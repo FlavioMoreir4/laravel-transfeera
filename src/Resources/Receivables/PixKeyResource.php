@@ -22,14 +22,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PixKeyResource extends BaseResource
 {
-    private const BASE_PATH = '/v1/pix-keys';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH = '/pix/key';
 
     /**
      * Lista todas as chaves Pix cadastradas.
@@ -101,7 +94,7 @@ class PixKeyResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/resend-code',
+            self::BASE_PATH . '/' . $id . '/resendVerificationCode',
             accountId: $this->accountId,
         );
     }
@@ -126,6 +119,8 @@ class PixKeyResource extends BaseResource
     /**
      * Inicia o processo de portabilidade/reivindicação de chave Pix.
      *
+     * A chave é passada na URL: POST /pix/key/{key}/claim
+     *
      * @param  string  $key  Chave Pix a ser reivindicada
      * @return array<string, mixed>
      */
@@ -133,9 +128,8 @@ class PixKeyResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/claim',
-            ['key' => $key],
-            $this->accountId,
+            '/pix/key/' . $key . '/claim',
+            accountId: $this->accountId,
         );
     }
 

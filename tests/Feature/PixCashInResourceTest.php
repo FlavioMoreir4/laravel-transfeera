@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 test('consulta pix recebidos por periodo', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix*' => Http::response([
+        'api-sandbox.transfeera.com/pix/cashin*' => Http::response([
             'data' => [
                 ['end2end_id' => 'E2E123', 'value' => 15000, 'status' => 'completed'],
             ],
@@ -31,7 +31,7 @@ test('consulta pix recebidos por periodo', function () {
 
 test('consulta pix por end2endId', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix/E2E123' => Http::response([
+        'api-sandbox.transfeera.com/pix/cashin/E2E123' => Http::response([
             'end2end_id' => 'E2E123',
             'value' => 15000,
             'status' => 'completed',
@@ -49,7 +49,7 @@ test('consulta pix por end2endId', function () {
 
 test('solicita devolucao de pix', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix/E2E123/refund' => Http::response([
+        'api-sandbox.transfeera.com/pix/cashin/E2E123/refund' => Http::response([
             'refund_id' => 'ref_abc',
             'amount' => 5000,
             'status' => 'pending',
@@ -71,7 +71,7 @@ test('solicita devolucao de pix', function () {
 
 test('consulta devolucoes de um pix', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix/E2E123/refunds' => Http::response([
+        'api-sandbox.transfeera.com/pix/cashin/E2E123/refund' => Http::response([
             'data' => [
                 ['refund_id' => 'ref_1', 'amount' => 5000, 'status' => 'completed'],
             ],

@@ -5,7 +5,28 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+
+test('lanca excecao de validacao em erro 422', function () {
+    Cache::forget('transfeera_access_token');
+    Cache::forget('transfeera_token_lock');
+    Http::stub(null);
+
+    Http::fake([
+        'api-sandbox.transfeera.com/batch' => Http::response([
+            'message' => 'Validation failed',
+            'errors' => ['name' => ['O campo nome é obrigatório.']],
+        ], 422),
+        'login-api-sandbox.transfeera.com/*' => Http::response([
+            'access_token' => 'test-token',
+            'expires_in' => 1800,
+        ]),
+    ]);
+
+    expect(fn () => Transfeera::batches()->create([]))
+        ->toThrow(\FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException::class);
+});
 
 test('cria lote com sucesso', function () {
     $expectedPayload = [
@@ -15,7 +36,7 @@ test('cria lote com sucesso', function () {
     ];
 
     Http::fake([
-        'api-sandbox.transfeera.com/v1/batches' => Http::response($expectedPayload, 201),
+        'api-sandbox.transfeera.com/batch' => Http::response($expectedPayload, 201),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
             'expires_in' => 1800,
@@ -31,7 +52,7 @@ test('cria lote com sucesso', function () {
 
 test('consulta lote por id', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/batches/batch_123' => Http::response([
+        'api-sandbox.transfeera.com/batch/batch_123' => Http::response([
             'id' => 'batch_123',
             'name' => 'Meu Lote',
             'status' => 'processed',
@@ -50,7 +71,7 @@ test('consulta lote por id', function () {
 
 test('lista lotes com paginacao', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/batches*' => Http::response([
+        'api-sandbox.transfeera.com/batch*' => Http::response([
             'data' => [
                 ['id' => 'batch_1', 'name' => 'Lote 1'],
                 ['id' => 'batch_2', 'name' => 'Lote 2'],
@@ -70,7 +91,7 @@ test('lista lotes com paginacao', function () {
 
 test('processa (fecha) lote', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/batches/batch_123/process' => Http::response([
+        'api-sandbox.transfeera.com/batch/batch_123/close' => Http::response([
             'id' => 'batch_123',
             'status' => 'processing',
         ]),
@@ -87,7 +108,7 @@ test('processa (fecha) lote', function () {
 
 test('atualiza lote', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/batches/batch_123' => Http::response([
+        'api-sandbox.transfeera.com/batch/batch_123' => Http::response([
             'id' => 'batch_123',
             'name' => 'Nome Atualizado',
         ]),
@@ -106,7 +127,7 @@ test('atualiza lote', function () {
 
 test('remove lote', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/batches/batch_123' => Http::response([], 204),
+        'api-sandbox.transfeera.com/batch/batch_123' => Http::response([], 204),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
             'expires_in' => 1800,
@@ -116,20 +137,4 @@ test('remove lote', function () {
     $result = Transfeera::batches()->delete('batch_123');
 
     expect($result)->toBe([]);
-});
-
-test('lanca excecao de validacao em erro 422', function () {
-    Http::fake([
-        'api-sandbox.transfeera.com/v1/batches' => Http::response([
-            'message' => 'Validation failed',
-            'errors' => ['name' => ['O campo nome é obrigatório.']],
-        ], 422),
-        'login-api-sandbox.transfeera.com/*' => Http::response([
-            'access_token' => 'test-token',
-            'expires_in' => 1800,
-        ]),
-    ]);
-
-    expect(fn () => Transfeera::batches()->create([]))
-        ->toThrow(\FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException::class);
 });

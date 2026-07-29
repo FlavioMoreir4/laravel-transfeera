@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 
 test('payments webhook cria url', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/webhooks/payments/urls' => Http::response([
+        'api-sandbox.transfeera.com/webhook' => Http::response([
             'id' => 'wh_url_1',
             'url' => 'https://meudominio.com/webhook',
         ], 201),
@@ -30,7 +30,7 @@ test('payments webhook cria url', function () {
 
 test('payments webhook lista urls', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/webhooks/payments/urls' => Http::response([
+        'api-sandbox.transfeera.com/webhook' => Http::response([
             'data' => [['id' => 'wh_1', 'url' => 'https://...']],
         ]),
         'login-api-sandbox.transfeera.com/*' => Http::response([
@@ -46,7 +46,7 @@ test('payments webhook lista urls', function () {
 
 test('payments webhook lista eventos', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/webhooks/payments/events*' => Http::response([
+        'api-sandbox.transfeera.com/webhook/event*' => Http::response([
             'data' => [
                 ['id' => 'evt_1', 'event' => 'batch.processed'],
             ],
@@ -64,7 +64,7 @@ test('payments webhook lista eventos', function () {
 
 test('payments webhook reenvia evento', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/webhooks/payments/events/evt_1/resend' => Http::response([
+        'api-sandbox.transfeera.com/webhook/event/evt_1/retry' => Http::response([
             'id' => 'evt_1',
             'status' => 'resent',
         ]),
@@ -83,7 +83,7 @@ test('payments webhook reenvia evento', function () {
 
 test('receivables webhook cria url', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/webhooks/receivables/urls' => Http::response([
+        'api-sandbox.transfeera.com/webhook' => Http::response([
             'id' => 'wh_rec_1',
             'url' => 'https://meudominio.com/webhook-recebimentos',
         ], 201),
@@ -104,7 +104,7 @@ test('receivables webhook cria url', function () {
 
 test('conta certa webhook lista eventos', function () {
     Http::fake([
-        'contacerta-api-sandbox.transfeera.com/v1/webhooks/events*' => Http::response([
+        'contacerta-api-sandbox.transfeera.com/webhook/event*' => Http::response([
             'data' => [
                 ['id' => 'evt_cc_1', 'event' => 'validation.completed'],
             ],

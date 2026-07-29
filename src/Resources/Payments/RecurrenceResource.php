@@ -26,7 +26,7 @@ class RecurrenceResource extends BaseResource
     {
         return $this->connector->get(
             self::DOMAIN,
-            '/v1/recurrences',
+            '/payout_recurrences',
             $params,
             $this->accountId,
         );
@@ -43,7 +43,7 @@ class RecurrenceResource extends BaseResource
     {
         return $this->connector->get(
             self::DOMAIN,
-            "/v1/recurrences/{$recurrenceId}/payments",
+            "/payout_recurrences/{$recurrenceId}/payments",
             $params,
             $this->accountId,
         );
@@ -59,7 +59,7 @@ class RecurrenceResource extends BaseResource
     {
         return $this->connector->post(
             self::DOMAIN,
-            "/v1/recurrences/{$recurrenceId}/cancel",
+            "/payout_recurrences/{$recurrenceId}/cancel",
             [],
             $this->accountId,
         );

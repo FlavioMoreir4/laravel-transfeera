@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -59,7 +61,7 @@ return [
     | Padrão: 'file' (usa o cache padrão da aplicação).
     |
     */
-    'cache_store' => env('TRANSFEERA_CACHE_STORE', null),
+    'cache_store' => env('TRANSFEERA_CACHE_STORE'),
 
     /*
     |--------------------------------------------------------------------------

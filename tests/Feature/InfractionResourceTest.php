@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 test('lista infractions', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/infractions*' => Http::response([
+        'api-sandbox.transfeera.com/med/infractions*' => Http::response([
             'data' => [
                 ['id' => 'inf_1', 'status' => 'open'],
                 ['id' => 'inf_2', 'status' => 'analysed'],
@@ -28,7 +28,7 @@ test('lista infractions', function () {
 
 test('consulta infracao por id', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/infractions/inf_1' => Http::response([
+        'api-sandbox.transfeera.com/med/infractions/inf_1' => Http::response([
             'id' => 'inf_1',
             'status' => 'open',
             'amount' => 15000,
@@ -46,7 +46,7 @@ test('consulta infracao por id', function () {
 
 test('envia analise individual', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/infractions/analysis' => Http::response([
+        'api-sandbox.transfeera.com/med/infractions/inf_1/analysis' => Http::response([
             'id' => 'analysis_1',
             'status' => 'submitted',
         ], 201),
@@ -56,8 +56,7 @@ test('envia analise individual', function () {
         ]),
     ]);
 
-    $response = Transfeera::infractions()->submitAnalysis([
-        'infraction_id' => 'inf_1',
+    $response = Transfeera::infractions()->submitAnalysis('inf_1', [
         'type' => 'refund',
         'refund_amount' => 5000,
         'description' => 'Devolução por acordo',
@@ -68,7 +67,7 @@ test('envia analise individual', function () {
 
 test('envia analise em lote', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/infractions/batch-analysis' => Http::response([
+        'api-sandbox.transfeera.com/med/infractions/analysis' => Http::response([
             'processed' => 2,
             'failures' => 0,
         ], 201),

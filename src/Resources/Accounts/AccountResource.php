@@ -37,14 +37,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class AccountResource extends BaseResource
 {
-    private const BASE_PATH = '/v1/accounts';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH = '/accounts';
 
     /**
      * Cria uma nova conta digital.
@@ -101,9 +94,10 @@ class AccountResource extends BaseResource
      */
     public function close(string $id): array
     {
-        return $this->connector->delete(
+        return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH . '/' . $id . '/close',
+            [],
             $this->accountId,
         );
     }

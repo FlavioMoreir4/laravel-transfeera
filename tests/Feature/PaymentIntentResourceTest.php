@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+
+beforeEach(function () {
+    Cache::forget('transfeera_access_token');
+    Cache::forget('transfeera_token_lock');
+});
 
 test('cria instrucao de pagamento', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/payment-intents' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/payment_intents' => Http::response([
             'id' => 'pi_1',
             'status' => 'pending',
             'value' => 15000,
@@ -30,7 +36,7 @@ test('cria instrucao de pagamento', function () {
 
 test('lista instrucoes de pagamento', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/payment-intents*' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/payment_intents*' => Http::response([
             'data' => [
                 ['id' => 'pi_1', 'status' => 'paid'],
                 ['id' => 'pi_2', 'status' => 'pending'],
@@ -49,7 +55,7 @@ test('lista instrucoes de pagamento', function () {
 
 test('consulta instrucao de pagamento', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/payment-intents/pi_1' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/payment_intents/pi_1' => Http::response([
             'id' => 'pi_1',
             'status' => 'paid',
         ]),
@@ -66,7 +72,7 @@ test('consulta instrucao de pagamento', function () {
 
 test('cancela instrucao de pagamento', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/payment-intents/pi_1/cancel' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/payment_intents/pi_1/cancellations' => Http::response([
             'id' => 'pi_1',
             'status' => 'cancelled',
         ]),
@@ -83,7 +89,7 @@ test('cancela instrucao de pagamento', function () {
 
 test('consulta cancelamento de instrucao', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/payment-intents/pi_1/cancellation' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/payment_intents/pi_1/cancellations/canc_1' => Http::response([
             'id' => 'pi_1',
             'cancelled_at' => '2025-06-01T10:00:00Z',
         ]),
@@ -93,14 +99,14 @@ test('consulta cancelamento de instrucao', function () {
         ]),
     ]);
 
-    $response = Transfeera::pixAutomaticoPaymentIntents()->getCancellation('pi_1');
+    $response = Transfeera::pixAutomaticoPaymentIntents()->getCancellation('pi_1', 'canc_1');
 
     expect($response['cancelled_at'])->toBe('2025-06-01T10:00:00Z');
 });
 
 test('reenvia retentativa de instrucao', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/payment-intents/pi_1/retry' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/payment_intents/pi_1/retry' => Http::response([
             'id' => 'pi_1',
             'status' => 'retry_sent',
         ]),

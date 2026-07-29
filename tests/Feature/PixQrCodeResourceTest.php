@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 test('cria qrcode estatico', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/qrcodes/static' => Http::response([
+        'api-sandbox.transfeera.com/pix/qrcode/static' => Http::response([
             'id' => 'qr_static_1',
             'type' => 'static',
             'key' => 'email@example.com',
@@ -31,7 +31,7 @@ test('cria qrcode estatico', function () {
 
 test('cria cobranca imediata', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/qrcodes/immediate' => Http::response([
+        'api-sandbox.transfeera.com/pix/qrcode/collection/immediate' => Http::response([
             'id' => 'qr_imm_1',
             'type' => 'immediate',
             'status' => 'active',
@@ -53,7 +53,7 @@ test('cria cobranca imediata', function () {
 
 test('cria cobranca com vencimento', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/qrcodes/due' => Http::response([
+        'api-sandbox.transfeera.com/pix/qrcode/collection/dueDate' => Http::response([
             'id' => 'qr_due_1',
             'type' => 'due',
             'status' => 'active',
@@ -76,7 +76,7 @@ test('cria cobranca com vencimento', function () {
 
 test('lista qrcodes', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/qrcodes*' => Http::response([
+        'api-sandbox.transfeera.com/pix/qrcode*' => Http::response([
             'data' => [
                 ['id' => 'qr_1', 'status' => 'active'],
                 ['id' => 'qr_2', 'status' => 'active'],
@@ -95,7 +95,7 @@ test('lista qrcodes', function () {
 
 test('revoga cobranca', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/qrcodes/qr_1/revoke' => Http::response([
+        'api-sandbox.transfeera.com/pix/qrcode/qr_1' => Http::response([
             'id' => 'qr_1',
             'status' => 'revoked',
         ]),

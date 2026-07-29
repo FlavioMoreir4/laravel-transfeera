@@ -22,14 +22,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PaymentIntentResource extends BaseResource
 {
-    private const BASE_PATH = '/v1/pix-automatico/payment-intents';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH = '/pix/automatic/payment_intents';
 
     /**
      * Cria uma nova instrução de pagamento dentro de uma autorização.
@@ -89,7 +82,7 @@ class PaymentIntentResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/cancel',
+            self::BASE_PATH . '/' . $id . '/cancellations',
             accountId: $this->accountId,
         );
     }
@@ -97,14 +90,15 @@ class PaymentIntentResource extends BaseResource
     /**
      * Consulta o cancelamento de uma instrução de pagamento.
      *
-     * @param  string  $id  ID da instrução de pagamento
+     * @param  string  $id               ID da instrução de pagamento
+     * @param  string  $cancellationId   ID do cancelamento
      * @return array<string, mixed>
      */
-    public function getCancellation(string $id): array
+    public function getCancellation(string $id, string $cancellationId): array
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/cancellation',
+            self::BASE_PATH . '/' . $id . '/cancellations/' . $cancellationId,
             accountId: $this->accountId,
         );
     }

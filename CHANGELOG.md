@@ -54,3 +54,31 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
   - `InfractionResource` (MED) — listar, consultar, enviar análise individual e em lote
   - 11 novos testes de feature
   - Total: **84 testes, 113 asserções**
+
+### Corrigido
+
+- Correção massiva dos paths da API conforme documentação oficial `docs.transfeera.dev`
+  - Removido prefixo incorreto `/v1/` de todos os Resources
+  - Batch / Billet / Transfer paths ajustados para padrão em lote
+  - Pix Automático cancel endpoints ajustados para `/cancellations`
+  - Webhook retry endpoints ajustados para `/retry`
+  - Pix DICT lookup e QR Code revoke paths corrigidos
+  - MED infraction paths ajustados para `/med/infractions`
+
+### Adicionado
+
+- `BilletResource` agora suporta operações dentro de lote (batch) e avulsas
+  - `create(string $batchId, array $data)`
+  - `createStandalone(array $data)`
+  - `update(string $batchId, string $id, array $data)`
+  - `updateStandalone(string $id, array $data)`
+  - `list(string $batchId, array $params)`
+  - `listStandalone(array $params)`
+  - `delete(string $batchId, string $id)`
+  - `deleteStandalone(string $id)`
+- `TransferResource::get()` suporta consulta standalone (`/transfer/{id}`) e contextual (`/batch/{batchId}/transfer/{id}`)
+- `ChargeResource::downloadPdf()` agora exige `$receivableId` conforme path oficial `/charges/{id}/receivables/{receivableId}/pdf`
+- `PixCashInResource::getRefunds()` exposto explicitamente (path `GET /pix/cashin/{end2endId}/refund`)
+- 10 novos testes de feature para `BilletResource`
+- 1 teste unitário para cache flush no `TestCase`
+- Total: **94 testes, 126 asserções**

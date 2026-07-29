@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 test('lista chaves pix', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-keys' => Http::response([
+        'api-sandbox.transfeera.com/pix/key' => Http::response([
             'data' => [
                 ['id' => 'key_1', 'type' => 'cpf', 'value' => '***12345609**', 'status' => 'verified'],
             ],
@@ -28,7 +28,7 @@ test('lista chaves pix', function () {
 
 test('cria chave pix', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-keys' => Http::response([
+        'api-sandbox.transfeera.com/pix/key' => Http::response([
             'id' => 'key_abc123',
             'type' => 'email',
             'value' => 'user@example.com',
@@ -51,7 +51,7 @@ test('cria chave pix', function () {
 
 test('verifica chave pix com codigo', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-keys/key_abc/verify' => Http::response([
+        'api-sandbox.transfeera.com/pix/key/key_abc/verify' => Http::response([
             'id' => 'key_abc',
             'status' => 'verified',
         ]),
@@ -68,7 +68,7 @@ test('verifica chave pix com codigo', function () {
 
 test('remove chave pix', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-keys/key_abc' => Http::response([], 204),
+        'api-sandbox.transfeera.com/pix/key/key_abc' => Http::response([], 204),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
             'expires_in' => 1800,
@@ -82,7 +82,7 @@ test('remove chave pix', function () {
 
 test('consulta chave pix por id', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-keys/key_1' => Http::response([
+        'api-sandbox.transfeera.com/pix/key/key_1' => Http::response([
             'id' => 'key_1',
             'type' => 'phone',
             'value' => '+5511999999999',
@@ -101,15 +101,15 @@ test('consulta chave pix por id', function () {
 
 test('portabilidade: claim, confirm, cancel', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-keys/claim' => Http::response([
+        'api-sandbox.transfeera.com/pix/key/1199999999/claim' => Http::response([
             'id' => 'claim_1',
             'status' => 'pending',
         ], 201),
-        'api-sandbox.transfeera.com/v1/pix-keys/claim_1/claim/confirm' => Http::response([
+        'api-sandbox.transfeera.com/pix/key/claim_1/claim/confirm' => Http::response([
             'id' => 'claim_1',
             'status' => 'confirmed',
         ]),
-        'api-sandbox.transfeera.com/v1/pix-keys/claim_1/claim/cancel' => Http::response([
+        'api-sandbox.transfeera.com/pix/key/claim_1/claim/cancel' => Http::response([
             'id' => 'claim_1',
             'status' => 'cancelled',
         ]),

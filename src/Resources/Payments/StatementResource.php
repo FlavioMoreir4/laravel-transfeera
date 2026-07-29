@@ -25,7 +25,7 @@ class StatementResource extends BaseResource
     {
         return $this->connector->get(
             self::DOMAIN,
-            '/v1/balance',
+            '/statement/balance',
             [],
             $this->accountId,
         );
@@ -41,7 +41,7 @@ class StatementResource extends BaseResource
     {
         return $this->connector->post(
             self::DOMAIN,
-            '/v1/balance/withdraw',
+            '/statement/withdraw',
             $data,
             $this->accountId,
         );
@@ -57,7 +57,7 @@ class StatementResource extends BaseResource
     {
         return $this->connector->post(
             self::DOMAIN,
-            '/v1/statement/report',
+            '/statement_report',
             $params,
             $this->accountId,
         );
@@ -73,7 +73,7 @@ class StatementResource extends BaseResource
     {
         return $this->connector->get(
             self::DOMAIN,
-            "/v1/statement/report/{$reportId}",
+            "/statement_report/{$reportId}",
             [],
             $this->accountId,
         );

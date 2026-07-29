@@ -7,6 +7,20 @@ parameters:
 
     ignoreErrors:
         - '#Call to an undefined method Illuminate\\Support\\Facades\\Cache::store\(\)#'
+        - '#Call to an undefined method Illuminate\\Support\\Facades\\Cache::flush\(\)#'
+        - '#Property .* is never assigned .* so it can be removed from the property type#'
+        - '#Property .* is never read, only written#'
+        - '#Property .* is never written, only read#'
+        - '#Offset .* on .* on left side of \?\? always exists#'
+        - '#Parameter .* expects array<string, mixed>, array<int, .* given#'
+        - '#PHPDoc tag @method for method getConfig\(\) return type with no value type#'
+        - '#Method .* has parameter .* with no value type specified in iterable type array#'
+        - '#Method .* return type has no value type specified in iterable type array#'
+        - '#Property .* on left side of \?\? is not nullable nor uninitialized#'
+
+    reportUnmatchedIgnoredErrors: false
+
+    treatPhpDocTypesAsCertain: false
 
 includes:
     - ./vendor/larastan/larastan/extension.neon

@@ -22,14 +22,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PixQrCodeResource extends BaseResource
 {
-    private const BASE_PATH = '/v1/qrcodes';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH = '/pix/qrcode';
 
     /**
      * Cria um QR Code estático (mesma chave, valor e dados fixos).
@@ -57,7 +50,7 @@ class PixQrCodeResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/immediate',
+            self::BASE_PATH . '/collection/immediate',
             $data,
             $this->accountId,
         );
@@ -73,7 +66,7 @@ class PixQrCodeResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/due',
+            self::BASE_PATH . '/collection/dueDate',
             $data,
             $this->accountId,
         );
@@ -118,9 +111,9 @@ class PixQrCodeResource extends BaseResource
      */
     public function revoke(string $id): array
     {
-        return $this->connector->post(
+        return $this->connector->delete(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/revoke',
+            self::BASE_PATH . '/' . $id,
             accountId: $this->accountId,
         );
     }

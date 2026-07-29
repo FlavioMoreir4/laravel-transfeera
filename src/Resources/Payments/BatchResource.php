@@ -28,7 +28,7 @@ class BatchResource extends BaseResource
     {
         return $this->connector->post(
             self::DOMAIN,
-            '/v1/batches',
+            '/batch',
             $data,
             $this->accountId,
         );
@@ -44,7 +44,7 @@ class BatchResource extends BaseResource
     {
         return $this->connector->get(
             self::DOMAIN,
-            "/v1/batches/{$id}",
+            "/batch/{$id}",
             [],
             $this->accountId,
         );
@@ -60,7 +60,7 @@ class BatchResource extends BaseResource
     {
         return $this->connector->get(
             self::DOMAIN,
-            '/v1/batches',
+            '/batch',
             $params,
             $this->accountId,
         );
@@ -77,7 +77,7 @@ class BatchResource extends BaseResource
     {
         return $this->connector->patch(
             self::DOMAIN,
-            "/v1/batches/{$id}",
+            "/batch/{$id}",
             $data,
             $this->accountId,
         );
@@ -93,7 +93,7 @@ class BatchResource extends BaseResource
     {
         return $this->connector->delete(
             self::DOMAIN,
-            "/v1/batches/{$id}",
+            "/batch/{$id}",
             $this->accountId,
         );
     }
@@ -108,7 +108,7 @@ class BatchResource extends BaseResource
     {
         return $this->connector->post(
             self::DOMAIN,
-            "/v1/batches/{$id}/process",
+            "/batch/{$id}/close",
             [],
             $this->accountId,
         );

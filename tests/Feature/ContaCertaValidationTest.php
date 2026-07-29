@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 test('conta certa cria validacao', function () {
     Http::fake([
-        'contacerta-api-sandbox.transfeera.com/v1/validations' => Http::response([
+        'contacerta-api-sandbox.transfeera.com/validation' => Http::response([
             'id' => 'val_1',
             'status' => 'pending',
             'bank_code' => '341',
@@ -34,7 +34,7 @@ test('conta certa cria validacao', function () {
 
 test('conta certa lista validacoes', function () {
     Http::fake([
-        'contacerta-api-sandbox.transfeera.com/v1/validations*' => Http::response([
+        'contacerta-api-sandbox.transfeera.com/validation*' => Http::response([
             'data' => [
                 ['id' => 'val_1', 'status' => 'completed'],
                 ['id' => 'val_2', 'status' => 'failed'],
@@ -53,7 +53,7 @@ test('conta certa lista validacoes', function () {
 
 test('conta certa consulta validacao', function () {
     Http::fake([
-        'contacerta-api-sandbox.transfeera.com/v1/validations/val_1' => Http::response([
+        'contacerta-api-sandbox.transfeera.com/validation/val_1' => Http::response([
             'id' => 'val_1',
             'status' => 'completed',
         ]),
@@ -70,7 +70,7 @@ test('conta certa consulta validacao', function () {
 
 test('conta certa lista bancos', function () {
     Http::fake([
-        'contacerta-api-sandbox.transfeera.com/v1/banks' => Http::response([
+        'contacerta-api-sandbox.transfeera.com/bank' => Http::response([
             'data' => [
                 ['code' => '341', 'name' => 'Itaú'],
                 ['code' => '001', 'name' => 'Banco do Brasil'],

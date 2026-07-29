@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 test('cria cobranca', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/charges' => Http::response([
+        'api-sandbox.transfeera.com/charges' => Http::response([
             'id' => 'chg_1',
             'status' => 'pending',
             'value' => 5000,
@@ -33,7 +33,7 @@ test('cria cobranca', function () {
 
 test('lista cobrancas', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/charges*' => Http::response([
+        'api-sandbox.transfeera.com/charges*' => Http::response([
             'data' => [
                 ['id' => 'chg_1', 'status' => 'pending'],
                 ['id' => 'chg_2', 'status' => 'paid'],
@@ -52,7 +52,7 @@ test('lista cobrancas', function () {
 
 test('consulta cobranca por id', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/charges/chg_1' => Http::response([
+        'api-sandbox.transfeera.com/charges/chg_1' => Http::response([
             'id' => 'chg_1',
             'status' => 'paid',
             'value' => 5000,
@@ -70,7 +70,7 @@ test('consulta cobranca por id', function () {
 
 test('cancela cobranca', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/charges/chg_1/cancel' => Http::response([
+        'api-sandbox.transfeera.com/charges/chg_1/cancel' => Http::response([
             'id' => 'chg_1',
             'status' => 'cancelled',
         ]),
@@ -87,8 +87,11 @@ test('cancela cobranca', function () {
 
 test('download pdf comprovante', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/charges/chg_1/pdf' => Http::response([
+        'api-sandbox.transfeera.com/charges/chg_1/receivables/rec_1/pdf' => Http::response([
             'url' => 'https://.../comprovante.pdf',
+        ]),
+        'api-sandbox.transfeera.com/charges/chg_2/pdf' => Http::response([
+            'url' => 'https://.../comprovante-legacy.pdf',
         ]),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
@@ -96,7 +99,9 @@ test('download pdf comprovante', function () {
         ]),
     ]);
 
-    $response = Transfeera::charges()->downloadPdf('chg_1');
-
+    $response = Transfeera::charges()->downloadPdf('chg_1', 'rec_1');
     expect($response['url'])->toContain('.pdf');
+
+    $legacy = Transfeera::charges()->downloadPdfByChargeId('chg_2');
+    expect($legacy['url'])->toContain('.pdf');
 });

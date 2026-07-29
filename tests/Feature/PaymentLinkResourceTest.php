@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 test('cria link de pagamento', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/payment-links' => Http::response([
+        'api-sandbox.transfeera.com/payment_links' => Http::response([
             'id' => 'pl_1',
             'name' => 'Produto X',
             'value' => 1990,
@@ -33,7 +33,7 @@ test('cria link de pagamento', function () {
 
 test('consulta link de pagamento', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/payment-links/pl_1' => Http::response([
+        'api-sandbox.transfeera.com/payment_links/pl_1' => Http::response([
             'id' => 'pl_1',
             'status' => 'active',
             'value' => 1990,
@@ -51,7 +51,7 @@ test('consulta link de pagamento', function () {
 
 test('exclui link de pagamento', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/payment-links/pl_1' => Http::response([], 204),
+        'api-sandbox.transfeera.com/payment_links/pl_1' => Http::response([], 204),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
             'expires_in' => 1800,

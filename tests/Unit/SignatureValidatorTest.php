@@ -39,12 +39,13 @@ test('usa regra de recebimentos quando configurado', function () {
     $secret = 'receivables-secret';
     $payload = '{"event":"pix.received","data":{"end2end":"E2E123"}}';
 
-    $validator = new SignatureValidator($secret, isReceivables: true);
+    $validator = new SignatureValidator($secret);
 
     // Deve usar o mesmo hash, mas a flag pode alterar o algoritmo no futuro
     $expected = hash_hmac('sha256', $payload, $secret);
 
-    expect($validator->calculate($payload))->toBe($expected);
+    expect($validator->calculateForReceivables($payload))->toBe($expected);
+    expect($validator->isValidForReceivables($payload, $expected))->toBeTrue();
 });
 
 test('usa hash_equals para comparacao timing-safe', function () {

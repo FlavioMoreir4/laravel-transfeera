@@ -21,14 +21,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class BankResource extends BaseResource
 {
-    private const BASE_PATH = '/v1/banks';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH = '/bank';
 
     /**
      * Lista os bancos suportados pela Conta Certa.

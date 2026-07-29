@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 test('cria transferencia em lote', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/batches/batch_123/transfers' => Http::response([
+        'api-sandbox.transfeera.com/batch/batch_123/transfer' => Http::response([
             'id' => 'transfer_1',
             'amount' => 15000,
             'status' => 'pending',
@@ -31,10 +31,15 @@ test('cria transferencia em lote', function () {
 
 test('consulta transferencia', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/batches/batch_123/transfers/transfer_1' => Http::response([
+        'api-sandbox.transfeera.com/batch/batch_123/transfer/transfer_1' => Http::response([
             'id' => 'transfer_1',
             'amount' => 15000,
             'status' => 'success',
+        ]),
+        'api-sandbox.transfeera.com/transfer/transfer_2' => Http::response([
+            'id' => 'transfer_2',
+            'amount' => 20000,
+            'status' => 'pending',
         ]),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
@@ -42,14 +47,16 @@ test('consulta transferencia', function () {
         ]),
     ]);
 
-    $result = Transfeera::transfers()->get('batch_123', 'transfer_1');
-
+    $result = Transfeera::transfers()->get('transfer_1', 'batch_123');
     expect($result['status'])->toBe('success');
+
+    $standalone = Transfeera::transfers()->get('transfer_2');
+    expect($standalone['status'])->toBe('pending');
 });
 
 test('lista transferencias de lote', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/batches/batch_123/transfers*' => Http::response([
+        'api-sandbox.transfeera.com/batch/batch_123/transfer*' => Http::response([
             'data' => [
                 ['id' => 'transfer_1', 'amount' => 10000],
                 ['id' => 'transfer_2', 'amount' => 20000],
@@ -68,7 +75,7 @@ test('lista transferencias de lote', function () {
 
 test('remove transferencia do lote', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/batches/batch_123/transfers/transfer_1' => Http::response([], 204),
+        'api-sandbox.transfeera.com/batch/batch_123/transfer/transfer_1' => Http::response([], 204),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
             'expires_in' => 1800,

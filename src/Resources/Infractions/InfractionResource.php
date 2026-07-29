@@ -40,14 +40,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class InfractionResource extends BaseResource
 {
-    private const BASE_PATH = '/v1/infractions';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH = '/med/infractions';
 
     /**
      * Lista as infrações cadastradas.
@@ -83,14 +76,17 @@ class InfractionResource extends BaseResource
     /**
      * Envia uma análise individual para contestação/devolução.
      *
-     * @param  array{infraction_id: string, type: string, refund_amount?: int, description?: string}  $data  Dados da análise
+     * A infraction_id vai na URL: POST /med/infractions/{id}/analysis
+     *
+     * @param  string  $id    ID da infração
+     * @param  array{type: string, refund_amount?: int, description?: string}  $data  Dados da análise
      * @return array<string, mixed>
      */
-    public function submitAnalysis(array $data): array
+    public function submitAnalysis(string $id, array $data): array
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/analysis',
+            self::BASE_PATH . '/' . $id . '/analysis',
             $data,
             $this->accountId,
         );
@@ -106,7 +102,7 @@ class InfractionResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/batch-analysis',
+            self::BASE_PATH . '/analysis',
             $analyses,
             $this->accountId,
         );

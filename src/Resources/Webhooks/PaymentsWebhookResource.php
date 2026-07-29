@@ -22,15 +22,8 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PaymentsWebhookResource extends BaseResource
 {
-    private const BASE_PATH_URLS = '/v1/webhooks/payments/urls';
-    private const BASE_PATH_EVENTS = '/v1/webhooks/payments/events';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH_URLS = '/webhook';
+    private const BASE_PATH_EVENTS = '/webhook/event';
 
     /**
      * Cria uma nova URL de webhook para pagamentos.
@@ -135,7 +128,7 @@ class PaymentsWebhookResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH_EVENTS . '/' . $eventId . '/resend',
+            self::BASE_PATH_EVENTS . '/' . $eventId . '/retry',
             accountId: $this->accountId,
         );
     }

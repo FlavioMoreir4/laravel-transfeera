@@ -28,8 +28,8 @@ class PixResource extends BaseResource
     {
         return $this->connector->get(
             self::DOMAIN,
-            '/v1/pix/lookup',
-            ['key' => $pixKey],
+            '/pix/dict_key/' . $pixKey,
+            [],
             $this->accountId,
         );
     }
@@ -45,7 +45,7 @@ class PixResource extends BaseResource
     {
         return $this->connector->post(
             self::DOMAIN,
-            '/v1/pix/parse-emv',
+            '/pix/qrcode/parse',
             ['emv' => $emv],
             $this->accountId,
         );

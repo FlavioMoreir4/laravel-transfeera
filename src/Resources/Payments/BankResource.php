@@ -26,7 +26,7 @@ class BankResource extends BaseResource
     {
         return $this->connector->get(
             self::DOMAIN,
-            '/v1/banks',
+            '/bank',
             $params,
             $this->accountId,
         );

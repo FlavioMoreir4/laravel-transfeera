@@ -2,6 +2,7 @@
 
 namespace FlavioMoreir4\Transfeera\Tests;
 
+use Illuminate\Support\Facades\Cache;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 /**
@@ -12,6 +13,13 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
  */
 abstract class TestCase extends OrchestraTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Cache::flush();
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -97,7 +97,6 @@ class TokenManager
     /**
      * Realiza a requisição de token via client_credentials.
      *
-     * @param  string|null  $accountId
      *
      * @throws TransfeeraAuthenticationException
      */
@@ -113,9 +112,9 @@ class TokenManager
             $params['scope'] = "account_id:{$accountId}";
         }
 
-        $response = Http::baseUrl($this->authBaseUrl)
-            ->asForm()
-            ->post('/authorization', $params);
+        $url = rtrim($this->authBaseUrl, '/') . '/authorization';
+
+        $response = Http::asForm()->post($url, $params);
 
         if ($response->failed()) {
             throw new TransfeeraAuthenticationException(

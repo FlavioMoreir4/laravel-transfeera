@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 test('cria conta digital', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/accounts' => Http::response([
+        'api-sandbox.transfeera.com/accounts' => Http::response([
             'id' => 'acc_1',
             'name' => 'Empresa XYZ',
             'status' => 'active',
@@ -32,7 +32,7 @@ test('cria conta digital', function () {
 
 test('lista contas digitais', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/accounts*' => Http::response([
+        'api-sandbox.transfeera.com/accounts*' => Http::response([
             'data' => [
                 ['id' => 'acc_1', 'name' => 'Empresa A'],
                 ['id' => 'acc_2', 'name' => 'Empresa B'],
@@ -51,7 +51,7 @@ test('lista contas digitais', function () {
 
 test('consulta conta digital', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/accounts/acc_1' => Http::response([
+        'api-sandbox.transfeera.com/accounts/acc_1' => Http::response([
             'id' => 'acc_1',
             'name' => 'Empresa XYZ',
         ]),
@@ -68,7 +68,7 @@ test('consulta conta digital', function () {
 
 test('encerra conta digital', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/accounts/acc_1' => Http::response([], 204),
+        'api-sandbox.transfeera.com/accounts/acc_1/close' => Http::response([], 204),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
             'expires_in' => 1800,

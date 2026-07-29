@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera;
 
+use FlavioMoreir4\Transfeera\Console\Commands\InstallCommand;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -24,11 +25,9 @@ class TransfeeraServiceProvider extends ServiceProvider
             'transfeera',
         );
 
-        $this->app->singleton('transfeera', function ($app) {
-            return new TransfeeraClient(
-                config: $app['config']['transfeera'],
-            );
-        });
+        $this->app->singleton('transfeera', fn($app) => new TransfeeraClient(
+            config: $app['config']['transfeera'],
+        ));
 
         $this->app->alias('transfeera', TransfeeraClient::class);
     }
@@ -44,7 +43,7 @@ class TransfeeraServiceProvider extends ServiceProvider
             ], 'transfeera-config');
 
             $this->commands([
-                Console\Commands\InstallCommand::class,
+                InstallCommand::class,
             ]);
         }
     }

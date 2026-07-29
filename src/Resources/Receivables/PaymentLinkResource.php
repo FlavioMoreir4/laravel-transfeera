@@ -24,14 +24,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PaymentLinkResource extends BaseResource
 {
-    private const BASE_PATH = '/v1/payment-links';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH = '/payment_links';
 
     /**
      * Cria um novo link de pagamento.

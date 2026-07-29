@@ -22,14 +22,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class AuthorizationResource extends BaseResource
 {
-    private const BASE_PATH = '/v1/pix-automatico/authorizations';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH = '/pix/automatic/authorizations';
 
     /**
      * Cria uma nova autorização Pix Automático.
@@ -88,7 +81,7 @@ class AuthorizationResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/cancel',
+            self::BASE_PATH . '/' . $id . '/cancellations',
             accountId: $this->accountId,
         );
     }
@@ -96,14 +89,15 @@ class AuthorizationResource extends BaseResource
     /**
      * Consulta o cancelamento de uma autorização.
      *
-     * @param  string  $id  ID da autorização
+     * @param  string  $id               ID da autorização
+     * @param  string  $cancellationId   ID do cancelamento
      * @return array<string, mixed>
      */
-    public function getCancellation(string $id): array
+    public function getCancellation(string $id, string $cancellationId): array
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/cancellation',
+            self::BASE_PATH . '/' . $id . '/cancellations/' . $cancellationId,
             accountId: $this->accountId,
         );
     }

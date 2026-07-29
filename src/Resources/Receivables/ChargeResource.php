@@ -24,14 +24,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class ChargeResource extends BaseResource
 {
-    private const BASE_PATH = '/v1/charges';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH = '/charges';
 
     /**
      * Cria uma nova cobrança (boleto e/ou Pix).
@@ -98,12 +91,30 @@ class ChargeResource extends BaseResource
     /**
      * Faz o download do comprovante (PDF) de uma cobrança.
      *
-     * Retorna o PDF como string binária ou URL para download.
+     * Path oficial: GET /charges/{id}/receivables/{receivableId}/pdf
+     *
+     * @param  string  $id            ID da cobrança
+     * @param  string  $receivableId  ID do recebível (boleto/pix gerado)
+     * @return array<string, mixed>
+     */
+    public function downloadPdf(string $id, string $receivableId): array
+    {
+        return $this->connector->get(
+            Connector::DOMAIN_PAYMENTS,
+            self::BASE_PATH . '/' . $id . '/receivables/' . $receivableId . '/pdf',
+            accountId: $this->accountId,
+        );
+    }
+
+    /**
+     * Faz o download do comprovante (PDF) de uma cobrança avulsa.
+     *
+     * @deprecated Use downloadPdf($id, $receivableId) para path oficial.
      *
      * @param  string  $id  ID da cobrança
      * @return array<string, mixed>
      */
-    public function downloadPdf(string $id): array
+    public function downloadPdfByChargeId(string $id): array
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,

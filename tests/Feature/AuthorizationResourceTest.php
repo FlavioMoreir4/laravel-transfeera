@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 test('cria autorizacao pix automatico', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/authorizations' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/authorizations' => Http::response([
             'id' => 'auth_1',
             'status' => 'active',
         ], 201),
@@ -30,7 +30,7 @@ test('cria autorizacao pix automatico', function () {
 
 test('lista autorizacoes pix automatico', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/authorizations*' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/authorizations*' => Http::response([
             'data' => [
                 ['id' => 'auth_1', 'status' => 'active'],
                 ['id' => 'auth_2', 'status' => 'cancelled'],
@@ -49,7 +49,7 @@ test('lista autorizacoes pix automatico', function () {
 
 test('consulta autorizacao pix automatico', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/authorizations/auth_1' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/authorizations/auth_1' => Http::response([
             'id' => 'auth_1',
             'status' => 'active',
         ]),
@@ -66,7 +66,7 @@ test('consulta autorizacao pix automatico', function () {
 
 test('cancela autorizacao pix automatico', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/authorizations/auth_1/cancel' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/authorizations/auth_1/cancellations' => Http::response([
             'id' => 'auth_1',
             'status' => 'cancelled',
         ]),
@@ -83,7 +83,7 @@ test('cancela autorizacao pix automatico', function () {
 
 test('consulta cancelamento de autorizacao', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/authorizations/auth_1/cancellation' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/authorizations/auth_1/cancellations/canc_1' => Http::response([
             'id' => 'auth_1',
             'cancelled_at' => '2025-06-01T10:00:00Z',
         ]),
@@ -93,14 +93,14 @@ test('consulta cancelamento de autorizacao', function () {
         ]),
     ]);
 
-    $response = Transfeera::pixAutomaticoAuthorizations()->getCancellation('auth_1');
+    $response = Transfeera::pixAutomaticoAuthorizations()->getCancellation('auth_1', 'canc_1');
 
     expect($response['cancelled_at'])->toBe('2025-06-01T10:00:00Z');
 });
 
 test('atualiza autorizacao (split_payment)', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/v1/pix-automatico/authorizations/auth_1' => Http::response([
+        'api-sandbox.transfeera.com/pix/automatic/authorizations/auth_1' => Http::response([
             'id' => 'auth_1',
             'split_payment' => ['percentage' => 50],
         ]),

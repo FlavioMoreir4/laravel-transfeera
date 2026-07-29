@@ -30,24 +30,31 @@ class TransferResource extends BaseResource
     {
         return $this->connector->post(
             self::DOMAIN,
-            "/v1/batches/{$batchId}/transfers",
+            "/batch/{$batchId}/transfer",
             $data,
             $this->accountId,
         );
     }
 
     /**
-     * Retorna os detalhes de uma transferência dentro de um lote.
+     * Retorna os detalhes de uma transferência pelo ID.
      *
-     * @param  string  $batchId     Identificador do lote
+     * Suporta tanto o path standalone `/transfer/{id}` quanto
+     * o path contextual `/batch/{batchId}/transfer/{id}`.
+     *
      * @param  string  $transferId  Identificador da transferência
+     * @param  string|null  $batchId  Identificador do lote (opcional)
      * @return array<string, mixed>
      */
-    public function get(string $batchId, string $transferId): array
+    public function get(string $transferId, ?string $batchId = null): array
     {
+        $path = $batchId !== null
+            ? "/batch/{$batchId}/transfer/{$transferId}"
+            : "/transfer/{$transferId}";
+
         return $this->connector->get(
             self::DOMAIN,
-            "/v1/batches/{$batchId}/transfers/{$transferId}",
+            $path,
             [],
             $this->accountId,
         );
@@ -64,7 +71,7 @@ class TransferResource extends BaseResource
     {
         return $this->connector->get(
             self::DOMAIN,
-            "/v1/batches/{$batchId}/transfers",
+            "/batch/{$batchId}/transfer",
             $params,
             $this->accountId,
         );
@@ -80,9 +87,9 @@ class TransferResource extends BaseResource
      */
     public function update(string $batchId, string $transferId, array $data): array
     {
-        return $this->connector->patch(
+        return $this->connector->put(
             self::DOMAIN,
-            "/v1/batches/{$batchId}/transfers/{$transferId}",
+            "/batch/{$batchId}/transfer/{$transferId}",
             $data,
             $this->accountId,
         );
@@ -99,7 +106,7 @@ class TransferResource extends BaseResource
     {
         return $this->connector->delete(
             self::DOMAIN,
-            "/v1/batches/{$batchId}/transfers/{$transferId}",
+            "/batch/{$batchId}/transfer/{$transferId}",
             $this->accountId,
         );
     }

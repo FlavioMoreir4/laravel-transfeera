@@ -44,7 +44,7 @@ test('mapeia erro 401 para AuthenticationException', function () {
         'api-sandbox.transfeera.com/*' => Http::response(['message' => 'Unauthenticated'], 401),
     ]);
 
-    expect(fn () => $this->connector->get(Connector::DOMAIN_PAYMENTS, '/v1/batches'))
+    expect(fn () => $this->connector->get(Connector::DOMAIN_PAYMENTS, '/batches'))
         ->toThrow(TransfeeraAuthenticationException::class);
 });
 
@@ -56,7 +56,7 @@ test('mapeia erro 422 para ValidationException', function () {
         ], 422),
     ]);
 
-    expect(fn () => $this->connector->get(Connector::DOMAIN_PAYMENTS, '/v1/batches'))
+    expect(fn () => $this->connector->get(Connector::DOMAIN_PAYMENTS, '/batches'))
         ->toThrow(TransfeeraValidationException::class);
 });
 
@@ -65,6 +65,6 @@ test('mapeia erro 429 para RateLimitException', function () {
         'api-sandbox.transfeera.com/*' => Http::response(['message' => 'Too Many Requests'], 429),
     ]);
 
-    expect(fn () => $this->connector->get(Connector::DOMAIN_PAYMENTS, '/v1/batches'))
+    expect(fn () => $this->connector->get(Connector::DOMAIN_PAYMENTS, '/batches'))
         ->toThrow(TransfeeraRateLimitException::class);
 });

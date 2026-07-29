@@ -70,9 +70,14 @@ $transfer = Transfeera::transfers()->create('batch_123', [
 ]);
 $transfers = Transfeera::transfers()->list('batch_123');
 
-// Boletos
-$billet = Transfeera::billets()->create($data);
-$billet = Transfeera::billets()->get('billet_456');
+// Transferências
+$transfer = Transfeera::transfers()->create('batch_123', [
+    'amount' => 15000, // R$ 150,00 em centavos
+    'pix_key' => 'fulano@email.com',
+    'pix_key_type' => 'email',
+]);
+$transfer = Transfeera::transfers()->get('transfer_123');
+$transfers = Transfeera::transfers()->list('batch_123');
 
 // Bancos
 $banks = Transfeera::banks()->list();
@@ -117,12 +122,13 @@ Transfeera::pixQrCodes()->revoke('qr_1');
 $pixList = Transfeera::pixCashIn()->list(['start_date' => '2025-01-01']);
 $pix = Transfeera::pixCashIn()->getByEnd2EndId('E2E123');
 $refund = Transfeera::pixCashIn()->requestRefund('E2E123', ['amount' => 5000]);
+$refunds = Transfeera::pixCashIn()->getRefunds('E2E123');
 
 // Cobranças (boleto + Pix)
 $charge = Transfeera::charges()->create(['payer_name' => 'João Silva', 'value' => 5000]);
 $charges = Transfeera::charges()->list(['status' => 'pending']);
 Transfeera::charges()->cancel('chg_1');
-$pdf = Transfeera::charges()->downloadPdf('chg_1');
+$pdf = Transfeera::charges()->downloadPdf('chg_1', 'rec_1');
 
 // Links de pagamento
 $link = Transfeera::paymentLinks()->create(['name' => 'Produto X', 'value' => 1990]);
@@ -137,6 +143,7 @@ $auth = Transfeera::pixAutomaticoAuthorizations()->create([
     'payer_pix_key' => 'fulano@email.com',
     'limit_value' => 50000,
 ]);
+$auth = Transfeera::pixAutomaticoAuthorizations()->get('auth_1');
 $auths = Transfeera::pixAutomaticoAuthorizations()->list(['status' => 'active']);
 Transfeera::pixAutomaticoAuthorizations()->cancel('auth_1');
 Transfeera::pixAutomaticoAuthorizations()->update('auth_1', [
@@ -148,6 +155,7 @@ $intent = Transfeera::pixAutomaticoPaymentIntents()->create('auth_1', [
     'value' => 15000,
     'description' => 'Mensalidade',
 ]);
+$intent = Transfeera::pixAutomaticoPaymentIntents()->get('pi_1');
 Transfeera::pixAutomaticoPaymentIntents()->cancel('pi_1');
 Transfeera::pixAutomaticoPaymentIntents()->resendRetry('pi_1');
 ```
@@ -213,8 +221,7 @@ $infractions = Transfeera::infractions()->list();
 $infraction = Transfeera::infractions()->get('inf_123');
 
 // Enviar análise individual
-Transfeera::infractions()->submitAnalysis([
-    'infraction_id' => 'inf_123',
+Transfeera::infractions()->submitAnalysis('inf_123', [
     'type' => 'refund',
     'refund_amount' => 5000, // R$ 50,00 em centavos
     'description' => 'Devolução por acordo entre as partes',
@@ -294,8 +301,8 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 | Artisan command `transfeera:install` | ✅ |
 | Bancos — listar | ✅ |
 | Lotes — CRUD + processar (fechar) | ✅ |
-| Transferências — CRUD | ✅ |
-| Boletos — CRUD + consulta CIP | ✅ |
+| Transferências — CRUD + consulta por ID | ✅ |
+| Boletos — CRUD em lote + avulso + consulta CIP | ✅ |
 | Saldo/Extrato — consultar saldo, resgatar, relatório | ✅ |
 | Pix — consulta DICT + parse EMV | ✅ |
 | Recorrências — listar, listar pagamentos, cancelar | ✅ |
@@ -306,9 +313,9 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 |---------|--------|
 | Chaves Pix — CRUD, verificação, portabilidade (claim/confirm/cancel) | ✅ |
 | QR Codes Pix — estático, cobrança imediata, com vencimento, revogar | ✅ |
-| Pix recebidos (Cash-in) — listar por período, consultar por end2endId | ✅ |
-| Devoluções Pix — solicitar devolução, consultar devoluções | ✅ |
-| Cobranças (boleto + Pix) — CRUD, cancelar, download PDF | ✅ |
+| Pix recebidos (Cash-in) — listar por período, consultar por end2endId, devolver | ✅ |
+| Devoluções Pix — consultar devoluções | ✅ |
+| Cobranças (boleto + Pix) — CRUD, cancelar, download PDF com recebível | ✅ |
 | Links de pagamento — criar, consultar, excluir | ✅ |
 
 ### Fase 3 ✅ — Pix Automático + Webhooks
@@ -340,7 +347,7 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 composer test
 ```
 
-Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **84 testes, 113 asserções** — todos passando.
+Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **94 testes, 126 asserções** — todos passando.
 
 ```bash
 composer test-coverage

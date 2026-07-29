@@ -42,7 +42,7 @@ class Connector
      * Envia uma requisição GET.
      *
      * @param  string  $domain    Domínio da API (self::DOMAIN_*)
-     * @param  string  $path      Caminho do endpoint (ex.: /v1/batches)
+     * @param  string  $path      Caminho do endpoint (ex.: /batch)
      * @param  array<string, mixed>  $query    Parâmetros de query string
      * @param  string|null  $accountId  ID da conta digital (Hub de Contas)
      */
@@ -158,7 +158,7 @@ class Connector
 
         // Aplica mTLS apenas nos domínios que exigem (payments e conta_certa)
         if (in_array($domain, [self::DOMAIN_PAYMENTS, self::DOMAIN_CONTA_CERTA], true)) {
-            $request = $this->mtls->apply($request);
+            return $this->mtls->apply($request);
         }
 
         return $request;

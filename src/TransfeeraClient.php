@@ -49,28 +49,6 @@ use FlavioMoreir4\Transfeera\Resources\Infractions\InfractionResource;
  */
 class TransfeeraClient
 {
-    private ?BatchResource $batches = null;
-    private ?TransferResource $transfers = null;
-    private ?BilletResource $billets = null;
-    private ?BankResource $banks = null;
-    private ?StatementResource $statement = null;
-    private ?RecurrenceResource $recurrences = null;
-    private ?PixResource $pix = null;
-    private ?PixKeyResource $pixKeys = null;
-    private ?PixQrCodeResource $pixQrCodes = null;
-    private ?PixCashInResource $pixCashIn = null;
-    private ?ChargeResource $charges = null;
-    private ?PaymentLinkResource $paymentLinks = null;
-    private ?AuthorizationResource $pixAutomaticoAuthorizations = null;
-    private ?PaymentIntentResource $pixAutomaticoPaymentIntents = null;
-    private ?PaymentsWebhookResource $paymentsWebhooks = null;
-    private ?ReceivablesWebhookResource $receivablesWebhooks = null;
-    private ?ContaCertaWebhookResource $contaCertaWebhooks = null;
-    private ?ValidationResource $contaCertaValidations = null;
-    private ?ContaCertaBankResource $contaCertaBanks = null;
-    private ?AccountResource $accounts = null;
-    private ?InfractionResource $infractions = null;
-
     /**
      * @param  array<string, mixed>  $config  Configurações do pacote
      */

@@ -21,14 +21,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PixCashInResource extends BaseResource
 {
-    private const BASE_PATH = '/v1/pix';
-
-    public function __construct(
-        Connector $connector,
-        ?string $accountId = null,
-    ) {
-        parent::__construct($connector, $accountId);
-    }
+    private const BASE_PATH = '/pix/cashin';
 
     /**
      * Consulta Pix recebidos por período.
@@ -90,7 +83,7 @@ class PixCashInResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $end2EndId . '/refunds',
+            self::BASE_PATH . '/' . $end2EndId . '/refund',
             accountId: $this->accountId,
         );
     }

@@ -24,15 +24,13 @@ class SignatureValidator
 {
     /**
      * @param  string  $secret       Chave secreta do webhook
-     * @param  bool    $isReceivables  Se true, usa regra de cálculo de recebimentos
      */
     public function __construct(
         private readonly string $secret,
-        private readonly bool $isReceivables = false,
     ) {}
 
     /**
-     * Valida a assinatura do payload do webhook.
+     * Valida a assinatura do payload para pagamentos/conta certa.
      *
      * @param  string  $payload       Corpo bruto da requisição (JSON)
      * @param  string  $signature     Assinatura enviada no header X-Signature
@@ -45,6 +43,19 @@ class SignatureValidator
     }
 
     /**
+     * Valida a assinatura do payload para recebimentos.
+     *
+     * @param  string  $payload       Corpo bruto da requisição (JSON)
+     * @param  string  $signature     Assinatura enviada no header X-Signature
+     */
+    public function isValidForReceivables(string $payload, string $signature): bool
+    {
+        $expected = $this->calculateForReceivables($payload);
+
+        return hash_equals($expected, $signature);
+    }
+
+    /**
      * Calcula a assinatura esperada para o payload.
      *
      * Pagamentos e recebimentos podem usar algoritmos diferentes.
@@ -52,12 +63,12 @@ class SignatureValidator
      */
     public function calculate(string $payload): string
     {
-        if ($this->isReceivables) {
-            // Recebimentos: HMAC-SHA256 do payload bruto
-            return hash_hmac('sha256', $payload, $this->secret);
-        }
-
         // Pagamentos e Conta Certa: HMAC-SHA256 do payload bruto
+        return hash_hmac('sha256', $payload, $this->secret);
+    }
+
+    public function calculateForReceivables(string $payload): string
+    {
         return hash_hmac('sha256', $payload, $this->secret);
     }
 }
