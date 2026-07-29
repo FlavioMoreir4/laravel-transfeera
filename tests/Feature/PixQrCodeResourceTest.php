@@ -1,0 +1,111 @@
+<?php
+
+declare(strict_types=1);
+
+namespace FlavioMoreir4\Transfeera\Tests\Feature;
+
+use FlavioMoreir4\Transfeera\Facades\Transfeera;
+use Illuminate\Support\Facades\Http;
+
+test('cria qrcode estatico', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/v1/qrcodes/static' => Http::response([
+            'id' => 'qr_static_1',
+            'type' => 'static',
+            'key' => 'email@example.com',
+            'pix_url' => 'pix://...',
+        ], 201),
+        'login-api-sandbox.transfeera.com/*' => Http::response([
+            'access_token' => 'test-token',
+            'expires_in' => 1800,
+        ]),
+    ]);
+
+    $response = Transfeera::pixQrCodes()->createStatic([
+        'key' => 'email@example.com',
+    ]);
+
+    expect($response['type'])->toBe('static');
+    expect($response['id'])->toBe('qr_static_1');
+});
+
+test('cria cobranca imediata', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/v1/qrcodes/immediate' => Http::response([
+            'id' => 'qr_imm_1',
+            'type' => 'immediate',
+            'status' => 'active',
+            'value' => 5000,
+        ], 201),
+        'login-api-sandbox.transfeera.com/*' => Http::response([
+            'access_token' => 'test-token',
+            'expires_in' => 1800,
+        ]),
+    ]);
+
+    $response = Transfeera::pixQrCodes()->createImmediate([
+        'key' => 'email@example.com',
+        'value' => 5000,
+    ]);
+
+    expect($response['status'])->toBe('active');
+});
+
+test('cria cobranca com vencimento', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/v1/qrcodes/due' => Http::response([
+            'id' => 'qr_due_1',
+            'type' => 'due',
+            'status' => 'active',
+            'due_date' => '2025-12-31',
+        ], 201),
+        'login-api-sandbox.transfeera.com/*' => Http::response([
+            'access_token' => 'test-token',
+            'expires_in' => 1800,
+        ]),
+    ]);
+
+    $response = Transfeera::pixQrCodes()->createDue([
+        'key' => 'email@example.com',
+        'value' => 10000,
+        'due_date' => '2025-12-31',
+    ]);
+
+    expect($response['due_date'])->toBe('2025-12-31');
+});
+
+test('lista qrcodes', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/v1/qrcodes*' => Http::response([
+            'data' => [
+                ['id' => 'qr_1', 'status' => 'active'],
+                ['id' => 'qr_2', 'status' => 'active'],
+            ],
+        ]),
+        'login-api-sandbox.transfeera.com/*' => Http::response([
+            'access_token' => 'test-token',
+            'expires_in' => 1800,
+        ]),
+    ]);
+
+    $response = Transfeera::pixQrCodes()->list(['status' => 'active']);
+
+    expect($response['data'])->toHaveCount(2);
+});
+
+test('revoga cobranca', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/v1/qrcodes/qr_1/revoke' => Http::response([
+            'id' => 'qr_1',
+            'status' => 'revoked',
+        ]),
+        'login-api-sandbox.transfeera.com/*' => Http::response([
+            'access_token' => 'test-token',
+            'expires_in' => 1800,
+        ]),
+    ]);
+
+    $response = Transfeera::pixQrCodes()->revoke('qr_1');
+
+    expect($response['status'])->toBe('revoked');
+});

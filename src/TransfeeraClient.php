@@ -14,6 +14,11 @@ use FlavioMoreir4\Transfeera\Resources\Payments\PixResource;
 use FlavioMoreir4\Transfeera\Resources\Payments\RecurrenceResource;
 use FlavioMoreir4\Transfeera\Resources\Payments\StatementResource;
 use FlavioMoreir4\Transfeera\Resources\Payments\TransferResource;
+use FlavioMoreir4\Transfeera\Resources\Receivables\ChargeResource;
+use FlavioMoreir4\Transfeera\Resources\Receivables\PaymentLinkResource;
+use FlavioMoreir4\Transfeera\Resources\Receivables\PixCashInResource;
+use FlavioMoreir4\Transfeera\Resources\Receivables\PixKeyResource;
+use FlavioMoreir4\Transfeera\Resources\Receivables\PixQrCodeResource;
 
 /**
  * Ponto de entrada principal do SDK Laravel Transfeera.
@@ -42,6 +47,11 @@ class TransfeeraClient
     private ?StatementResource $statement = null;
     private ?RecurrenceResource $recurrences = null;
     private ?PixResource $pix = null;
+    private ?PixKeyResource $pixKeys = null;
+    private ?PixQrCodeResource $pixQrCodes = null;
+    private ?PixCashInResource $pixCashIn = null;
+    private ?ChargeResource $charges = null;
+    private ?PaymentLinkResource $paymentLinks = null;
 
     /**
      * @param  array<string, mixed>  $config  Configurações do pacote
@@ -136,6 +146,46 @@ class TransfeeraClient
     public function pix(?string $accountId = null): PixResource
     {
         return new PixResource($this->connector(), $accountId);
+    }
+
+    /**
+     * Resource para gerenciamento de Chaves Pix (Recebimentos).
+     */
+    public function pixKeys(?string $accountId = null): PixKeyResource
+    {
+        return new PixKeyResource($this->connector(), $accountId);
+    }
+
+    /**
+     * Resource para gerenciamento de QR Codes Pix (Recebimentos).
+     */
+    public function pixQrCodes(?string $accountId = null): PixQrCodeResource
+    {
+        return new PixQrCodeResource($this->connector(), $accountId);
+    }
+
+    /**
+     * Resource para consulta de Pix recebidos (Cash-in).
+     */
+    public function pixCashIn(?string $accountId = null): PixCashInResource
+    {
+        return new PixCashInResource($this->connector(), $accountId);
+    }
+
+    /**
+     * Resource para gerenciamento de Cobranças (boleto + Pix).
+     */
+    public function charges(?string $accountId = null): ChargeResource
+    {
+        return new ChargeResource($this->connector(), $accountId);
+    }
+
+    /**
+     * Resource para gerenciamento de Links de Pagamento.
+     */
+    public function paymentLinks(?string $accountId = null): PaymentLinkResource
+    {
+        return new PaymentLinkResource($this->connector(), $accountId);
     }
 
     /**
