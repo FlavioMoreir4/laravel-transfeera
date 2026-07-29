@@ -89,7 +89,16 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ### Alterado
 
-- Requisitos atualizados: Laravel 11 / 12 / 13
+- Requisitos atualizados: Laravel 12 / 13, PHP 8.3+
+
+## [1.2.0] — 2025-07-29
+
+### Alterado
+
+- Drop suporte a Laravel 11 e PHP 8.2
+- Requer Laravel 12/13 e PHP 8.3+
+- CI matrix: PHP 8.3/8.4 × Laravel 12/13
+- Rector executado apenas no PHP 8.3 (compatibilidade)
 
 ## [1.1.0] — 2025-07-29
 
