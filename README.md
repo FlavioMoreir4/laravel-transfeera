@@ -6,7 +6,7 @@
 
 SDK Laravel para integração completa com a API **Transfeera** — Pagamentos, Recebimentos, Pix Automático, Conta Certa, Hub de Contas e MED/Infrações.
 
-> 🚧 Projeto em desenvolvimento faseado. Fases 1, 2 e 3 concluídas — consulte a [tabela de cobertura](#cobertura-de-endpoints).
+> 🚧 Projeto em desenvolvimento faseado. Fases 1, 2, 3 e 4 concluídas — consulte a [tabela de cobertura](#cobertura-de-endpoints).
 
 ## Requisitos
 
@@ -168,7 +168,66 @@ $events = Transfeera::receivablesWebhooks()->listEvents();
 // Conta Certa
 $url = Transfeera::contaCertaWebhooks()->createUrl(['url' => 'https://meudominio.com/webhook-cc']);
 $events = Transfeera::contaCertaWebhooks()->listEvents();
+```
 
+#### Conta Certa / Validações
+
+```php
+// Validar conta bancária
+$validation = Transfeera::contaCertaValidations()->create([
+    'bank_code' => '341',
+    'agency' => '1234',
+    'account' => '56789',
+    'document' => '12345678909',
+    'account_type' => 'checking',
+]);
+$validations = Transfeera::contaCertaValidations()->list(['status' => 'completed']);
+$validation = Transfeera::contaCertaValidations()->get('val_123');
+
+// Bancos suportados pela Conta Certa
+$banks = Transfeera::contaCertaBanks()->list();
+```
+
+#### Hub de Contas
+
+```php
+// Gerenciar contas digitais
+$account = Transfeera::accounts()->create([
+    'name' => 'Empresa XYZ',
+    'document' => '11222333444455',
+    'email' => 'financeiro@xyz.com',
+]);
+$accounts = Transfeera::accounts()->list();
+$account = Transfeera::accounts()->get('acc_123');
+Transfeera::accounts()->close('acc_123'); // Remove chaves Pix vinculadas
+
+// Operar em nome de uma conta específica
+$batch = Transfeera::batches('acc_123')->create(['name' => 'Lote da Conta 123']);
+```
+
+#### MED / Infrações
+
+```php
+// Infrações (Mecanismo Especial de Devolução)
+$infractions = Transfeera::infractions()->list();
+$infraction = Transfeera::infractions()->get('inf_123');
+
+// Enviar análise individual
+Transfeera::infractions()->submitAnalysis([
+    'infraction_id' => 'inf_123',
+    'type' => 'refund',
+    'refund_amount' => 5000, // R$ 50,00 em centavos
+    'description' => 'Devolução por acordo entre as partes',
+]);
+
+// Enviar análise em lote
+Transfeera::infractions()->submitBatchAnalysis([
+    ['infraction_id' => 'inf_001', 'type' => 'refund', 'refund_amount' => 3000],
+    ['infraction_id' => 'inf_002', 'type' => 'contest', 'description' => 'Pagamento correto'],
+]);
+```
+
+```php
 // Validação de assinatura (no controller do webhook)
 $validator = new \FlavioMoreir4\Transfeera\Webhooks\SignatureValidator(
     secret: config('transfeera.webhook_secret'),
@@ -264,14 +323,14 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 | SignatureValidator — HMAC-SHA256 com suporte a pagamentos/recebimentos | ✅ |
 | WebhookEvent — evento Laravel dispatchable | ✅ |
 
-### Fase 4 ⬜ — Conta Certa + Hub de Contas + MED (pendente)
+### Fase 4 ✅ — Conta Certa + Hub de Contas + MED
 
 | Recurso | Status |
 |---------|--------|
-| Validações Conta Certa — CRUD | ⬜ |
-| Bancos Conta Certa — listar | ⬜ |
-| Hub de Contas — criar, listar, consultar, encerrar | ⬜ |
-| MED/Infrações — consultar, enviar análise | ⬜ |
+| Validações Conta Certa — criar, listar, consultar | ✅ |
+| Bancos Conta Certa — listar | ✅ |
+| Hub de Contas — criar, listar, consultar, encerrar | ✅ |
+| MED/Infrações — listar, consultar, enviar análise individual e em lote | ✅ |
 
 ---
 
@@ -281,7 +340,7 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 composer test
 ```
 
-Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **72 testes, 99 asserções** — todos passando.
+Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **84 testes, 113 asserções** — todos passando.
 
 ```bash
 composer test-coverage

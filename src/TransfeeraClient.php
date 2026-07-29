@@ -24,6 +24,10 @@ use FlavioMoreir4\Transfeera\Resources\PixAutomatico\PaymentIntentResource;
 use FlavioMoreir4\Transfeera\Resources\Webhooks\ContaCertaWebhookResource;
 use FlavioMoreir4\Transfeera\Resources\Webhooks\PaymentsWebhookResource;
 use FlavioMoreir4\Transfeera\Resources\Webhooks\ReceivablesWebhookResource;
+use FlavioMoreir4\Transfeera\Resources\ContaCerta\BankResource as ContaCertaBankResource;
+use FlavioMoreir4\Transfeera\Resources\ContaCerta\ValidationResource;
+use FlavioMoreir4\Transfeera\Resources\Accounts\AccountResource;
+use FlavioMoreir4\Transfeera\Resources\Infractions\InfractionResource;
 
 /**
  * Ponto de entrada principal do SDK Laravel Transfeera.
@@ -62,6 +66,10 @@ class TransfeeraClient
     private ?PaymentsWebhookResource $paymentsWebhooks = null;
     private ?ReceivablesWebhookResource $receivablesWebhooks = null;
     private ?ContaCertaWebhookResource $contaCertaWebhooks = null;
+    private ?ValidationResource $contaCertaValidations = null;
+    private ?ContaCertaBankResource $contaCertaBanks = null;
+    private ?AccountResource $accounts = null;
+    private ?InfractionResource $infractions = null;
 
     /**
      * @param  array<string, mixed>  $config  Configurações do pacote
@@ -240,6 +248,44 @@ class TransfeeraClient
     public function contaCertaWebhooks(?string $accountId = null): ContaCertaWebhookResource
     {
         return new ContaCertaWebhookResource($this->connector(), $accountId);
+    }
+
+    // ─── Conta Certa / Validações ─────────────────────────────
+
+    /**
+     * Resource para validação de contas bancárias (Conta Certa).
+     */
+    public function contaCertaValidations(?string $accountId = null): ValidationResource
+    {
+        return new ValidationResource($this->connector(), $accountId);
+    }
+
+    /**
+     * Resource para consulta de bancos no domínio Conta Certa.
+     */
+    public function contaCertaBanks(?string $accountId = null): ContaCertaBankResource
+    {
+        return new ContaCertaBankResource($this->connector(), $accountId);
+    }
+
+    // ─── Hub de Contas ────────────────────────────────────────
+
+    /**
+     * Resource para gerenciamento de contas digitais (Hub de Contas).
+     */
+    public function accounts(?string $accountId = null): AccountResource
+    {
+        return new AccountResource($this->connector(), $accountId);
+    }
+
+    // ─── MED / Infrações ──────────────────────────────────────
+
+    /**
+     * Resource para gerenciamento de infrações MED (Mecanismo Especial de Devolução).
+     */
+    public function infractions(?string $accountId = null): InfractionResource
+    {
+        return new InfractionResource($this->connector(), $accountId);
     }
 
     /**

@@ -46,3 +46,11 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
   - `WebhookEvent` (evento Laravel dispatchable)
   - 18 novos testes de feature + 5 unitários
   - Total: **72 testes, 99 asserções**
+
+- **Fase 4 — Conta Certa + Hub de Contas + MED**
+  - `ValidationResource` (Conta Certa) — criar, listar, consultar validações
+  - `BankResource` (Conta Certa) — listar bancos suportados
+  - `AccountResource` (Hub de Contas) — criar, listar, consultar, encerrar contas digitais
+  - `InfractionResource` (MED) — listar, consultar, enviar análise individual e em lote
+  - 11 novos testes de feature
+  - Total: **84 testes, 113 asserções**

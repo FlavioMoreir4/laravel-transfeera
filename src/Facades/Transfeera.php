@@ -27,6 +27,10 @@ use Illuminate\Support\Facades\Facade;
  * @method static \FlavioMoreir4\Transfeera\Resources\Webhooks\PaymentsWebhookResource paymentsWebhooks(?string $accountId = null)
  * @method static \FlavioMoreir4\Transfeera\Resources\Webhooks\ReceivablesWebhookResource receivablesWebhooks(?string $accountId = null)
  * @method static \FlavioMoreir4\Transfeera\Resources\Webhooks\ContaCertaWebhookResource contaCertaWebhooks(?string $accountId = null)
+ * @method static \FlavioMoreir4\Transfeera\Resources\ContaCerta\ValidationResource contaCertaValidations(?string $accountId = null)
+ * @method static \FlavioMoreir4\Transfeera\Resources\ContaCerta\BankResource contaCertaBanks(?string $accountId = null)
+ * @method static \FlavioMoreir4\Transfeera\Resources\Accounts\AccountResource accounts(?string $accountId = null)
+ * @method static \FlavioMoreir4\Transfeera\Resources\Infractions\InfractionResource infractions(?string $accountId = null)
  *
  * @see \FlavioMoreir4\Transfeera\TransfeeraClient
  */
