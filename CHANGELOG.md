@@ -83,6 +83,17 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - 1 teste unitário para cache flush no `TestCase`
 - Total: **94 testes, 126 asserções**
 
+### Corrigido
+
+- Corrige erro `Could not read XML from file "--cache-directory"` ao rodar Pest na CI adicionando `phpunit.xml` explícito
+- Atualiza dependências para permitir PHP 8.5, Laravel 13, Testbench 11, Larastan 4 e Rector 3
+
+### Alterado
+
+- CI passa a testar PHP 8.2/8.3/8.4/8.5 contra Laravel 11.x/12.x/13.x
+- Badge de suporte a Laravel 11.x/12.x/13.x no README
+- Requisitos atualizados: Laravel 11 / 12 / 13
+
 ## [1.1.0] — 2025-07-29
 
 ### Adicionado
