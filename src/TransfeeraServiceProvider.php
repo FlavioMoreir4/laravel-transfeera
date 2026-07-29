@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera;
 
 use FlavioMoreir4\Transfeera\Console\Commands\InstallCommand;
+use FlavioMoreir4\Transfeera\Events\TransfeeraWebhookReceived;
+use FlavioMoreir4\Transfeera\Listeners\LogTransfeeraWebhook;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -15,6 +17,17 @@ use Illuminate\Support\ServiceProvider;
  */
 class TransfeeraServiceProvider extends ServiceProvider
 {
+    /**
+     * Eventos e listeners registrados automaticamente pelo pacote.
+     *
+     * @var array<class-string, array<class-string>>
+     */
+    protected $listen = [
+        TransfeeraWebhookReceived::class => [
+            LogTransfeeraWebhook::class,
+        ],
+    ];
+
     /**
      * Registra o binding do cliente no container.
      */
@@ -37,10 +50,16 @@ class TransfeeraServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->loadRoutesFrom(__DIR__ . '/../routes/webhooks.php');
+
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/transfeera.php' => $this->app->configPath('transfeera.php'),
             ], 'transfeera-config');
+
+            $this->publishes([
+                __DIR__ . '/../routes/webhooks.php' => $this->app->basePath('routes/transfeera-webhooks.php'),
+            ], 'transfeera-routes');
 
             $this->commands([
                 InstallCommand::class,

@@ -3,7 +3,6 @@ node_modules/
 .phpunit.cache
 .phpunit.result.cache
 .phpstan-cache
-/rector.php
 rector_temp
 .php-cs-fixer.cache
 *.swp

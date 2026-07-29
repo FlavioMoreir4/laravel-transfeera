@@ -82,3 +82,29 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - 10 novos testes de feature para `BilletResource`
 - 1 teste unitário para cache flush no `TestCase`
 - Total: **94 testes, 126 asserções**
+
+## [1.1.0] — 2025-07-29
+
+### Adicionado
+
+- DTOs readonly para os principais recursos:
+  - `BatchDTO`, `TransferDTO`, `PixKeyDTO`, `ChargeDTO`, `AuthorizationDTO`, `PaymentIntentDTO`
+- Controller e rotas de webhooks prontos:
+  - `POST /webhooks/transfeera/payments`
+  - `POST /webhooks/transfeera/receivables`
+  - `POST /webhooks/transfeera/conta-certa`
+  - Validação automática de assinatura HMAC-SHA256
+  - Disparo do evento Laravel `TransfeeraWebhookReceived`
+- Listener de exemplo `LogTransfeeraWebhook`
+- Configuração de webhook secrets em `config/transfeera.php`
+- GitHub Actions CI rodando Pest, PHPStan e Rector em PHP 8.2/8.3/8.4 e Laravel 11/12
+- Badges de CI, tests, PHPStan e Rector no README
+- Suporte explícito a Laravel 12 e PHP 8.4 no `composer.json`
+- Testes de feature para `WebhookController`
+- Testes unitários para DTOs e listeners
+- Total: **101 testes, 136 asserções**
+
+### Corrigido
+
+- Assinatura de webhooks de recebimentos usa método dedicado `isValidForReceivables`
+- Configuração de webhook secrets por domínio no `.env`

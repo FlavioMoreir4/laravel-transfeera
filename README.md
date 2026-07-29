@@ -3,6 +3,10 @@
 [![Latest Version](https://img.shields.io/packagist/v/flaviomoreir4/laravel-transfeera.svg)](https://packagist.org/packages/flaviomoreir4/laravel-transfeera)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue)](https://php.net)
 [![License](https://img.shields.io/github/license/flaviomoreir4/laravel-transfeera)](LICENSE)
+[![CI](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml/badge.svg)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-101%2F101-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](phpstan.neon)
+[![Rector](https://img.shields.io/badge/Rector-clean-brightgreen)](rector.php)
 
 SDK Laravel para integração completa com a API **Transfeera** — Pagamentos, Recebimentos, Pix Automático, Conta Certa, Hub de Contas e MED/Infrações.
 
@@ -61,14 +65,6 @@ $batches = Transfeera::batches()->list(['page' => 1]);
 $batch = Transfeera::batches()->update('batch_123', ['name' => 'Novo Nome']);
 Transfeera::batches()->delete('batch_123');
 Transfeera::batches()->process('batch_123'); // Fechar lote
-
-// Transferências
-$transfer = Transfeera::transfers()->create('batch_123', [
-    'amount' => 15000, // R$ 150,00 em centavos
-    'pix_key' => 'fulano@email.com',
-    'pix_key_type' => 'email',
-]);
-$transfers = Transfeera::transfers()->list('batch_123');
 
 // Transferências
 $transfer = Transfeera::transfers()->create('batch_123', [
@@ -163,19 +159,18 @@ Transfeera::pixAutomaticoPaymentIntents()->resendRetry('pi_1');
 #### Webhooks
 
 ```php
-// Pagamentos
-$url = Transfeera::paymentsWebhooks()->createUrl(['url' => 'https://meudominio.com/webhook']);
-$urls = Transfeera::paymentsWebhooks()->listUrls();
-$events = Transfeera::paymentsWebhooks()->listEvents(['status' => 'failed']);
-Transfeera::paymentsWebhooks()->resendEvent('evt_1');
+// URLs de webhook são criadas via Resource
+$url = Transfeera::paymentsWebhooks()->createUrl(['url' => 'https://meudominio.com/webhooks/transfeera/payments']);
 
-// Recebimentos
-$url = Transfeera::receivablesWebhooks()->createUrl(['url' => 'https://meudominio.com/webhook-rec']);
-$events = Transfeera::receivablesWebhooks()->listEvents();
-
-// Conta Certa
-$url = Transfeera::contaCertaWebhooks()->createUrl(['url' => 'https://meudominio.com/webhook-cc']);
-$events = Transfeera::contaCertaWebhooks()->listEvents();
+// O pacote já expõe rotas prontas:
+// POST /webhooks/transfeera/payments
+// POST /webhooks/transfeera/receivables
+// POST /webhooks/transfeera/conta-certa
+//
+// Basta ouvir o evento Laravel:
+\FlavioMoreir4\Transfeera\Events\TransfeeraWebhookReceived::class => [
+    \App\Listeners\MeuWebhookListener::class,
+],
 ```
 
 #### Conta Certa / Validações
@@ -347,7 +342,7 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 composer test
 ```
 
-Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **94 testes, 126 asserções** — todos passando.
+Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **101 testes, 136 asserções** — todos passando.
 
 ```bash
 composer test-coverage

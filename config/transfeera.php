@@ -98,24 +98,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | URLs base por ambiente e sub-API
+    | Webhook Secret
     |--------------------------------------------------------------------------
     |
-    | Não altere a menos que a Transfeera mude seus endpoints.
+    | Segredo usado para validar a assinatura HMAC-SHA256 dos webhooks.
+    | Você pode usar um único secret global ou definir secrets por domínio.
     |
     */
-    'base_urls' => [
-        'auth' => [
-            'sandbox'    => 'https://login-api-sandbox.transfeera.com',
-            'production' => 'https://login-api.transfeera.com',
-        ],
-        'payments' => [
-            'sandbox'    => 'https://api-sandbox.transfeera.com',
-            'production' => 'https://api.mtls.transfeera.com',
-        ],
-        'conta_certa' => [
-            'sandbox'    => 'https://contacerta-api-sandbox.transfeera.com',
-            'production' => 'https://contacerta-api.mtls.transfeera.com',
-        ],
+    'webhook_secret' => env('TRANSFEERA_WEBHOOK_SECRET'),
+
+    'webhook_secrets' => [
+        'payments' => env('TRANSFEERA_WEBHOOK_SECRET_PAYMENTS'),
+        'receivables' => env('TRANSFEERA_WEBHOOK_SECRET_RECEIVABLES'),
+        'conta_certa' => env('TRANSFEERA_WEBHOOK_SECRET_CONTA_CERTA'),
     ],
+
 ];
