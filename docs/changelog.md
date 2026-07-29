@@ -7,6 +7,24 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.4.0] — 2025-07-29
+
+### Adicionado
+
+- **Documentação avançada completa (4 guias):**
+  - `docs/primeiro-pagamento.md` — Guia completo: instalação, configuração, primeiro pagamento, lote, transferência, webhooks, service pattern
+  - `docs/primeiro-recebimento.md` — Chaves Pix, QR Codes (estático, imediato, vencimento), Cobranças, Links, Cash-in, Webhooks
+  - `docs/webhooks.md` — Rotas, secrets, validação HMAC-SHA256, eventos, listeners, boas práticas, testes
+  - `docs/erros.md` — Hierarquia exceções, códigos HTTP, handler global, retry, jobs com backoff, logs
+  - `docs/changelog.md` — Histórico versionado Keep a Changelog
+
+### Alterado
+
+- **README** — Links para documentação, badges atualizados (118 testes), seção Documentação
+- **composer.json** — Versão 1.4.0
+
+---
+
 ## [1.3.0] — 2025-07-29
 
 ### Adicionado
@@ -184,7 +202,6 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 | Versão | Foco |
 |--------|------|
-| **1.4.0** | Documentação avançada (guias, webhooks, erros) |
 | **1.5.0** | Integração DTOs nos Resources (tipagem de retorno) |
 | **2.0.0** | Breaking: Resources retornam DTOs tipados, exceptions por domínio |
 
