@@ -89,7 +89,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ### Alterado
 
-- Requisitos mantidos: Laravel 11 / 12
+- Requisitos atualizados: Laravel 11 / 12 / 13
 
 ## [1.1.0] — 2025-07-29
 
