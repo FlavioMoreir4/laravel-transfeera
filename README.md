@@ -5,13 +5,20 @@
 [![Laravel](https://img.shields.io/badge/Laravel-12.x%2F13.x-FF2D20)](https://laravel.com)
 [![License](https://img.shields.io/github/license/flaviomoreir4/laravel-transfeera)](LICENSE)
 [![CI](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml/badge.svg)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-101%2F101-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-118%2F118-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](phpstan.neon)
 [![Rector](https://img.shields.io/badge/Rector-clean-brightgreen)](rector.php)
 
 SDK Laravel para integração completa com a API **Transfeera** — Pagamentos, Recebimentos, Pix Automático, Conta Certa, Hub de Contas e MED/Infrações.
 
 > 🚧 Projeto em desenvolvimento faseado. Fases 1, 2, 3 e 4 concluídas — consulte a [tabela de cobertura](#cobertura-de-endpoints).
+
+## Documentação
+
+- [Primeiro Pagamento](docs/primeiro-pagamento.md) — Transferências, lotes, webhooks
+- [Primeiro Recebimento](docs/primeiro-recebimento.md) — Chaves Pix, QR Codes, Cobranças, Links
+- [Webhooks](docs/webhooks.md) — Configuração, segurança, eventos, listeners
+- [Tratamento de Erros](docs/erros.md) — Exceções, códigos, retry, handler global
 
 ## Requisitos
 
@@ -284,6 +291,16 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 
 ---
 
+## Documentação Avançada
+
+- [Primeiro Pagamento](docs/primeiro-pagamento.md) — Passo a passo do primeiro pagamento
+- [Primeiro Recebimento](docs/primeiro-recebimento.md) — Chaves Pix, QR Codes, cobranças
+- [Configuração de Webhooks](docs/webhooks.md) — Segurança, validação, eventos
+- [Tratamento de Erros](docs/erros.md) — Exceções, retry, códigos de erro
+- [Changelog](docs/changelog.md) — Histórico de versões
+
+---
+
 ## Cobertura de endpoints
 
 ### Fase 1 ✅ — Núcleo + Pagamentos
@@ -343,7 +360,7 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 composer test
 ```
 
-Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **101 testes, 136 asserções** — todos passando.
+Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **118 testes, 153 asserções** — todos passando.
 
 ```bash
 composer test-coverage
