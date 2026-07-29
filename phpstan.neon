@@ -1,0 +1,12 @@
+parameters:
+    level: 8
+    paths:
+        - src
+    excludePaths:
+        - *.blade.php
+
+    ignoreErrors:
+        - '#Call to an undefined method Illuminate\\Support\\Facades\\Cache::store\(\)#'
+
+includes:
+    - ./vendor/larastan/larastan/extension.neon
