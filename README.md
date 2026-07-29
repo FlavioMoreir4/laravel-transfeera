@@ -6,7 +6,7 @@
 
 SDK Laravel para integração completa com a API **Transfeera** — Pagamentos, Recebimentos, Pix Automático, Conta Certa, Hub de Contas e MED/Infrações.
 
-> 🚧 Projeto em desenvolvimento faseado. Fases 1 e 2 concluídas — consulte a [tabela de cobertura](#cobertura-de-endpoints).
+> 🚧 Projeto em desenvolvimento faseado. Fases 1, 2 e 3 concluídas — consulte a [tabela de cobertura](#cobertura-de-endpoints).
 
 ## Requisitos
 
@@ -129,6 +129,64 @@ $link = Transfeera::paymentLinks()->create(['name' => 'Produto X', 'value' => 19
 Transfeera::paymentLinks()->delete('pl_1');
 ```
 
+#### Pix Automático
+
+```php
+// Autorizações
+$auth = Transfeera::pixAutomaticoAuthorizations()->create([
+    'payer_pix_key' => 'fulano@email.com',
+    'limit_value' => 50000,
+]);
+$auths = Transfeera::pixAutomaticoAuthorizations()->list(['status' => 'active']);
+Transfeera::pixAutomaticoAuthorizations()->cancel('auth_1');
+Transfeera::pixAutomaticoAuthorizations()->update('auth_1', [
+    'split_payment' => ['percentage' => 50],
+]);
+
+// Instruções de pagamento (Payment Intents)
+$intent = Transfeera::pixAutomaticoPaymentIntents()->create('auth_1', [
+    'value' => 15000,
+    'description' => 'Mensalidade',
+]);
+Transfeera::pixAutomaticoPaymentIntents()->cancel('pi_1');
+Transfeera::pixAutomaticoPaymentIntents()->resendRetry('pi_1');
+```
+
+#### Webhooks
+
+```php
+// Pagamentos
+$url = Transfeera::paymentsWebhooks()->createUrl(['url' => 'https://meudominio.com/webhook']);
+$urls = Transfeera::paymentsWebhooks()->listUrls();
+$events = Transfeera::paymentsWebhooks()->listEvents(['status' => 'failed']);
+Transfeera::paymentsWebhooks()->resendEvent('evt_1');
+
+// Recebimentos
+$url = Transfeera::receivablesWebhooks()->createUrl(['url' => 'https://meudominio.com/webhook-rec']);
+$events = Transfeera::receivablesWebhooks()->listEvents();
+
+// Conta Certa
+$url = Transfeera::contaCertaWebhooks()->createUrl(['url' => 'https://meudominio.com/webhook-cc']);
+$events = Transfeera::contaCertaWebhooks()->listEvents();
+
+// Validação de assinatura (no controller do webhook)
+$validator = new \FlavioMoreir4\Transfeera\Webhooks\SignatureValidator(
+    secret: config('transfeera.webhook_secret'),
+    isReceivables: true,
+);
+
+if (! $validator->isValid($request->getContent(), $request->header('X-Signature'))) {
+    abort(401, 'Invalid signature');
+}
+
+// Disparar evento Laravel
+\FlavioMoreir4\Transfeera\Webhooks\WebhookEvent::dispatch(
+    domain: 'payments',
+    type: 'batch.processed',
+    payload: ['batch_id' => '123'],
+);
+```
+
 ### Via injeção de dependência
 
 ```php
@@ -194,15 +252,17 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 | Cobranças (boleto + Pix) — CRUD, cancelar, download PDF | ✅ |
 | Links de pagamento — criar, consultar, excluir | ✅ |
 
-### Fase 3 ⬜ — Pix Automático + Webhooks (pendente)
+### Fase 3 ✅ — Pix Automático + Webhooks
 
 | Recurso | Status |
 |---------|--------|
-| Autorizações Pix Automático — CRUD + cancelar + atualizar split | ⬜ |
-| Payment Intents — CRUD + cancelar + reenviar retentativa | ⬜ |
-| Webhooks Pagamentos — CRUD URLs + eventos | ⬜ |
-| Webhooks Recebimentos — CRUD URLs + eventos + verificação de assinatura | ⬜ |
-| Webhooks Conta Certa — CRUD URLs + eventos | ⬜ |
+| Autorizações Pix Automático — CRUD + cancelar + atualizar split | ✅ |
+| Payment Intents — CRUD + cancelar + reenviar retentativa | ✅ |
+| Webhooks Pagamentos — URL CRUD + eventos + reenvio | ✅ |
+| Webhooks Recebimentos — URL CRUD + eventos + reenvio | ✅ |
+| Webhooks Conta Certa — URL CRUD + eventos + reenvio | ✅ |
+| SignatureValidator — HMAC-SHA256 com suporte a pagamentos/recebimentos | ✅ |
+| WebhookEvent — evento Laravel dispatchable | ✅ |
 
 ### Fase 4 ⬜ — Conta Certa + Hub de Contas + MED (pendente)
 
@@ -221,7 +281,7 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 composer test
 ```
 
-Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **49 testes, 74 asserções** — todos passando.
+Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **72 testes, 99 asserções** — todos passando.
 
 ```bash
 composer test-coverage

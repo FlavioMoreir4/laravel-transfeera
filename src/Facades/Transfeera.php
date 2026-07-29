@@ -22,6 +22,11 @@ use Illuminate\Support\Facades\Facade;
  * @method static \FlavioMoreir4\Transfeera\Resources\Receivables\ChargeResource charges(?string $accountId = null)
  * @method static \FlavioMoreir4\Transfeera\Resources\Receivables\PaymentLinkResource paymentLinks(?string $accountId = null)
  * @method static array getConfig()
+ * @method static \FlavioMoreir4\Transfeera\Resources\PixAutomatico\AuthorizationResource pixAutomaticoAuthorizations(?string $accountId = null)
+ * @method static \FlavioMoreir4\Transfeera\Resources\PixAutomatico\PaymentIntentResource pixAutomaticoPaymentIntents(?string $accountId = null)
+ * @method static \FlavioMoreir4\Transfeera\Resources\Webhooks\PaymentsWebhookResource paymentsWebhooks(?string $accountId = null)
+ * @method static \FlavioMoreir4\Transfeera\Resources\Webhooks\ReceivablesWebhookResource receivablesWebhooks(?string $accountId = null)
+ * @method static \FlavioMoreir4\Transfeera\Resources\Webhooks\ContaCertaWebhookResource contaCertaWebhooks(?string $accountId = null)
  *
  * @see \FlavioMoreir4\Transfeera\TransfeeraClient
  */

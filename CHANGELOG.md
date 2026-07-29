@@ -24,6 +24,25 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
   - `RecurrenceResource` (listar, listar pagamentos, cancelar)
   - `PixResource` (consulta DICT, parse EMV)
   - Comando `php artisan transfeera:install`
-  - Testes Pest (Unit + Feature)
+  - Testes Pest (Unit + Feature) — 26 testes
   - PHPStan level 8
   - Rector configurado
+
+- **Fase 2 — Recebimentos**
+  - `PixKeyResource` (CRUD, verificação, portabilidade claim/confirm/cancel)
+  - `PixQrCodeResource` (estático, cobrança imediata, com vencimento, revogar)
+  - `PixCashInResource` (listar, consultar por end2endId, devoluções)
+  - `ChargeResource` (CRUD, cancelar, download PDF)
+  - `PaymentLinkResource` (criar, consultar, excluir)
+  - 17 novos testes de feature
+
+- **Fase 3 — Pix Automático + Webhooks**
+  - `AuthorizationResource` (CRUD, cancelar, atualizar split_payment)
+  - `PaymentIntentResource` (CRUD, cancelar, reenviar retentativa)
+  - `PaymentsWebhookResource` (URLs CRUD, eventos, reenvio)
+  - `ReceivablesWebhookResource` (URLs CRUD, eventos, reenvio)
+  - `ContaCertaWebhookResource` (URLs CRUD, eventos, reenvio)
+  - `SignatureValidator` (validação HMAC-SHA256 com suporte a pagamentos e recebimentos)
+  - `WebhookEvent` (evento Laravel dispatchable)
+  - 18 novos testes de feature + 5 unitários
+  - Total: **72 testes, 99 asserções**

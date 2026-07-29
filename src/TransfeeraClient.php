@@ -19,6 +19,11 @@ use FlavioMoreir4\Transfeera\Resources\Receivables\PaymentLinkResource;
 use FlavioMoreir4\Transfeera\Resources\Receivables\PixCashInResource;
 use FlavioMoreir4\Transfeera\Resources\Receivables\PixKeyResource;
 use FlavioMoreir4\Transfeera\Resources\Receivables\PixQrCodeResource;
+use FlavioMoreir4\Transfeera\Resources\PixAutomatico\AuthorizationResource;
+use FlavioMoreir4\Transfeera\Resources\PixAutomatico\PaymentIntentResource;
+use FlavioMoreir4\Transfeera\Resources\Webhooks\ContaCertaWebhookResource;
+use FlavioMoreir4\Transfeera\Resources\Webhooks\PaymentsWebhookResource;
+use FlavioMoreir4\Transfeera\Resources\Webhooks\ReceivablesWebhookResource;
 
 /**
  * Ponto de entrada principal do SDK Laravel Transfeera.
@@ -52,6 +57,11 @@ class TransfeeraClient
     private ?PixCashInResource $pixCashIn = null;
     private ?ChargeResource $charges = null;
     private ?PaymentLinkResource $paymentLinks = null;
+    private ?AuthorizationResource $pixAutomaticoAuthorizations = null;
+    private ?PaymentIntentResource $pixAutomaticoPaymentIntents = null;
+    private ?PaymentsWebhookResource $paymentsWebhooks = null;
+    private ?ReceivablesWebhookResource $receivablesWebhooks = null;
+    private ?ContaCertaWebhookResource $contaCertaWebhooks = null;
 
     /**
      * @param  array<string, mixed>  $config  Configurações do pacote
@@ -186,6 +196,50 @@ class TransfeeraClient
     public function paymentLinks(?string $accountId = null): PaymentLinkResource
     {
         return new PaymentLinkResource($this->connector(), $accountId);
+    }
+
+    // ─── Pix Automático ──────────────────────────────────────
+
+    /**
+     * Resource para autorizações Pix Automático.
+     */
+    public function pixAutomaticoAuthorizations(?string $accountId = null): AuthorizationResource
+    {
+        return new AuthorizationResource($this->connector(), $accountId);
+    }
+
+    /**
+     * Resource para instruções de pagamento (Payment Intents) Pix Automático.
+     */
+    public function pixAutomaticoPaymentIntents(?string $accountId = null): PaymentIntentResource
+    {
+        return new PaymentIntentResource($this->connector(), $accountId);
+    }
+
+    // ─── Webhooks ────────────────────────────────────────────
+
+    /**
+     * Resource para webhooks de pagamentos.
+     */
+    public function paymentsWebhooks(?string $accountId = null): PaymentsWebhookResource
+    {
+        return new PaymentsWebhookResource($this->connector(), $accountId);
+    }
+
+    /**
+     * Resource para webhooks de recebimentos.
+     */
+    public function receivablesWebhooks(?string $accountId = null): ReceivablesWebhookResource
+    {
+        return new ReceivablesWebhookResource($this->connector(), $accountId);
+    }
+
+    /**
+     * Resource para webhooks de Conta Certa / Validações.
+     */
+    public function contaCertaWebhooks(?string $accountId = null): ContaCertaWebhookResource
+    {
+        return new ContaCertaWebhookResource($this->connector(), $accountId);
     }
 
     /**
