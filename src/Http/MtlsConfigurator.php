@@ -18,8 +18,6 @@ class MtlsConfigurator
     /**
      * @param  array{cert_path: string, key_path: string}  $mtlsConfig
      * @param  string  $environment  'sandbox'|'production'
-     *
-     * @throws TransfeeraException Se produção estiver ativa sem certificado configurado
      */
     public function __construct(
         private readonly array $mtlsConfig,

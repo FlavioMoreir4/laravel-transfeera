@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/packagist/v/flaviomoreir4/laravel-transfeera.svg)](https://packagist.org/packages/flaviomoreir4/laravel-transfeera)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue)](https://php.net)
-[![Laravel](https://img.shields.io/badge/Laravel-11.x%2F12.x%2F13.x-FF2D20)](https://laravel.com)
+[![Laravel](https://img.shields.io/badge/Laravel-11.x%2F12.x-FF2D20)](https://laravel.com)
 [![License](https://img.shields.io/github/license/flaviomoreir4/laravel-transfeera)](LICENSE)
 [![CI](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml/badge.svg)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-101%2F101-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
@@ -16,7 +16,7 @@ SDK Laravel para integração completa com a API **Transfeera** — Pagamentos, 
 ## Requisitos
 
 - PHP 8.2+
-- Laravel 11 / 12 / 13
+- Laravel 11 / 12
 - Composer
 
 ## Instalação

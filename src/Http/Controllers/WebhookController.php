@@ -68,7 +68,7 @@ class WebhookController extends Controller
             return new Response('Invalid signature', 401);
         }
 
-        $eventPayload = $request->json()?->all() ?? [];
+        $eventPayload = $request->json()->all() ?? [];
         $eventType = $eventPayload['event'] ?? 'unknown';
 
         TransfeeraWebhookReceived::dispatch(
