@@ -1,7 +1,7 @@
 {
     "name": "flaviomoreir4/laravel-transfeera",
     "description": "SDK Laravel para integração completa com a API Transfeera — Pagamentos, Recebimentos, Pix Automático, Conta Certa e mais.",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "type": "library",
     "license": "MIT",
     "keywords": [
