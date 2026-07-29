@@ -16,7 +16,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PixResource extends BaseResource
 {
-    private const DOMAIN = Connector::DOMAIN_PAYMENTS;
+    private const string DOMAIN = Connector::DOMAIN_PAYMENTS;
 
     /**
      * Consulta uma chave Pix no DICT para obter os dados do recebedor.

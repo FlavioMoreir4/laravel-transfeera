@@ -14,7 +14,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class StatementResource extends BaseResource
 {
-    private const DOMAIN = Connector::DOMAIN_PAYMENTS;
+    private const string DOMAIN = Connector::DOMAIN_PAYMENTS;
 
     /**
      * Consulta o saldo disponível na conta.

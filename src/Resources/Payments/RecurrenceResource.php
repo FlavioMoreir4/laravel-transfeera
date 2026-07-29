@@ -14,7 +14,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class RecurrenceResource extends BaseResource
 {
-    private const DOMAIN = Connector::DOMAIN_PAYMENTS;
+    private const string DOMAIN = Connector::DOMAIN_PAYMENTS;
 
     /**
      * Lista todas as recorrências cadastradas.

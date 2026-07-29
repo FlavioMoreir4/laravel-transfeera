@@ -24,7 +24,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PaymentLinkResource extends BaseResource
 {
-    private const BASE_PATH = '/payment_links';
+    private const string BASE_PATH = '/payment_links';
 
     /**
      * Cria um novo link de pagamento.

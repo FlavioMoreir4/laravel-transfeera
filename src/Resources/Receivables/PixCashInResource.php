@@ -21,7 +21,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PixCashInResource extends BaseResource
 {
-    private const BASE_PATH = '/pix/cashin';
+    private const string BASE_PATH = '/pix/cashin';
 
     /**
      * Consulta Pix recebidos por período.

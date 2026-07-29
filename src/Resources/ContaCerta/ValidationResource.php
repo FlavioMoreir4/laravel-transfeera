@@ -28,7 +28,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class ValidationResource extends BaseResource
 {
-    private const BASE_PATH = '/validation';
+    private const string BASE_PATH = '/validation';
 
     /**
      * Cria uma nova validação de conta bancária.

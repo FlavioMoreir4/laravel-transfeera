@@ -37,7 +37,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class AccountResource extends BaseResource
 {
-    private const BASE_PATH = '/accounts';
+    private const string BASE_PATH = '/accounts';
 
     /**
      * Cria uma nova conta digital.

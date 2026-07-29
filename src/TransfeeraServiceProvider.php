@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera;
 
+use Override;
 use FlavioMoreir4\Transfeera\Console\Commands\InstallCommand;
 use FlavioMoreir4\Transfeera\Events\TransfeeraWebhookReceived;
 use FlavioMoreir4\Transfeera\Listeners\LogTransfeeraWebhook;
@@ -31,6 +32,7 @@ class TransfeeraServiceProvider extends ServiceProvider
     /**
      * Registra o binding do cliente no container.
      */
+    #[Override]
     public function register(): void
     {
         $this->mergeConfigFrom(

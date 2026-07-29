@@ -17,7 +17,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class TransferResource extends BaseResource
 {
-    private const DOMAIN = Connector::DOMAIN_PAYMENTS;
+    private const string DOMAIN = Connector::DOMAIN_PAYMENTS;
 
     /**
      * Cria uma nova transferência dentro de um lote.

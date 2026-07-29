@@ -14,28 +14,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.2', '8.3', '8.4', '8.5']
-        laravel: ['11.*', '12.*', '13.*']
+        php: ['8.3', '8.4', '8.5']
+        laravel: ['12.*', '13.*']
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 11.*
-            testbench: 9.*
           - laravel: 12.*
             testbench: 10.*
           - laravel: 13.*
             testbench: 11.*
         exclude:
-          # Laravel 11 + PHP 8.4/8.5 not officially supported yet
-          - php: '8.4'
-            laravel: '11.*'
-          - php: '8.5'
-            laravel: '11.*'
-          # Laravel 12 requires PHP 8.3+
-          - php: '8.2'
-            laravel: '12.*'
           # Laravel 13 requires Pest 5 which requires PHP 8.4+
-          - php: '8.2'
-            laravel: '13.*'
           - php: '8.3'
             laravel: '13.*'
 

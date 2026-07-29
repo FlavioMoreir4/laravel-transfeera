@@ -21,8 +21,8 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class ContaCertaWebhookResource extends BaseResource
 {
-    private const BASE_PATH_URLS = '/webhook';
-    private const BASE_PATH_EVENTS = '/webhook/event';
+    private const string BASE_PATH_URLS = '/webhook';
+    private const string BASE_PATH_EVENTS = '/webhook/event';
 
     /**
      * Cria uma nova URL de webhook para Conta Certa.

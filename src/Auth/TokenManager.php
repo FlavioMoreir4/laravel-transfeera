@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Http;
  */
 class TokenManager
 {
-    private const CACHE_KEY = 'transfeera_access_token';
-    private const CACHE_LOCK_KEY = 'transfeera_token_lock';
+    private const string CACHE_KEY = 'transfeera_access_token';
+    private const string CACHE_LOCK_KEY = 'transfeera_token_lock';
 
     /**
      * @param  array<string, string>  $config  Configurações de autenticação

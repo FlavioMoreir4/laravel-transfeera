@@ -24,7 +24,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class ChargeResource extends BaseResource
 {
-    private const BASE_PATH = '/charges';
+    private const string BASE_PATH = '/charges';
 
     /**
      * Cria uma nova cobrança (boleto e/ou Pix).

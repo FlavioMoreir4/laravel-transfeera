@@ -16,7 +16,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class BatchResource extends BaseResource
 {
-    private const DOMAIN = Connector::DOMAIN_PAYMENTS;
+    private const string DOMAIN = Connector::DOMAIN_PAYMENTS;
 
     /**
      * Cria um novo lote de pagamentos.

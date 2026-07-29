@@ -14,7 +14,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class BankResource extends BaseResource
 {
-    private const DOMAIN = Connector::DOMAIN_PAYMENTS;
+    private const string DOMAIN = Connector::DOMAIN_PAYMENTS;
 
     /**
      * Retorna a lista de bancos disponíveis para pagamentos.

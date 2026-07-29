@@ -20,7 +20,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class BilletResource extends BaseResource
 {
-    private const DOMAIN = Connector::DOMAIN_PAYMENTS;
+    private const string DOMAIN = Connector::DOMAIN_PAYMENTS;
 
     /**
      * Cria um novo boleto dentro de um lote.

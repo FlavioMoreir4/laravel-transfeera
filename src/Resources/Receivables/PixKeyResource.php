@@ -22,7 +22,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PixKeyResource extends BaseResource
 {
-    private const BASE_PATH = '/pix/key';
+    private const string BASE_PATH = '/pix/key';
 
     /**
      * Lista todas as chaves Pix cadastradas.

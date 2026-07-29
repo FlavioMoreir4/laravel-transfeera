@@ -22,7 +22,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PaymentIntentResource extends BaseResource
 {
-    private const BASE_PATH = '/pix/automatic/payment_intents';
+    private const string BASE_PATH = '/pix/automatic/payment_intents';
 
     /**
      * Cria uma nova instrução de pagamento dentro de uma autorização.

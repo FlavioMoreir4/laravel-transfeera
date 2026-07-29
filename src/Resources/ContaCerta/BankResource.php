@@ -21,7 +21,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class BankResource extends BaseResource
 {
-    private const BASE_PATH = '/bank';
+    private const string BASE_PATH = '/bank';
 
     /**
      * Lista os bancos suportados pela Conta Certa.

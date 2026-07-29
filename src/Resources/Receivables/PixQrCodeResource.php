@@ -22,7 +22,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class PixQrCodeResource extends BaseResource
 {
-    private const BASE_PATH = '/pix/qrcode';
+    private const string BASE_PATH = '/pix/qrcode';
 
     /**
      * Cria um QR Code estático (mesma chave, valor e dados fixos).

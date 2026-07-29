@@ -22,7 +22,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class AuthorizationResource extends BaseResource
 {
-    private const BASE_PATH = '/pix/automatic/authorizations';
+    private const string BASE_PATH = '/pix/automatic/authorizations';
 
     /**
      * Cria uma nova autorização Pix Automático.

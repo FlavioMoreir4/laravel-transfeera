@@ -40,7 +40,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class InfractionResource extends BaseResource
 {
-    private const BASE_PATH = '/med/infractions';
+    private const string BASE_PATH = '/med/infractions';
 
     /**
      * Lista as infrações cadastradas.
