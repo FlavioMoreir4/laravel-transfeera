@@ -7,6 +7,23 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.8.1] — 2025-07-30
+
+### Adicionado
+
+- **Novos testes (14)** — cobertura de `TransferResource::update()`, `PixQrCodeResource::get()`, webhooks completos para receivables e conta_certa (12 testes)
+- **Pint config** — `pint.json` com preset Laravel e script `composer format`
+- **Script `composer analyse`** — alias para `composer phpstan`
+- **`.env.example`** — template completo de variáveis de ambiente
+
+### Corrigido
+
+- **AGENTS.md** — versão atualizada para v1.8.0, contagem de testes (169), Pest versão 5
+- **CONTRIBUTING.md** — Pest 5 em vez de Pest 4
+- **Formatação PSR-12** — 113 arquivos corrigidos automaticamente via Pint (75 issues)
+
+---
+
 ## [1.8.0] — 2025-07-30
 
 ### Adicionado
@@ -287,7 +304,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 |--------|------|
 | **1.7.0** | Exceptions tipadas por domínio, testes de integração |
 | **1.8.0** ✅ | Cobertura de testes: error handling, middlewares, concorrência, mTLS, Resources parciais |
-| **1.8.1** ♻️ | PATCH: correções rápidas (testes faltantes, scripts, docs) |
+| **1.8.1** ✅ | PATCH: Pint, scripts, 14 novos testes webhook/transfer/qrcode, docs |
 | **1.9.0+** | Apenas MINORs — compatibilidade garantida para sempre |
 | **v2** | ❌ Cancelado — decisão de nunca quebrar |
 

@@ -2,7 +2,7 @@
 
 > **Filosofia**: Compatibilidade garantida para sempre (v2 cancelado).
 > Apenas **MINORs** (features compatíveis) e **PATCHs** (correções).
-> Atual — v1.8.0 (169 testes, 242 asserções, PHPStan 0, Rector clean).
+> Atual — v1.8.1 (183 testes, 260 asserções, PHPStan 0, Rector clean, Pint PSR-12).
 
 ---
 
