@@ -6,19 +6,23 @@ Este documento descreve os passos necessários para migrar entre versões princi
 
 ---
 
-## v2.0.0 (Próximo Major) — Planejado
+## v2.0.0 — Cancelado
 
-> ⚠️ Esta versão **ainda não foi lançada**. O conteúdo abaixo reflete o planejamento atual e pode mudar.
+> ❌ **Decisão: nunca quebrar.** As mudanças previstas para v2.0.0 que já foram entregues
+> (DTOs nos Resources, exceptions tipadas) couberam como MINOR porque convivem com o
+> fallback. As breakings restantes (arrays em create/update, métodos `*Raw()`, Connector
+> público) serão mantidas como estão — compatibilidade garantida para sempre.
+>
+> Este pacote seguirá apenas versões MINOR (features compatíveis) e PATCH (correções).
+> Se um dia houver motivo real para breaking, será comunicado com aviso prévio de duas
+> MINORs.
 
-### Breaking Changes Previstas
+### Mudanças Anteriores (v1.x — entregues como MINOR)
 
-| Área | Mudança | Impacto | Migração |
-|------|---------|---------|----------|
-| **Resources** | Todos retornam DTOs tipados (não arrays) | Código que acessa `$result['field']` falha | Substitua `$result['field']` por `$result->field` |
-| **Exceptions** | Removido fallback para `TransfeeraException` em erros de domínio | `catch (TransfeeraException)` não pega `PaymentException` etc. | Adicione `catch (PaymentException\|ReceivableException\|...)` antes do `catch (TransfeeraException)` |
-| **DTOs Request** | Obrigatório usar DTOs (não arrays) em `create()`, `update()` | Código passando arrays falha no type hint | Use `new BatchDTO([...])` ou `$dto->toArray()` |
-| **BaseResource** | Métodos `*Raw()` removidos | Código chamando `getRaw()`, `postRaw()` falha | Use `getDTO()`, `postDTO()` ou `get()` / `post()` |
-| **Connector** | Métodos `get()`, `post()`, etc. removidos da API pública | Código injetando `Connector` diretamente impactado | Use `TransfeeraClient` ou Facade |
+| Área | Mudança | Versão |
+|------|---------|--------|
+| **Resources** | Retornam DTOs tipados (e também aceitam arrays) | v1.5.0 |
+| **Exceptions** | Exceptions tipadas por domínio (com fallback preservado) | v1.7.0 |
 
 ---
 

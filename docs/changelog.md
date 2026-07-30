@@ -287,7 +287,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 |--------|------|
 | **1.7.0** | Exceptions tipadas por domínio, testes de integração |
 | **1.8.0** ✅ | Cobertura de testes: error handling, middlewares, concorrência, mTLS, Resources parciais |
-| **1.9.0** | A definir — sugestões no roadmap |
-| **2.0.0** | TBD — Breaking reais (arrays em create/update, métodos *Raw(), Connector público) |
+| **1.9.0+** | Apenas MINORs — compatibilidade garantida para sempre |
+| **v2** | ❌ Cancelado — decisão de nunca quebrar |
 
 ---
