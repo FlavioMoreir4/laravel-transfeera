@@ -242,7 +242,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 | Versão | Foco |
 |--------|------|
-| **1.5.0** | Integração DTOs nos Resources (tipagem de retorno) |
+| **1.7.0** | Exceptions tipadas por domínio, testes de integração |
 | **2.0.0** | Breaking: Resources retornam DTOs tipados, exceptions por domínio |
 
 ---
