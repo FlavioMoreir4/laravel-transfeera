@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera;
 
 use FlavioMoreir4\Transfeera\Auth\TokenManager;
+use FlavioMoreir4\Transfeera\Console\Commands\CacheWarmCommand;
 use FlavioMoreir4\Transfeera\Console\Commands\CheckCommand;
 use FlavioMoreir4\Transfeera\Console\Commands\DebugCommand;
 use FlavioMoreir4\Transfeera\Console\Commands\InstallCommand;
@@ -14,6 +15,7 @@ use FlavioMoreir4\Transfeera\Http\Middleware\LoggingMiddleware;
 use FlavioMoreir4\Transfeera\Http\Middleware\MetricsMiddleware;
 use FlavioMoreir4\Transfeera\Http\MtlsConfigurator;
 use FlavioMoreir4\Transfeera\Listeners\LogTransfeeraWebhook;
+use FlavioMoreir4\Transfeera\Services\RateLimitMonitor;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -88,6 +90,7 @@ class TransfeeraServiceProvider extends ServiceProvider
             baseUrls: $this->resolveBaseUrls($app['config']['transfeera']),
             loggingMiddleware: $app->make(LoggingMiddleware::class),
             metricsMiddleware: $app->make(MetricsMiddleware::class),
+            rateLimitMonitor: $app->make(RateLimitMonitor::class),
         ));
 
         $this->app->singleton('transfeera', fn ($app) => new TransfeeraClient(
@@ -97,6 +100,9 @@ class TransfeeraServiceProvider extends ServiceProvider
         ));
 
         $this->app->alias('transfeera', TransfeeraClient::class);
+
+        // Rate limit monitor
+        $this->app->singleton(RateLimitMonitor::class);
     }
 
     /**
@@ -119,6 +125,7 @@ class TransfeeraServiceProvider extends ServiceProvider
                 InstallCommand::class,
                 CheckCommand::class,
                 DebugCommand::class,
+                CacheWarmCommand::class,
             ]);
         }
 

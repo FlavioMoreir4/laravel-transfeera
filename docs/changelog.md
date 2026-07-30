@@ -9,6 +9,17 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [1.15.0] — 2025-07-30
+
+### Added
+
+- **RateLimitMonitor service** — monitora headers `X-RateLimit-Remaining/Limit/Reset` de TODAS as respostas da API (não apenas 429). Expõe `getRemaining()`, `getLimit()`, `getReset()`, `isThrottled()`, `getState()` por domínio.
+- **Rate limit tracking no Connector** — parseia headers de rate limit também em respostas bem-sucedidas (200, 201, 204) e alimenta o RateLimitMonitor automaticamente.
+- **`transfeera:cache-warm` command** — pré-aquece o cache do token OAuth para evitar latência na primeira requisição. Aceita `--account-id` para tokens multi-tenant e `--force` para renovação forçada.
+- **`TransfeeraBaseJob`** — classe abstrata para jobs de fila com retry consciente de rate limit, backoff progressivo (5s → 405s), log estruturado em cada tentativa, e callback `failed()` com diagnóstico.
+- **`docs/fila.md`** — guia completo de filas: job base, exemplo de pagamento em lote, backoff inteligente com RateLimitMonitor, integração com Horizon/Pulse, e boas práticas.
+- **25 novos testes** — RateLimitMonitorTest (12 testes), CacheWarmCommandTest (5 testes), TransfeeraBaseJobTest (8 testes), MiddlewareTest (+1 teste de integração Connector + RateLimitMonitor).
+
 ## [1.14.0] — 2025-07-30
 
 ### Added

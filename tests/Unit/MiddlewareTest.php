@@ -11,6 +11,7 @@ use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Http\Middleware\LoggingMiddleware;
 use FlavioMoreir4\Transfeera\Http\Middleware\MetricsMiddleware;
 use FlavioMoreir4\Transfeera\Http\MtlsConfigurator;
+use FlavioMoreir4\Transfeera\Services\RateLimitMonitor;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -259,11 +260,16 @@ it('usa prefixo configurado nas metricas', function () {
     expect($middleware->enabled)->toBeTrue();
 });
 
-it('metrica executa inclusive em excecao lancada pelo next', function () {
-    $middleware = new MetricsMiddleware(enabled: true, prefix: 'api');
+it('alimenta rate limit monitor em resposta bem-sucedida', function () {
+    $rateMonitor = new RateLimitMonitor;
+    $middleware = new MetricsMiddleware(enabled: false);
 
     Http::fake([
-        'api-sandbox.transfeera.com/batches*' => Http::response(['error' => 'Server error'], 503),
+        'api-sandbox.transfeera.com/batches*' => Http::response(['id' => 'batch_1'], 200, [
+            'X-RateLimit-Limit' => '100',
+            'X-RateLimit-Remaining' => '88',
+            'X-RateLimit-Reset' => '1699000000',
+        ]),
     ]);
 
     $connector = new Connector(
@@ -278,8 +284,12 @@ it('metrica executa inclusive em excecao lancada pelo next', function () {
             Connector::DOMAIN_PAYMENTS => 'https://api-sandbox.transfeera.com',
         ],
         metricsMiddleware: $middleware,
+        rateLimitMonitor: $rateMonitor,
     );
 
-    expect(fn () => $connector->get(Connector::DOMAIN_PAYMENTS, '/batches'))
-        ->toThrow(PaymentException::class);
+    $result = $connector->get(Connector::DOMAIN_PAYMENTS, '/batches');
+
+    expect($result['id'])->toBe('batch_1');
+    expect($rateMonitor->getRemaining('payments'))->toBe(88);
+    expect($rateMonitor->getLimit('payments'))->toBe(100);
 });

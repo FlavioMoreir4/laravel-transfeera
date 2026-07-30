@@ -18,6 +18,7 @@ use FlavioMoreir4\Transfeera\Exceptions\TransfeeraRateLimitException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException;
 use FlavioMoreir4\Transfeera\Http\Middleware\LoggingMiddleware;
 use FlavioMoreir4\Transfeera\Http\Middleware\MetricsMiddleware;
+use FlavioMoreir4\Transfeera\Services\RateLimitMonitor;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -75,6 +76,7 @@ class Connector
         private readonly array $baseUrls,
         private readonly ?LoggingMiddleware $loggingMiddleware = null,
         private readonly ?MetricsMiddleware $metricsMiddleware = null,
+        private readonly ?RateLimitMonitor $rateLimitMonitor = null,
     ) {}
 
     /**
@@ -205,6 +207,11 @@ class Connector
                 duration: $duration,
                 responseData: $response?->json() ?? [],
             );
+
+            // Alimenta o monitor de rate limit com headers de todas as respostas
+            if ($this->rateLimitMonitor instanceof RateLimitMonitor && $response !== null) {
+                $this->rateLimitMonitor->updateFromResponse($domain, $response);
+            }
         }
     }
 
