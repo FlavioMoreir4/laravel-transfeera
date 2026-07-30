@@ -7,6 +7,28 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.7.0] — 2025-07-29
+
+### Adicionado
+
+- **Exceptions tipadas por domínio** — Nova hierarquia de exceptions para melhor debugging e handling:
+  - `PaymentException` — API de Pagamentos (lotes, transferências, boletos, bancos, saldo/extrato, Pix, recorrências)
+  - `ReceivableException` — API de Recebimentos (chaves Pix, QR Codes, cash-in, cobranças, links)
+  - `PixAutomaticoException` — API de Pix Automático (autorizações, payment intents)
+  - `ContaCertaException` — API de Conta Certa / Validações
+  - `AccountException` — API de Hub de Contas
+  - `InfractionException` — API de Infrações MED
+  - Todas herdam de `TransfeeraException` e possuem método estático `fromResponse()`
+
+### Alterado
+
+- **Connector** — Mapeamento de erros HTTP para exceptions tipadas por domínio:
+  - 401/422/429 → exceptions base (AuthenticationException, ValidationException, RateLimitException)
+  - Outros códigos → exceptions específicas do domínio (PaymentException, ReceivableException, etc.)
+- **Resources** — Lançam exceptions tipadas automaticamente via Connector
+
+---
+
 ## [1.6.0] — 2025-07-29
 
 ### Adicionado

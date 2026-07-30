@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\Http;
 
 use FlavioMoreir4\Transfeera\Auth\TokenManager;
+use FlavioMoreir4\Transfeera\Exceptions\AccountException;
+use FlavioMoreir4\Transfeera\Exceptions\InfractionException;
+use FlavioMoreir4\Transfeera\Exceptions\PaymentException;
+use FlavioMoreir4\Transfeera\Exceptions\ReceivableException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraAuthenticationException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraRateLimitException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException;
+use FlavioMoreir4\Transfeera\Exceptions\PixAutomaticoException;
+use FlavioMoreir4\Transfeera\Exceptions\ContaCertaException;
 use FlavioMoreir4\Transfeera\Http\Middleware\LoggingMiddleware;
 use FlavioMoreir4\Transfeera\Http\Middleware\MetricsMiddleware;
 use Illuminate\Http\Client\PendingRequest;
@@ -141,7 +147,7 @@ class Connector
             ),
         };
 
-        return $this->handleResponse($response);
+        return $this->handleResponse($response, $domain);
     }
 
     /**
@@ -202,16 +208,21 @@ class Connector
     }
 
     /**
-     * Processa a resposta, mapeando erros HTTP para exceptions tipadas.
+     * Processa a resposta, mapeando erros HTTP para exceptions tipadas por domínio.
      *
      * @return array<string, mixed>
      *
      * @throws TransfeeraException
      * @throws TransfeeraAuthenticationException
      * @throws TransfeeraValidationException
-     * @throws TransfeeraRateLimitException
-     */
-    private function handleResponse(Response $response): array
+     * @throws PaymentException
+     * @throws ReceivableException
+     * @throws PixAutomaticoException
+     * @throws ContaCertaException
+     * @throws AccountException
+     * @throws InfractionException
+    */
+    private function handleResponse(Response $response, string $domain): array
     {
         if ($response->successful()) {
             return $response->json() ?? [];
@@ -221,28 +232,76 @@ class Connector
         $status = $response->status();
         $message = $payload['message'] ?? $payload['error'] ?? $response->body();
 
-        return match (true) {
-            $status === 401 => throw new TransfeeraAuthenticationException(
-                message: $message,
-                statusCode: $status,
+        // Mapeia códigos HTTP para exceptions base
+                    $baseException = match (true) {
+                        $status === 401 => new TransfeeraAuthenticationException(
+                            message: $message,
+                            statusCode: $status,
+                            payload: $payload,
+                        ),
+                        $status === 422 => new TransfeeraValidationException(
+                            message: $message,
+                            statusCode: $status,
+                            errors: $payload['errors'] ?? $payload ?? [],
+                            payload: $payload,
+                        ),
+                        $status === 429 => new TransfeeraRateLimitException(
+                            message: $message,
+                            statusCode: $status,
+                            payload: $payload,
+                        ),
+                        default => new TransfeeraException(
+                            message: $message,
+                            statusCode: $status,
+                            payload: $payload,
+                        ),
+                    };
+
+                    // Para erros de autenticação/validação/rate-limit, lança a exception base
+                    // (não são específicos de domínio)
+                    if (in_array($status, [401, 422, 429], true)) {
+                        throw $baseException;
+                    }
+
+                    // Lança exception específica do domínio para outros erros
+                    return match ($domain) {
+            self::DOMAIN_PAYMENTS => throw new PaymentException(
+                message: $baseException->getMessage(),
+                statusCode: $baseException->getCode(),
                 payload: $payload,
+                previous: $baseException,
             ),
-            $status === 422 => throw new TransfeeraValidationException(
-                message: $message,
-                statusCode: $status,
-                errors: $payload['errors'] ?? $payload ?? [],
+            'receivables' => throw new ReceivableException(
+                message: $baseException->getMessage(),
+                statusCode: $baseException->getCode(),
                 payload: $payload,
+                previous: $baseException,
             ),
-            $status === 429 => throw new TransfeeraRateLimitException(
-                message: $message,
-                statusCode: $status,
+            'pix_automatico' => throw new PixAutomaticoException(
+                message: $baseException->getMessage(),
+                statusCode: $baseException->getCode(),
                 payload: $payload,
+                previous: $baseException,
             ),
-            default => throw new TransfeeraException(
-                message: $message,
-                statusCode: $status,
+            self::DOMAIN_CONTA_CERTA => throw new ContaCertaException(
+                message: $baseException->getMessage(),
+                statusCode: $baseException->getCode(),
                 payload: $payload,
+                previous: $baseException,
             ),
+            'accounts' => throw new AccountException(
+                message: $baseException->getMessage(),
+                statusCode: $baseException->getCode(),
+                payload: $payload,
+                previous: $baseException,
+            ),
+            'infractions' => throw new InfractionException(
+                message: $baseException->getMessage(),
+                statusCode: $baseException->getCode(),
+                payload: $payload,
+                previous: $baseException,
+            ),
+            default => throw $baseException,
         };
     }
 }
