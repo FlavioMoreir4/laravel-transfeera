@@ -10,7 +10,7 @@ Pagamentos • Recebimentos • Pix Automático • Conta Certa • Hub de Conta
 [![Laravel](https://img.shields.io/badge/Laravel-12.x%2F13.x-FF2D20)](https://laravel.com)
 [![License](https://img.shields.io/github/license/flaviomoreir4/laravel-transfeera)](LICENSE)
 [![CI](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml/badge.svg)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-201%2F201-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-203%2F203-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](phpstan.neon)
 [![Rector](https://img.shields.io/badge/Rector-clean-brightgreen)](rector.php)
 [![Pint](https://img.shields.io/badge/Pint-PSR%2012-brightgreen)](pint.json)
@@ -198,7 +198,7 @@ $balance = Transfeera::statement()->getBalance();
 | `pixQrCodes()` | `create()`, `list()`, `get()` | `PixQrCodeResponseDTO` |
 | `pixCashIn()` | `list()`, `get()` | `PixCashInResponseDTO[]` |
 | `charges()` | `create()`, `list()`, `get()`, `update()`, `delete()`, `downloadPdfByChargeId()` | `ChargeResponseDTO` |
-| `paymentLinks()` | `create()`, `list()`, `get()`, `update()`, `delete()` | `PaymentLinkResponseDTO` |
+| `paymentLinks()` | `create()`, `list()`, `get()`, `delete()` | `PaymentLinkResponseDTO` |
 
 ```php
 // Criar cobrança Pix com vencimento
@@ -430,7 +430,7 @@ php artisan transfeera:check
 ## Testes
 
 ```bash
-composer test              # Pest (201 testes, 283 asserções)
+composer test              # Pest (203 testes, 291 asserções)
 composer test-coverage     # Com cobertura (PHP 8.3+)
 composer phpstan           # PHPStan level 8
 composer rector            # Rector dry-run

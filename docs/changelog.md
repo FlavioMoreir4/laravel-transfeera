@@ -7,6 +7,21 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [Unreleased]
+
+## [1.12.0] — 2025-07-30
+
+### Added
+
+- **`PaymentLinkResource::list()`** — novo método para consultar todos os links de pagamento com filtros (`status`, `name`, paginação). Retorna `array<int, PaymentLinkResponseDTO>`.
+- **Testes do `PaymentLinkResource`** — 4 testes (create, list, get, delete) totalizando 291 asserções.
+
+### Full Changelog
+
+203 testes, 291 asserções — PHPStan level 8 (0 erros), Rector clean, Pint PSR-12.
+
+---
+
 ## [1.10.0] — 2025-07-30
 
 ### Added

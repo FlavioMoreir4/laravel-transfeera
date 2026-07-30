@@ -20,6 +20,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  *     'name' => 'Produto X',
  *     'value' => 1990, // R$ 19,90 em centavos
  * ]);
+ * Transfeera::paymentLinks()->list(['status' => 'active']);
  * Transfeera::paymentLinks()->get('link_abc123');
  * ```
  */
@@ -35,6 +36,17 @@ class PaymentLinkResource extends BaseResource
     public function create(array $data): PaymentLinkResponseDTO
     {
         return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $data, PaymentLinkResponseDTO::class);
+    }
+
+    /**
+     * Lista os links de pagamento cadastrados.
+     *
+     * @param  array<string, mixed>  $filters  Filtros opcionais (status, name, paginação)
+     * @return array<int, PaymentLinkResponseDTO>
+     */
+    public function list(array $filters = []): array
+    {
+        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, PaymentLinkResponseDTO::class);
     }
 
     /**
