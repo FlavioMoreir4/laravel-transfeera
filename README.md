@@ -1,47 +1,62 @@
+<div align="center">
+
 # Laravel Transfeera
 
-[![Latest Version](https://img.shields.io/packagist/v/flaviomoreir4/laravel-transfeera.svg)](https://packagist.org/packages/flaviomoreir4/laravel-transfeera)
+**SDK Laravel oficial para integração completa com a API Transfeera**
+<br>
+Pagamentos • Recebimentos • Pix Automático • Conta Certa • Hub de Contas • MED
+
 [![PHP](https://img.shields.io/badge/PHP-8.3%2B-blue)](https://php.net)
 [![Laravel](https://img.shields.io/badge/Laravel-12.x%2F13.x-FF2D20)](https://laravel.com)
 [![License](https://img.shields.io/github/license/flaviomoreir4/laravel-transfeera)](LICENSE)
 [![CI](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml/badge.svg)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-183%2F183-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-199%2F199-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](phpstan.neon)
 [![Rector](https://img.shields.io/badge/Rector-clean-brightgreen)](rector.php)
 [![Pint](https://img.shields.io/badge/Pint-PSR%2012-brightgreen)](pint.json)
 
-SDK Laravel para integração completa com a API **Transfeera** — Pagamentos, Recebimentos, Pix Automático, Conta Certa, Hub de Contas e MED/Infrações.
-
-> 🚧 Projeto em desenvolvimento faseado. Versão atual: **v1.8.0** — consulte a [tabela de cobertura](#cobertura-de-endpoints).
+</div>
 
 ---
 
-## Documentação
+## Índice
 
-| Guia | Descrição |
-|------|-----------|
-| [Primeiro Pagamento](docs/primeiro-pagamento.md) | Passo a passo: instalação → configuração → lote → transferência → webhooks |
-| [Primeiro Recebimento](docs/primeiro-recebimento.md) | Chaves Pix, QR Codes (estático/imediato/vencimento), Cobranças, Links, Cash-in |
-| [Pagamentos](docs/pagamentos.md) | Lotes, transferências, boletos, bancos, saldo/extrato, Pix DICT, recorrências |
-| [Recebimentos](docs/recebimentos.md) | Chaves Pix, QR Codes, Cobranças (boleto+Pix), Links, Cash-in, Devoluções |
-| [Pix Automático](docs/pix-automatico.md) | Autorizações, Payment Intents, split, webhooks |
-| [Conta Certa](docs/conta-certa.md) | Validações de conta, bancos suportados |
-| [Hub de Contas](docs/hub-contas.md) | Contas digitais, multi-tenancy via `accountId` |
-| [MED/Infrações](docs/med.md) | Listar, consultar, análise individual e em lote |
-| [Webhooks](docs/webhooks.md) | Rotas, secrets, HMAC-SHA256, eventos, listeners, retry, testes |
-| [Tratamento de Erros](docs/erros.md) | Hierarquia de exceptions, códigos, handler global, retry, debug |
-| [Exceptions](docs/exceptions.md) | Referência completa: hierarquia, quando catchar, métodos úteis |
-| [Middlewares](docs/middlewares.md) | LoggingMiddleware, MetricsMiddleware, configuração, exportação Prometheus |
-| [Changelog](docs/changelog.md) | Histórico versionado (Keep a Changelog) |
-| [Roadmap](docs/roadmap.md) | Planejamento de versões futuras |
+- [Visão Geral](#visão-geral)
+- [Instalação](#instalação)
+- [Configuração](#configuração)
+- [Uso Rápido](#uso-rápido)
+- [Recursos por Domínio](#recursos-por-domínio)
+  - [Pagamentos](#pagamentos)
+  - [Recebimentos](#recebimentos)
+  - [Pix Automático](#pix-automático)
+  - [Conta Certa / Validações](#conta-certa--validações)
+  - [Hub de Contas](#hub-de-contas)
+  - [MED / Infrações](#med--infrações)
+- [Webhooks](#webhooks)
+- [Tratamento de Erros](#tratamento-de-erros)
+- [Autenticação & mTLS](#autenticação--mtls)
+- [Multi-tenancy (Hub de Contas)](#multi-tenancy-hub-de-contas)
+- [Comandos Artisan](#comandos-artisan)
+- [Testes](#testes)
+- [Documentação](#documentação)
+- [Contribuição](#contribuição)
+- [Licença](#licença)
 
 ---
 
-## Requisitos
+## Visão Geral
 
-- PHP 8.3+
-- Laravel 12 / 13
-- Composer
+O **Laravel Transfeera SDK** é um pacote Laravel nativo que encapsula toda a API da [Transfeera](https://transfeera.com) — plataforma de pagamentos e recebimentos via Pix, boletos e transferências.
+
+**Diferenciais:**
+
+- 🪶 **Zero dependências externas** — usa apenas `illuminate/support`, `illuminate/http` e `illuminate/contracts`
+- 🏗️ **Arquitetura por domínios** — 24 Resources organizados em 7 domínios de negócio
+- 🧱 **DTOs tipados** — `readonly class` para requests e responses, sem bibliotecas externas
+- 🔐 **mTLS automático** — certificação mútua TLS em produção sem configuração manual extra
+- 🪝 **Webhooks completos** — validação HMAC-SHA256, eventos Laravel, controllers pré-registrados
+- 🧪 **Testado em CI** — matrix PHP 8.3/8.4 × Laravel 12/13, PHPStan level 8, Rector
+- 🔄 **Multi-tenancy** — suporte a múltiplas contas digitais via `accountId`
 
 ---
 
@@ -51,240 +66,70 @@ SDK Laravel para integração completa com a API **Transfeera** — Pagamentos, 
 composer require flaviomoreir4/laravel-transfeera
 ```
 
-### Configuração Rápida
+O Service Provider é registrado automaticamente via auto-discovery do Laravel.
+
+Publique a configuração (opcional):
 
 ```bash
-php artisan transfeera:install
-```
-
-Isso publica o arquivo `config/transfeera.php` e valida o ambiente.
-
-### Variáveis de Ambiente (`.env`)
-
-```env
-TRANSFEERA_ENVIRONMENT=sandbox
-TRANSFEERA_CLIENT_ID=seu_client_id
-TRANSFEERA_CLIENT_SECRET=seu_client_secret
-TRANSFEERA_USER_AGENT="MeuApp (email@exemplo.com)"
-
-# Apenas em produção (mTLS obrigatório para Pagamentos e Conta Certa):
-TRANSFEERA_MTLS_CERT_PATH=/caminho/para/certificado.pem
-TRANSFEERA_MTLS_KEY_PATH=/caminho/para/chave.pem
+php artisan vendor:publish --tag=transfeera-config
 ```
 
 ---
 
-## Uso
+## Configuração
+
+Adicione ao seu `.env`:
+
+```env
+# Ambiente: sandbox | production
+TRANSFEERA_ENVIRONMENT=sandbox
+TRANSFEERA_CLIENT_ID=seu_client_id
+TRANSFEERA_CLIENT_SECRET=seu_client_secret
+TRANSFEERA_USER_AGENT="MeuApp (email@dominio.com)"
+
+# Opcional — mTLS (obrigatório em produção)
+TRANSFEERA_MTLS_CERT_PATH=/caminho/cert.pem
+TRANSFEERA_MTLS_KEY_PATH=/caminho/key.pem
+
+# Opcional — timeout e retry
+TRANSFEERA_TIMEOUT=30
+TRANSFEERA_RETRY_MAX=3
+TRANSFEERA_RETRY_DELAY=100
+
+# Opcional — webhook secrets
+TRANSFEERA_WEBHOOK_SECRET_PAYMENTS=secret-pagamentos
+TRANSFEERA_WEBHOOK_SECRET_RECEIVABLES=secret-recebimentos
+TRANSFEERA_WEBHOOK_SECRET_CONTA_CERTA=secret-conta-certa
+```
+
+Todas as chaves têm defaults seguros (sandbox, sem credenciais). O SDK valida a configuração no boot e emite warnings no log se algo estiver inconsistente.
+
+> **⚠️ Produção:** O mTLS é **obrigatório** para as APIs de Pagamentos e Conta Certa em produção. Configure `TRANSFEERA_MTLS_CERT_PATH` e `TRANSFEERA_MTLS_KEY_PATH` apontando para seus certificados `.pem`.
+
+---
+
+## Uso Rápido
 
 ### Via Facade
 
 ```php
 use Transfeera;
-```
 
-#### Pagamentos
-
-```php
-use FlavioMoreir4\Transfeera\DTOs\BatchDTO;
-use FlavioMoreir4\Transfeera\DTOs\TransferDTO;
-
-// Lotes
-$batch = Transfeera::batches()->create(new BatchDTO(
-    name: 'Pagamentos Fornecedores',
-    type: 'immediate', // ou 'scheduled'
-));
-$batch = Transfeera::batches()->get('batch_123');
-$batches = Transfeera::batches()->list(['page' => 1]);
-$batch = Transfeera::batches()->update('batch_123', ['name' => 'Novo Nome']);
-Transfeera::batches()->delete('batch_123');
-Transfeera::batches()->process('batch_123'); // Fechar lote
-
-// Transferências
-$transfer = Transfeera::transfers()->create('batch_123', new TransferDTO(
-    amount: 15000, // R$ 150,00 em centavos
-    pixKey: 'fulano@email.com',
-    pixKeyType: 'email',
-));
-$transfer = Transfeera::transfers()->get('transfer_123');
-$transfers = Transfeera::transfers()->list('batch_123');
-
-// Bancos
-$banks = Transfeera::banks()->list();
-
-// Saldo e Extrato
-$balance = Transfeera::statement()->getBalance();
-$report = Transfeera::statement()->requestReport(new StatementReportDTO(
-    startDate: '2025-01-01',
-    endDate: '2025-01-31',
-));
-
-// Pix
-$pixData = Transfeera::pix()->lookupKey('fulano@email.com');
-$parsed = Transfeera::pix()->parseEmv('00020126580014BR.GOV.BCB.PIX...');
-
-// Recorrências
-$recurrences = Transfeera::recurrences()->list();
-Transfeera::recurrences()->cancel('rec_789');
-```
-
-#### Recebimentos
-
-```php
-use FlavioMoreir4\Transfeera\DTOs\PixKeyDTO;
-use FlavioMoreir4\Transfeera\DTOs\ChargeDTO;
-use FlavioMoreir4\Transfeera\DTOs\PaymentLinkDTO;
-
-// Chaves Pix
-$keys = Transfeera::pixKeys()->list();
-$key = Transfeera::pixKeys()->create(new PixKeyDTO(type: 'cpf', value: '12345678909'));
-Transfeera::pixKeys()->verify('key_abc', '123456');
-Transfeera::pixKeys()->delete('key_abc');
-
-// Portabilidade
-$claim = Transfeera::pixKeys()->claim('11999999999');
-Transfeera::pixKeys()->confirmClaim('claim_1');
-Transfeera::pixKeys()->cancelClaim('claim_1');
-
-// QR Codes Pix
-$static = Transfeera::pixQrCodes()->createStatic(['key' => 'email@example.com']);
-$immediate = Transfeera::pixQrCodes()->createImmediate(['key' => 'email@example.com', 'value' => 5000]);
-$due = Transfeera::pixQrCodes()->createDue(['key' => 'email@example.com', 'value' => 10000, 'due_date' => '2025-12-31']);
-Transfeera::pixQrCodes()->revoke('qr_1');
-
-// Cash-in (Pix recebidos)
-$pixList = Transfeera::pixCashIn()->list(['start_date' => '2025-01-01']);
-$pix = Transfeera::pixCashIn()->getByEnd2EndId('E2E123');
-$refund = Transfeera::pixCashIn()->requestRefund('E2E123', ['amount' => 5000]);
-$refunds = Transfeera::pixCashIn()->getRefunds('E2E123');
-
-// Cobranças (boleto + Pix)
-$charge = Transfeera::charges()->create(new ChargeDTO(
-    payerName: 'João Silva',
-    value: 5000,
-    dueDate: '2025-12-31',
-));
-$charges = Transfeera::charges()->list(['status' => 'pending']);
-Transfeera::charges()->cancel('chg_1');
-$pdf = Transfeera::charges()->downloadPdf('chg_1', 'rec_1');
-
-// Links de pagamento
-$link = Transfeera::paymentLinks()->create(new PaymentLinkDTO(
-    name: 'Produto X',
-    value: 1990,
-    expiresIn: 30,
-    redirectUrl: 'https://meuapp.com/sucesso',
-));
-Transfeera::paymentLinks()->delete('pl_1');
-```
-
-#### Pix Automático
-
-```php
-use FlavioMoreir4\Transfeera\DTOs\AuthorizationDTO;
-use FlavioMoreir4\Transfeera\DTOs\PaymentIntentDTO;
-
-// Autorizações
-$auth = Transfeera::pixAutomaticoAuthorizations()->create(new AuthorizationDTO(
-    payerPixKey: 'fulano@email.com',
-    limitValue: 50000,
-    startDate: '2025-01-01',
-    endDate: '2025-12-31',
-));
-$auth = Transfeera::pixAutomaticoAuthorizations()->get('auth_1');
-$auths = Transfeera::pixAutomaticoAuthorizations()->list(['status' => 'active']);
-Transfeera::pixAutomaticoAuthorizations()->cancel('auth_1');
-Transfeera::pixAutomaticoAuthorizations()->update('auth_1', [
-    'split_payment' => ['percentage' => 50],
+// Criar um lote de pagamentos
+$batch = Transfeera::batches()->create([
+    'name' => 'Pagamento fornecedores',
+    'type' => 'manual',
 ]);
 
-// Instruções de Pagamento (Payment Intents)
-$intent = Transfeera::pixAutomaticoPaymentIntents()->create('auth_1', new PaymentIntentDTO(
-    value: 15000,
-    description: 'Mensalidade',
-    dueDate: '2025-12-31',
-));
-$intent = Transfeera::pixAutomaticoPaymentIntents()->get('pi_1');
-Transfeera::pixAutomaticoPaymentIntents()->cancel('pi_1');
-Transfeera::pixAutomaticoPaymentIntents()->resendRetry('pi_1');
-```
+// Consultar saldo
+$balance = Transfeera::statement()->getBalance();
 
-#### Webhooks
-
-```php
-// URLs de webhook são criadas via Resource
-$url = Transfeera::paymentsWebhooks()->createUrl(['url' => 'https://meudominio.com/webhooks/transfeera/payments']);
-
-// O pacote já expõe rotas prontas:
-// POST /webhooks/transfeera/payments
-// POST /webhooks/transfeera/receivables
-// POST /webhooks/transfeera/conta-certa
-
-// Basta ouvir o evento Laravel:
-\FlavioMoreir4\Transfeera\Events\TransfeeraWebhookReceived::class => [
-    \App\Listeners\MeuWebhookListener::class,
-],
-```
-
-#### Conta Certa / Validações
-
-```php
-use FlavioMoreir4\Transfeera\DTOs\ValidationDTO;
-
-// Validar conta bancária
-$validation = Transfeera::contaCertaValidations()->create(new ValidationDTO(
-    bankCode: '341',
-    agency: '1234',
-    account: '56789',
-    document: '12345678909',
-    accountType: 'checking',
-));
-$validations = Transfeera::contaCertaValidations()->list(['status' => 'completed']);
-$validation = Transfeera::contaCertaValidations()->get('val_123');
-
-// Bancos suportados pela Conta Certa
-$banks = Transfeera::contaCertaBanks()->list();
-```
-
-#### Hub de Contas
-
-```php
-use FlavioMoreir4\Transfeera\DTOs\AccountDTO;
-
-// Gerenciar contas digitais
-$account = Transfeera::accounts()->create(new AccountDTO(
-    name: 'Empresa XYZ',
-    document: '11222333444455',
-    email: 'financeiro@xyz.com',
-    phone: '11988887777',
-));
-$accounts = Transfeera::accounts()->list();
-$account = Transfeera::accounts()->get('acc_123');
-Transfeera::accounts()->close('acc_123'); // Remove chaves Pix vinculadas
-
-// Operar em nome de uma conta específica
-$batch = Transfeera::batches('acc_123')->create(['name' => 'Lote da Conta 123']);
-```
-
-#### MED / Infrações
-
-```php
-use FlavioMoreir4\Transfeera\DTOs\InfractionAnalysisDTO;
-
-// Infrações (MED - Mecanismo Especial de Devolução)
-$infractions = Transfeera::infractions()->list();
-$infraction = Transfeera::infractions()->get('inf_123');
-
-// Enviar análise individual
-Transfeera::infractions()->submitAnalysis('inf_123', new InfractionAnalysisDTO(
-    type: 'refund',
-    refundAmount: 50000, // R$ 500,00
-    description: 'Devolução por acordo',
-));
-
-// Enviar análise em lote
-Transfeera::infractions()->submitBatchAnalysis([
-    new InfractionAnalysisDTO(type: 'refund', refundAmount: 30000),
-    new InfractionAnalysisDTO(type: 'contest', description: 'Pagamento correto'),
+// Validar conta bancária (Conta Certa)
+$validation = Transfeera::contaCertaValidations()->validate([
+    'bank_code' => '341',
+    'agency' => '1234',
+    'account' => '56789-0',
+    'document' => '123.456.789-00',
 ]);
 ```
 
@@ -293,115 +138,344 @@ Transfeera::infractions()->submitBatchAnalysis([
 ```php
 use FlavioMoreir4\Transfeera\TransfeeraClient;
 
-class PagamentoService
+class PaymentService
 {
     public function __construct(
-        private readonly TransfeeraClient $transfeera,
+        private TransfeeraClient $transfeera,
     ) {}
 
-    public function pagar(array $data): array
+    public function payout(array $transfers): BatchResponseDTO
     {
-        $batch = $this->transfeera->batches()->create([
-            'name' => 'Pagamento via Service',
+        return $this->transfeera->batches()->create([
+            'name' => 'Lote de pagamentos',
+            'transfers' => $transfers,
         ]);
-
-        return $this->transfeera->transfers()->create($batch['id'], $data);
     }
 }
 ```
 
-### Hub de Contas (múltiplas contas digitais)
+---
+
+## Recursos por Domínio
+
+### Pagamentos
+
+| Resource | Métodos | Response DTO |
+|----------|---------|-------------|
+| `batches()` | `create()`, `list()`, `get()`, `update()`, `delete()` | `BatchResponseDTO` |
+| `transfers()` | `create()`, `get()`, `update()`, `delete()` | `TransferResponseDTO` |
+| `billets()` | `create()`, `get()`, `list()`, `update()`, `delete()` | `array` (raw) |
+| `banks()` | `list()` | `BankResponseDTO[]` |
+| `statement()` | `getBalance()`, `getTransactions()` | `array` (raw) |
+| `recurrences()` | `create()`, `get()`, `list()`, `update()`, `delete()` | `array` (raw) |
+| `pix()` | `consultKey()`, `parseEMV()` | `array` (raw) |
 
 ```php
-// Passando accountId, o TokenManager adiciona scope=account_id:{id}
-$batch = Transfeera::batches('conta_digital_123')->create([
-    'name' => 'Lote da Conta 123',
+// Criar lote com transferências
+$batch = Transfeera::batches()->create([
+    'name' => 'Fornecedores Julho',
+    'type' => 'manual',
+]);
+
+// Adicionar transferência ao lote
+$transfer = Transfeera::transfers($batch['id'])->create([
+    'amount' => 150000,                     // R$ 1.500,00 (em centavos)
+    'pix_key' => 'cliente@email.com',
+    'pix_key_type' => 'email',
+    'description' => 'Pagamento nota 123',
+]);
+
+// Consultar saldo
+$balance = Transfeera::statement()->getBalance();
+// ['balance' => 500000, 'blocked' => 100000, 'available' => 400000]
+```
+
+### Recebimentos
+
+| Resource | Métodos | Response DTO |
+|----------|---------|-------------|
+| `pixKeys()` | `create()`, `list()`, `get()`, `update()`, `delete()` | `PixKeyResponseDTO[]` |
+| `pixQrCodes()` | `create()`, `list()`, `get()` | `PixQrCodeResponseDTO` |
+| `pixCashIn()` | `list()`, `get()` | `PixCashInResponseDTO[]` |
+| `charges()` | `create()`, `list()`, `get()`, `update()`, `delete()`, `downloadPdfByChargeId()` | `ChargeResponseDTO` |
+| `paymentLinks()` | `create()`, `list()`, `get()`, `update()`, `delete()` | `PaymentLinkResponseDTO` |
+
+```php
+// Criar cobrança Pix com vencimento
+$charge = Transfeera::charges()->create([
+    'payer_document' => '123.456.789-00',
+    'payer_name' => 'João Silva',
+    'amount' => 50000,                // R$ 500,00 (centavos)
+    'due_date' => '2025-08-15',
+    'type' => 'pix',
+]);
+
+// Baixar PDF do boleto
+$pdf = Transfeera::charges()->downloadPdfByChargeId($charge->id);
+
+// Criar chave Pix
+$key = Transfeera::pixKeys()->create([
+    'type' => 'email',
+    'value' => 'cobranca@exemplo.com',
 ]);
 ```
 
-Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
+### Pix Automático
+
+| Resource | Métodos | Response DTO |
+|----------|---------|-------------|
+| `pixAutomaticoAuthorizations()` | `create()`, `list()`, `get()`, `revoke()` | `AuthorizationResponseDTO` |
+| `pixAutomaticoPaymentIntents()` | `create()`, `list()`, `get()`, `cancel()` | `PaymentIntentResponseDTO` |
+
+```php
+// Criar autorização Pix Automático
+$auth = Transfeera::pixAutomaticoAuthorizations()->create([
+    'payer_document' => '123.456.789-00',
+    'payer_name' => 'João Silva',
+    'payer_bank' => '341',
+    'limit_amount' => 100000,         // R$ 1.000,00 (centavos)
+    'limit_type' => 'monthly',
+]);
+
+// Criar instrução de pagamento
+$intent = Transfeera::pixAutomaticoPaymentIntents()->create([
+    'authorization_id' => $auth->id,
+    'amount' => 50000,
+    'description' => 'Assinatura mensal',
+]);
+```
+
+### Conta Certa / Validações
+
+| Resource | Métodos | Response DTO |
+|----------|---------|-------------|
+| `contaCertaValidations()` | `validate()`, `get()`, `list()`, `listBanks()` | `array` (raw) |
+| `contaCertaBanks()` | `list()` | `BankResponseDTO[]` |
+
+```php
+// Validar conta bancária
+$result = Transfeera::contaCertaValidations()->validate([
+    'bank_code' => '341',
+    'agency' => '1234',
+    'account' => '56789-0',
+    'document' => '123.456.789-00',
+    'account_type' => 'corrente',
+]);
+```
+
+### Hub de Contas
+
+| Resource | Métodos | Response DTO |
+|----------|---------|-------------|
+| `accounts()` | `create()`, `list()`, `get()`, `update()`, `delete()` | `array` (raw) |
+
+```php
+// Criar conta digital
+$account = Transfeera::accounts()->create([
+    'name' => 'Conta Cliente A',
+    'document' => '12.345.678/0001-90',
+    'type' => 'company',
+]);
+```
+
+### MED / Infrações
+
+| Resource | Métodos | Response DTO |
+|----------|---------|-------------|
+| `infractions()` | `analyze()`, `analyzeBatch()`, `list()`, `get()`, `return()`, `returnBatch()` | `array` (raw) |
+
+```php
+// Analisar infração individual
+$analysis = Transfeera::infractions()->analyze([
+    'end_to_end_id' => 'E123456789012024...',
+    'infraction_type' => 'fraud',
+]);
+
+// Devolução em lote
+$result = Transfeera::infractions()->returnBatch([
+    'infractions' => [...],
+]);
+```
 
 ---
 
-## Documentação Avançada
+## Webhooks
 
-- [Primeiro Pagamento](docs/primeiro-pagamento.md) — Passo a passo do primeiro pagamento
-- [Primeiro Recebimento](docs/primeiro-recebimento.md) — Chaves Pix, QR Codes, cobranças
-- [Pagamentos](docs/pagamentos.md) — Documentação completa de pagamentos
-- [Recebimentos](docs/recebimentos.md) — Documentação completa de recebimentos
-- [Pix Automático](docs/pix-automatico.md) — Autorizações, Payment Intents, split
-- [Conta Certa](docs/conta-certa.md) — Validações, bancos suportados
-- [Hub de Contas](docs/hub-contas.md) — Contas digitais, multi-tenancy
-- [MED/Infrações](docs/med.md) — Infrações, análises individual/lote
-- [Webhooks](docs/webhooks.md) — Rotas, secrets, HMAC-SHA256, eventos, listeners, retry, testes
-- [Tratamento de Erros](docs/erros.md) — Exceptions, códigos, handler global, retry, jobs
-- [Exceptions](docs/exceptions.md) — Referência completa: hierarquia, quando catchar, métodos úteis
-- [Middlewares](docs/middlewares.md) — Logging, métricas, configuração, exportação Prometheus
+O SDK expõe 3 endpoints para receber notificações da Transfeera:
+
+| Rota | Domínio | Controller |
+|------|---------|------------|
+| `POST /webhooks/transfeera/payments` | Pagamentos | `WebhookController@payments` |
+| `POST /webhooks/transfeera/receivables` | Recebimentos | `WebhookController@receivables` |
+| `POST /webhooks/transfeera/conta-certa` | Conta Certa | `WebhookController@contaCerta` |
+
+**Validação de assinatura:** HMAC-SHA256, automática. Configure os secrets no `.env`.
+
+```php
+// Ouvir eventos no EventServiceProvider
+use FlavioMoreir4\Transfeera\Events\TransfeeraWebhookReceived;
+
+protected $listen = [
+    TransfeeraWebhookReceived::class => [
+        MinhaListener::class,
+    ],
+];
+```
+
+Publicar rotas (opcional):
+```bash
+php artisan vendor:publish --tag=transfeera-routes
+```
+
+> 📖 Consulte [docs/webhooks.md](docs/webhooks.md) para detalhes completos.
 
 ---
 
-## Cobertura de endpoints
+## Tratamento de Erros
 
-| Fase | Domínio | Status | Resources |
-|------|---------|--------|-----------|
-| 1 | Núcleo + Pagamentos | ✅ | Batch, Transfer, Billet, Bank, Statement, Recurrence, Pix |
-| 2 | Recebimentos | ✅ | PixKey, PixQrCode, PixCashIn, Charge, PaymentLink |
-| 3 | Pix Automático + Webhooks | ✅ | Authorization, PaymentIntent, 3 WebhookResources |
-| 4 | Conta Certa + Hub + MED | ✅ | Validation, Bank, Account, Infraction |
+Todas as exceptions estendem `TransfeeraException`:
 
-**Total: 24 Resources implementados**
+```php
+use FlavioMoreir4\Transfeera\Exceptions\{
+    TransfeeraException,
+    TransfeeraAuthenticationException,  // 401
+    TransfeeraValidationException,      // 422 — use $e->getErrors()
+    TransfeeraRateLimitException,       // 429 — use $e->getRetryAfter()
+    PaymentException,                   // Erros em Pagamentos
+    ReceivableException,                // Erros em Recebimentos
+    PixAutomaticoException,             // Erros em Pix Automático
+    ContaCertaException,                // Erros em Conta Certa
+    AccountException,                   // Erros no Hub de Contas
+    InfractionException,                // Erros em MED/Infrações
+};
+
+try {
+    $batch = Transfeera::batches()->create([...]);
+} catch (TransfeeraValidationException $e) {
+    // Campos inválidos
+    foreach ($e->getErrors() as $field => $messages) { ... }
+} catch (TransfeeraRateLimitException $e) {
+    // Rate limit — backoff
+    $retryAfter = $e->getRetryAfter();
+    $limit = $e->getLimit();
+    $remaining = $e->getRemaining();
+} catch (PaymentException $e) {
+    // Erro específico de pagamentos
+}
+```
+
+> 📖 Consulte [docs/exceptions.md](docs/exceptions.md) para a hierarquia completa.
+
+---
+
+## Autenticação & mTLS
+
+O SDK gerencia o ciclo de vida do token OAuth2 `client_credentials` automaticamente:
+
+- **Cache** — token armazenado no cache do Laravel (store configurável)
+- **Renovação antecipada** — renova 60s antes do `expires_in` real
+- **Concorrência** — lock de cache evita múltiplas renovações simultâneas
+- **Multi-tenancy** — tokens separados por `accountId`
+
+```php
+// Forçar renovação manual
+Transfeera::getConfig(); // ou via TokenManager
+```
+
+**mTLS** em produção é aplicado automaticamente nas APIs de Pagamentos e Conta Certa. Configure:
+
+```env
+TRANSFEERA_MTLS_CERT_PATH=/etc/ssl/transfeera/cert.pem
+TRANSFEERA_MTLS_KEY_PATH=/etc/ssl/transfeera/key.pem
+```
+
+---
+
+## Multi-tenancy (Hub de Contas)
+
+Todos os Resources aceitam `$accountId` opcional:
+
+```php
+// Operar como conta específica
+$batches = Transfeera::batches('acc_123')->list();
+
+// Criar recurso em nome de outra conta
+$batch = Transfeera::batches('acc_456')->create([
+    'name' => 'Lote Conta B',
+]);
+```
+
+O `TokenManager` adiciona `scope=account_id:{accountId}` ao token, garantindo escopo correto.
+
+---
+
+## Comandos Artisan
+
+| Comando | Descrição |
+|---------|-----------|
+| `php artisan transfeera:install` | Publica configuração e exibe instruções |
+| `php artisan transfeera:check` | Verifica conectividade, credenciais e mTLS |
+
+```bash
+php artisan transfeera:check
+# 🔍 Verificando Transfeera SDK...
+# 📋 Ambiente: sandbox
+# ✅ Ambiente válido.
+# ✅ Credenciais configuradas.
+# ✅ Endpoint de autenticação acessível.
+```
 
 ---
 
 ## Testes
 
 ```bash
-composer test
-# OK (169 tests, 242 assertions)
+composer test              # Pest (199 testes, 283 asserções)
+composer test-coverage     # Com cobertura (PHP 8.3+)
+composer phpstan           # PHPStan level 8
+composer rector            # Rector dry-run
+composer format            # Pint PSR-12
 ```
 
-```bash
-composer test-coverage
-```
-
-Testes com Pest, usando `Http::fake()` com payloads mockados extraídos da documentação oficial. Atualmente **169 testes, 242 asserções** — todos passando.
+O CI roda em matrix PHP 8.3/8.4 × Laravel 12/13.
 
 ---
 
-## Análise Estática
+## Documentação
 
-```bash
-composer phpstan       # PHPStan nível 8
-composer rector        # Rector dry-run
-composer rector-fix    # Rector com correção automática
-composer format        # Pint/PSR-12
-```
+| Documento | Conteúdo |
+|-----------|----------|
+| [Pagamentos](docs/pagamentos.md) | Lotes, transferências, boletos, saldo, recorrências |
+| [Recebimentos](docs/recebimentos.md) | Chaves Pix, QR Codes, Cash-in, cobranças, links |
+| [Pix Automático](docs/pix-automatico.md) | Autorizações, Payment Intents, fluxo completo |
+| [Conta Certa](docs/conta-certa.md) | Validações, bancos suportados |
+| [Hub de Contas](docs/hub-contas.md) | Contas digitais, onboarding, tenancy |
+| [MED / Infrações](docs/med.md) | Infrações, análise individual/lote, devolução |
+| [Webhooks](docs/webhooks.md) | Rotas, secrets, validação HMAC, listeners |
+| [Exceptions](docs/exceptions.md) | Hierarquia completa, catch, métodos úteis |
+| [Middlewares](docs/middlewares.md) | Config, logging, métricas, Prometheus |
+| [Erros](docs/erros.md) | Códigos HTTP, handlers, retry |
+| [Primeiro Pagamento](docs/primeiro-pagamento.md) | Passo a passo inicial |
+| [Primeiro Recebimento](docs/primeiro-recebimento.md) | Passo a passo inicial |
+| [Changelog](docs/changelog.md) | Histórico de versões (Keep a Changelog) |
+| [Roadmap](docs/roadmap.md) | Planejamento de versões futuras |
 
----
-
-## Changelog
-
-Veja [docs/changelog.md](docs/changelog.md) para o histórico de alterações.
-
----
-
-## Documentação da API Transfeera
-
-- [Endpoints](https://docs.transfeera.dev/reference/endpoints.md) — Referência completa da API
-- [Guia de Pagamentos](https://docs.transfeera.dev/docs/pagamentos-lotes-como-funciona.md)
-- [Guia de Recebimentos](https://docs.transfeera.dev/docs/recebimentos-introducao.md)
-- [Guia de Pix Automático](https://docs.transfeera.dev/docs/pix-automatico-como-funciona.md)
-- [Guia de Conta Certa](https://docs.transfeera.dev/docs/conta-certa-introducao.md)
+**Links oficiais da Transfeera:**
+- [Documentação da API](https://docs.transfeera.dev/reference/endpoints)
 - [Índice completo (llms.txt)](https://docs.transfeera.dev/llms.txt)
 
 ---
 
-## Contribuindo
+## Contribuição
 
-Veja [CONTRIBUTING.md](CONTRIBUTING.md) para o padrão de commits, branches, PRs e requisitos de qualidade.
+Veja [CONTRIBUTING.md](CONTRIBUTING.md) para detalhes.
+
+```
+composer test && composer phpstan && composer rector
+```
 
 ---
 
 ## Licença
 
-MIT — veja o arquivo [LICENSE](LICENSE) para detalhes.
+MIT © [Flávio Moreira](LICENSE). Veja o arquivo [LICENSE](LICENSE) para detalhes.

@@ -107,7 +107,7 @@ Se a tentação de adicionar uma dependência nova surgir, **parar e justificar 
 
 ## Documentação — manter sincronizada a cada mudança relevante
 
-Todo o conteúdo de `docs/` está criado e sincronizado com a v1.8.1 (15 arquivos):
+Todo o conteúdo de `docs/` está criado e sincronizado com a v1.9.0:
 
 | Arquivo | Conteúdo |
 |---------|----------|
@@ -125,11 +125,15 @@ Todo o conteúdo de `docs/` está criado e sincronizado com a v1.8.1 (15 arquivo
 | `docs/primeiro-recebimento.md` | Guia passo a passo inicial |
 | `docs/changelog.md` | Histórico de versões (atalho local) |
 | `docs/roadmap.md` | Planejamento de versões futuras |
+| `docs/adr/README.md` + 10 ADRs | Registro de Decisões Arquiteturais |
+| **`REQUISITOS.md`** | Especificação de requisitos completa (52 RFs, 17 RNFs) |
 
 - Recurso documentado mas não implementado vai para uma seção **"Roadmap"** no respectivo doc de domínio — nunca fica implícito.
 - `README.md`: instalacão, config (com aviso de mTLS em produção), exemplo por domínio, tabela de cobertura de endpoints, seção de links oficiais.
 - `CHANGELOG.md`: formato **Keep a Changelog** estrito — seções Added/Changed/Deprecated/Removed/Fixed/Security, seção `[Unreleased]` sempre no topo.
 - `UPGRADE.md`: guia de migração entre versões MAJOR. Obrigatório quando houver breaking change na API pública do pacote.
+- `REQUISITOS.md`: Especificação de Requisitos de Software (SRS) — rastreabilidade RF → código, casos de uso, métricas de qualidade.
+- `docs/adr/`: 10 Decisões Arquiteturais no formato Michael Nygard.
 
 ## Versionamento e release
 
