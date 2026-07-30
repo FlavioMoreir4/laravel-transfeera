@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static PixCashInResource pixCashIn(?string $accountId = null)
  * @method static ChargeResource charges(?string $accountId = null)
  * @method static PaymentLinkResource paymentLinks(?string $accountId = null)
- * @method static array getConfig()
+ * @method static array<int, mixed> getConfig()
  * @method static AuthorizationResource pixAutomaticoAuthorizations(?string $accountId = null)
  * @method static PaymentIntentResource pixAutomaticoPaymentIntents(?string $accountId = null)
  * @method static PaymentsWebhookResource paymentsWebhooks(?string $accountId = null)

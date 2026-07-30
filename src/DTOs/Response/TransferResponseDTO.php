@@ -47,9 +47,12 @@ class TransferResponseDTO extends BaseResponseDTO
         ]), fn ($value) => $value !== null);
     }
 
-    public static function fromResponse(array $data): self
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public static function fromResponse(array $data): static
     {
-        return new self(
+        $dto = new self(
             batchId: $data['batch_id'] ?? '',
             amount: $data['amount'] ?? 0,
             pixKey: $data['pix_key'] ?? '',
@@ -58,5 +61,8 @@ class TransferResponseDTO extends BaseResponseDTO
             createdAt: $data['created_at'] ?? null,
             updatedAt: $data['updated_at'] ?? null,
         );
+        $dto->id = $data['id'] ?? '';
+        $dto->status = $data['status'] ?? '';
+        return $dto;
     }
 }

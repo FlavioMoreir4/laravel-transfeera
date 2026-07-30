@@ -47,7 +47,9 @@ test('cria lote com sucesso', function () {
         'name' => 'Pagamentos Fornecedores',
     ]);
 
-    expect($result)->toBe($expectedPayload);
+    expect($result->id)->toBe('batch_123');
+    expect($result->name)->toBe('Pagamentos Fornecedores');
+    expect($result->status)->toBe('pending');
 });
 
 test('consulta lote por id', function () {
@@ -65,8 +67,8 @@ test('consulta lote por id', function () {
 
     $result = Transfeera::batches()->get('batch_123');
 
-    expect($result['id'])->toBe('batch_123');
-    expect($result['status'])->toBe('processed');
+    expect($result->id)->toBe('batch_123');
+    expect($result->status)->toBe('processed');
 });
 
 test('lista lotes com paginacao', function () {
@@ -86,7 +88,9 @@ test('lista lotes com paginacao', function () {
 
     $result = Transfeera::batches()->list(['page' => 1, 'per_page' => 10]);
 
-    expect($result['data'])->toHaveCount(2);
+    expect($result)->toHaveCount(2);
+    expect($result[0]->id)->toBe('batch_1');
+    expect($result[1]->id)->toBe('batch_2');
 });
 
 test('processa (fecha) lote', function () {
@@ -103,7 +107,7 @@ test('processa (fecha) lote', function () {
 
     $result = Transfeera::batches()->process('batch_123');
 
-    expect($result['status'])->toBe('processing');
+    expect($result->status)->toBe('processing');
 });
 
 test('atualiza lote', function () {
@@ -122,7 +126,7 @@ test('atualiza lote', function () {
         'name' => 'Nome Atualizado',
     ]);
 
-    expect($result['name'])->toBe('Nome Atualizado');
+    expect($result->name)->toBe('Nome Atualizado');
 });
 
 test('remove lote', function () {

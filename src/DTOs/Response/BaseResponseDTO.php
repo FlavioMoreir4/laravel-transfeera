@@ -38,4 +38,11 @@ abstract class BaseResponseDTO
             'updated_at' => $this->updatedAt,
         ], fn ($value) => $value !== null);
     }
+
+    /**
+     * Cria instância a partir da resposta da API.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    abstract public static function fromResponse(array $data): static;
 }

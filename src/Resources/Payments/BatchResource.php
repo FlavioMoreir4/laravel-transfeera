@@ -4,66 +4,53 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
-use FlavioMoreir4\Transfeera\Http\Connector;
+use FlavioMoreir4\Transfeera\DTOs\Response\BatchResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\BatchDTO;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
+use FlavioMoreir4\Transfeera\Http\Connector;
 
 /**
- * Resource para gerenciamento de lotes (batches) de pagamentos.
+ * Resource para gerenciamento de lotes de pagamentos.
  *
- * Um lote agrupa múltiplas transferências que são processadas em conjunto.
- *
- * @see https://docs.transfeera.dev/reference/batches
+ * @see https://docs.transfeera.dev/reference/post_batch.md
  */
 class BatchResource extends BaseResource
 {
-    private const string DOMAIN = Connector::DOMAIN_PAYMENTS;
+    /**
+     * @var string Domínio da API de pagamentos
+     */
+    protected const string DOMAIN = Connector::DOMAIN_PAYMENTS;
 
     /**
      * Cria um novo lote de pagamentos.
      *
-     * @param  array<string, mixed>  $data  Dados do lote (ex.: nome, tipo)
-     * @return array<string, mixed>
+     * @param  BatchDTO|array<string, mixed>  $data  Dados do lote
      */
-    public function create(array $data): array
+    public function create(BatchDTO|array $data): BatchResponseDTO
     {
-        return $this->connector->post(
-            self::DOMAIN,
-            '/batch',
-            $data,
-            $this->accountId,
-        );
+        $payload = $data instanceof BatchDTO ? $data->toArray() : $data;
+        return $this->postDTO(self::DOMAIN, '/batch', $payload, BatchResponseDTO::class);
     }
 
     /**
-     * Retorna os detalhes de um lote específico.
+     * Retorna os detalhes de um lote pelo ID.
      *
-     * @param  string  $id  Identificador único do lote
-     * @return array<string, mixed>
+     * @param  string  $id  Identificador do lote
      */
-    public function get(string $id): array
+    public function get(string $id): BatchResponseDTO
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            "/batch/{$id}",
-            [],
-            $this->accountId,
-        );
+        return $this->getDTO(self::DOMAIN, "/batch/{$id}", [], BatchResponseDTO::class);
     }
 
     /**
-     * Lista todos os lotes com paginação.
+     * Lista lotes com paginação e filtros.
      *
-     * @param  array<string, mixed>  $params  Filtros (page, per_page, status, etc.)
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $params  Parâmetros de filtro (page, per_page, status, etc.)
+     * @return array<int, BatchResponseDTO>
      */
     public function list(array $params = []): array
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            '/batch',
-            $params,
-            $this->accountId,
-        );
+        return $this->getDTOList(self::DOMAIN, '/batch', $params, BatchResponseDTO::class);
     }
 
     /**
@@ -71,46 +58,37 @@ class BatchResource extends BaseResource
      *
      * @param  string  $id    Identificador do lote
      * @param  array<string, mixed>  $data  Dados a serem atualizados
-     * @return array<string, mixed>
      */
-    public function update(string $id, array $data): array
+    public function update(string $id, array $data): BatchResponseDTO
     {
-        return $this->connector->patch(
-            self::DOMAIN,
-            "/batch/{$id}",
-            $data,
-            $this->accountId,
-        );
+        return $this->putDTO(self::DOMAIN, "/batch/{$id}", $data, BatchResponseDTO::class);
     }
 
     /**
      * Remove um lote.
      *
      * @param  string  $id  Identificador do lote
-     * @return array<string, mixed>
+     * @return array<string, mixed> Confirmação de exclusão
      */
     public function delete(string $id): array
     {
-        return $this->connector->delete(
-            self::DOMAIN,
-            "/batch/{$id}",
-            $this->accountId,
-        );
+        return $this->deleteRaw(self::DOMAIN, "/batch/{$id}");
     }
 
     /**
      * Processa (fecha) um lote, enviando as transferências para execução.
      *
      * @param  string  $id  Identificador do lote
-     * @return array<string, mixed>
+     * @return BatchResponseDTO Lote processado
      */
-    public function process(string $id): array
+    public function process(string $id): BatchResponseDTO
     {
-        return $this->connector->post(
+        $response = $this->connector->post(
             self::DOMAIN,
             "/batch/{$id}/close",
             [],
             $this->accountId,
         );
+        return $this->toDTO(BatchResponseDTO::class, $response);
     }
 }

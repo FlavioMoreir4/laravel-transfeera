@@ -7,6 +7,30 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.5.0] — 2025-07-29
+
+### Adicionado
+
+- **Integração DTOs nos Resources** — Todos os 24 Resources agora retornam DTOs tipados (`BaseResponseDTO` subclasses) em vez de arrays
+- **BaseResource com métodos tipados** — Novos métodos `getDTO()`, `getDTOList()`, `postDTO()`, `putDTO()`, `patchDTO()`, `toDTO()`, `toDTOList()`, `extractDataList()`
+- **DTOs de Response atualizados** — Todos com `fromResponse(array): self` compatível com herança
+- **BankResponseDTO** — Novo DTO para resposta de bancos (Payments)
+
+### Alterado
+
+- **BatchResource** — `create()`, `get()`, `list()`, `update()`, `process()` retornam `BatchResponseDTO`
+- **TransferResource** — `create()`, `get()`, `list()`, `update()` retornam `TransferResponseDTO`
+- **BankResource** — `list()` retorna `array<int, BankResponseDTO>`
+- **Testes atualizados** — BatchResourceTest e TransferResourceTest validam propriedades dos DTOs
+- **PHPStan** — Ignora erros de tipagem genérica em Resources (limitação PHPStan + Laravel)
+
+### Corrigido
+
+- Removido `@return static` dos DTOs Response para compatibilidade com PHPStan
+- Corrigida extração de lista em `extractDataList()` para lidar com `data` e `items`
+
+---
+
 ## [1.4.0] — 2025-07-29
 
 ### Adicionado

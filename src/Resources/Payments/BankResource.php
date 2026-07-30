@@ -4,31 +4,26 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
-use FlavioMoreir4\Transfeera\Http\Connector;
+use FlavioMoreir4\Transfeera\DTOs\Response\BankResponseDTO;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
+use FlavioMoreir4\Transfeera\Http\Connector;
 
 /**
- * Resource para consulta de bancos disponíveis.
+ * Resource para consulta de bancos disponíveis para pagamentos.
  *
- * @see https://docs.transfeera.dev/reference/banks
+ * @see https://docs.transfeera.dev/reference/get_bank.md
  */
 class BankResource extends BaseResource
 {
-    private const string DOMAIN = Connector::DOMAIN_PAYMENTS;
+    protected const string DOMAIN = Connector::DOMAIN_PAYMENTS;
 
     /**
-     * Retorna a lista de bancos disponíveis para pagamentos.
+     * Retorna a lista de bancos disponíveis.
      *
-     * @param  array<string, mixed>  $params  Filtros (código, nome, etc.)
-     * @return array<string, mixed>
+     * @return array<int, BankResponseDTO>
      */
-    public function list(array $params = []): array
+    public function list(): array
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            '/bank',
-            $params,
-            $this->accountId,
-        );
+        return $this->getDTOList(self::DOMAIN, '/bank', [], BankResponseDTO::class);
     }
 }

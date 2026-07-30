@@ -45,7 +45,10 @@ class PixKeyResponseDTO extends BaseResponseDTO
         ]), fn ($value) => $value !== null);
     }
 
-    public static function fromResponse(array $data): self
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public static function fromResponse(array $data): static
     {
         return new self(
             type: $data['type'] ?? '',

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
-use FlavioMoreir4\Transfeera\Http\Connector;
+use FlavioMoreir4\Transfeera\DTOs\Response\TransferResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\TransferDTO;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
+use FlavioMoreir4\Transfeera\Http\Connector;
 
 /**
  * Resource para gerenciamento de transferências dentro de um lote.
@@ -17,23 +19,18 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
  */
 class TransferResource extends BaseResource
 {
-    private const string DOMAIN = Connector::DOMAIN_PAYMENTS;
+    protected const string DOMAIN = Connector::DOMAIN_PAYMENTS;
 
     /**
      * Cria uma nova transferência dentro de um lote.
      *
      * @param  string  $batchId  Identificador do lote
-     * @param  array<string, mixed>  $data    Dados da transferência (valor, chave Pix, etc.)
-     * @return array<string, mixed>
+     * @param  TransferDTO|array<string, mixed>  $data  Dados da transferência
      */
-    public function create(string $batchId, array $data): array
+    public function create(string $batchId, TransferDTO|array $data): TransferResponseDTO
     {
-        return $this->connector->post(
-            self::DOMAIN,
-            "/batch/{$batchId}/transfer",
-            $data,
-            $this->accountId,
-        );
+        $payload = $data instanceof TransferDTO ? $data->toArray() : $data;
+        return $this->postDTO(self::DOMAIN, "/batch/{$batchId}/transfer", $payload, TransferResponseDTO::class);
     }
 
     /**
@@ -44,37 +41,26 @@ class TransferResource extends BaseResource
      *
      * @param  string  $transferId  Identificador da transferência
      * @param  string|null  $batchId  Identificador do lote (opcional)
-     * @return array<string, mixed>
      */
-    public function get(string $transferId, ?string $batchId = null): array
+    public function get(string $transferId, ?string $batchId = null): TransferResponseDTO
     {
         $path = $batchId !== null
             ? "/batch/{$batchId}/transfer/{$transferId}"
             : "/transfer/{$transferId}";
 
-        return $this->connector->get(
-            self::DOMAIN,
-            $path,
-            [],
-            $this->accountId,
-        );
+        return $this->getDTO(self::DOMAIN, $path, [], TransferResponseDTO::class);
     }
 
     /**
      * Lista as transferências de um lote.
      *
      * @param  string  $batchId  Identificador do lote
-     * @param  array<string, mixed>  $params   Filtros (page, per_page, status)
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $params  Filtros (page, per_page, status)
+     * @return array<int, TransferResponseDTO>
      */
     public function list(string $batchId, array $params = []): array
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            "/batch/{$batchId}/transfer",
-            $params,
-            $this->accountId,
-        );
+        return $this->getDTOList(self::DOMAIN, "/batch/{$batchId}/transfer", $params, TransferResponseDTO::class);
     }
 
     /**
@@ -82,17 +68,11 @@ class TransferResource extends BaseResource
      *
      * @param  string  $batchId     Identificador do lote
      * @param  string  $transferId  Identificador da transferência
-     * @param  array<string, mixed>  $data        Dados a serem atualizados
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $data  Dados a serem atualizados
      */
-    public function update(string $batchId, string $transferId, array $data): array
+    public function update(string $batchId, string $transferId, array $data): TransferResponseDTO
     {
-        return $this->connector->put(
-            self::DOMAIN,
-            "/batch/{$batchId}/transfer/{$transferId}",
-            $data,
-            $this->accountId,
-        );
+        return $this->putDTO(self::DOMAIN, "/batch/{$batchId}/transfer/{$transferId}", $data, TransferResponseDTO::class);
     }
 
     /**
@@ -100,14 +80,10 @@ class TransferResource extends BaseResource
      *
      * @param  string  $batchId     Identificador do lote
      * @param  string  $transferId  Identificador da transferência
-     * @return array<string, mixed>
+     * @return array<string, mixed> Confirmação de exclusão
      */
     public function delete(string $batchId, string $transferId): array
     {
-        return $this->connector->delete(
-            self::DOMAIN,
-            "/batch/{$batchId}/transfer/{$transferId}",
-            $this->accountId,
-        );
+        return $this->deleteRaw(self::DOMAIN, "/batch/{$batchId}/transfer/{$transferId}");
     }
 }
