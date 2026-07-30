@@ -47,7 +47,7 @@ class AccountResource extends BaseResource
      */
     public function create(array $data): AccountResponseDTO
     {
-        return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $data, AccountResponseDTO::class);
+        return $this->postDTO(Connector::DOMAIN_ACCOUNTS, self::BASE_PATH, $data, AccountResponseDTO::class);
     }
 
     /**
@@ -58,7 +58,7 @@ class AccountResource extends BaseResource
      */
     public function list(array $filters = []): array
     {
-        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, AccountResponseDTO::class);
+        return $this->getDTOList(Connector::DOMAIN_ACCOUNTS, self::BASE_PATH, $filters, AccountResponseDTO::class);
     }
 
     /**
@@ -68,7 +68,7 @@ class AccountResource extends BaseResource
      */
     public function get(string $id): AccountResponseDTO
     {
-        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], AccountResponseDTO::class);
+        return $this->getDTO(Connector::DOMAIN_ACCOUNTS, self::BASE_PATH.'/'.$id, [], AccountResponseDTO::class);
     }
 
     /**
@@ -80,7 +80,7 @@ class AccountResource extends BaseResource
     public function close(string $id): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_ACCOUNTS,
             self::BASE_PATH.'/'.$id.'/close',
             [],
             $this->accountId,

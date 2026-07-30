@@ -32,7 +32,7 @@ class AuthorizationResource extends BaseResource
      */
     public function create(array $data): AuthorizationResponseDTO
     {
-        return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $data, AuthorizationResponseDTO::class);
+        return $this->postDTO(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH, $data, AuthorizationResponseDTO::class);
     }
 
     /**
@@ -43,7 +43,7 @@ class AuthorizationResource extends BaseResource
      */
     public function list(array $filters = []): array
     {
-        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, AuthorizationResponseDTO::class);
+        return $this->getDTOList(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH, $filters, AuthorizationResponseDTO::class);
     }
 
     /**
@@ -53,7 +53,7 @@ class AuthorizationResource extends BaseResource
      */
     public function get(string $id): AuthorizationResponseDTO
     {
-        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], AuthorizationResponseDTO::class);
+        return $this->getDTO(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH.'/'.$id, [], AuthorizationResponseDTO::class);
     }
 
     /**
@@ -65,7 +65,7 @@ class AuthorizationResource extends BaseResource
     public function cancel(string $id): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_PIX_AUTOMATICO,
             self::BASE_PATH.'/'.$id.'/cancellations',
             accountId: $this->accountId,
         );
@@ -81,7 +81,7 @@ class AuthorizationResource extends BaseResource
     public function getCancellation(string $id, string $cancellationId): array
     {
         return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_PIX_AUTOMATICO,
             self::BASE_PATH.'/'.$id.'/cancellations/'.$cancellationId,
             accountId: $this->accountId,
         );
@@ -95,6 +95,6 @@ class AuthorizationResource extends BaseResource
      */
     public function update(string $id, array $data): AuthorizationResponseDTO
     {
-        return $this->patchDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, $data, AuthorizationResponseDTO::class);
+        return $this->patchDTO(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH.'/'.$id, $data, AuthorizationResponseDTO::class);
     }
 }

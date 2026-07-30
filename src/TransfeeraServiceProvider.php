@@ -6,6 +6,7 @@ namespace FlavioMoreir4\Transfeera;
 
 use FlavioMoreir4\Transfeera\Auth\TokenManager;
 use FlavioMoreir4\Transfeera\Console\Commands\CheckCommand;
+use FlavioMoreir4\Transfeera\Console\Commands\DebugCommand;
 use FlavioMoreir4\Transfeera\Console\Commands\InstallCommand;
 use FlavioMoreir4\Transfeera\Events\TransfeeraWebhookReceived;
 use FlavioMoreir4\Transfeera\Http\Connector;
@@ -111,6 +112,7 @@ class TransfeeraServiceProvider extends ServiceProvider
             $this->commands([
                 InstallCommand::class,
                 CheckCommand::class,
+                DebugCommand::class,
             ]);
         }
 

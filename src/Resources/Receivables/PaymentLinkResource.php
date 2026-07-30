@@ -35,7 +35,7 @@ class PaymentLinkResource extends BaseResource
      */
     public function create(array $data): PaymentLinkResponseDTO
     {
-        return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $data, PaymentLinkResponseDTO::class);
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH, $data, PaymentLinkResponseDTO::class);
     }
 
     /**
@@ -46,7 +46,7 @@ class PaymentLinkResource extends BaseResource
      */
     public function list(array $filters = []): array
     {
-        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, PaymentLinkResponseDTO::class);
+        return $this->getDTOList(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH, $filters, PaymentLinkResponseDTO::class);
     }
 
     /**
@@ -56,7 +56,7 @@ class PaymentLinkResource extends BaseResource
      */
     public function get(string $id): PaymentLinkResponseDTO
     {
-        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], PaymentLinkResponseDTO::class);
+        return $this->getDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id, [], PaymentLinkResponseDTO::class);
     }
 
     /**
@@ -67,6 +67,6 @@ class PaymentLinkResource extends BaseResource
      */
     public function delete(string $id): array
     {
-        return $this->deleteRaw(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id);
+        return $this->deleteRaw(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id);
     }
 }

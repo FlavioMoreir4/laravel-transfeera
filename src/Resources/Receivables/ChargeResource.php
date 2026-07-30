@@ -34,7 +34,7 @@ class ChargeResource extends BaseResource
      */
     public function create(array $data): ChargeResponseDTO
     {
-        return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $data, ChargeResponseDTO::class);
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH, $data, ChargeResponseDTO::class);
     }
 
     /**
@@ -45,7 +45,7 @@ class ChargeResource extends BaseResource
      */
     public function list(array $filters = []): array
     {
-        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, ChargeResponseDTO::class);
+        return $this->getDTOList(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH, $filters, ChargeResponseDTO::class);
     }
 
     /**
@@ -55,7 +55,7 @@ class ChargeResource extends BaseResource
      */
     public function get(string $id): ChargeResponseDTO
     {
-        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], ChargeResponseDTO::class);
+        return $this->getDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id, [], ChargeResponseDTO::class);
     }
 
     /**
@@ -67,7 +67,7 @@ class ChargeResource extends BaseResource
     public function cancel(string $id): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$id.'/cancel',
             accountId: $this->accountId,
         );
@@ -85,7 +85,7 @@ class ChargeResource extends BaseResource
     public function downloadPdf(string $id, string $receivableId): array
     {
         return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$id.'/receivables/'.$receivableId.'/pdf',
             accountId: $this->accountId,
         );
@@ -102,7 +102,7 @@ class ChargeResource extends BaseResource
     public function downloadPdfByChargeId(string $id): array
     {
         return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$id.'/pdf',
             accountId: $this->accountId,
         );

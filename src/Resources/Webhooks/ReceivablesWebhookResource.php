@@ -35,7 +35,7 @@ class ReceivablesWebhookResource extends BaseResource
     public function createUrl(array $data): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH_URLS,
             $data,
             $this->accountId,
@@ -51,7 +51,7 @@ class ReceivablesWebhookResource extends BaseResource
     public function getUrl(string $id): array
     {
         return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH_URLS.'/'.$id,
             accountId: $this->accountId,
         );
@@ -65,7 +65,7 @@ class ReceivablesWebhookResource extends BaseResource
     public function listUrls(): array
     {
         return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH_URLS,
             accountId: $this->accountId,
         );
@@ -81,7 +81,7 @@ class ReceivablesWebhookResource extends BaseResource
     public function updateUrl(string $id, array $data): array
     {
         return $this->connector->put(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH_URLS.'/'.$id,
             $data,
             $this->accountId,
@@ -97,7 +97,7 @@ class ReceivablesWebhookResource extends BaseResource
     public function deleteUrl(string $id): array
     {
         return $this->connector->delete(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH_URLS.'/'.$id,
             $this->accountId,
         );
@@ -112,7 +112,7 @@ class ReceivablesWebhookResource extends BaseResource
     public function listEvents(array $filters = []): array
     {
         return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH_EVENTS,
             $filters,
             $this->accountId,
@@ -128,7 +128,7 @@ class ReceivablesWebhookResource extends BaseResource
     public function resendEvent(string $eventId): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH_EVENTS.'/'.$eventId.'/retry',
             accountId: $this->accountId,
         );

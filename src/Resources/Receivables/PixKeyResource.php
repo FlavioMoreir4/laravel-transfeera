@@ -32,7 +32,7 @@ class PixKeyResource extends BaseResource
      */
     public function list(): array
     {
-        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, [], PixKeyResponseDTO::class);
+        return $this->getDTOList(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH, [], PixKeyResponseDTO::class);
     }
 
     /**
@@ -42,7 +42,7 @@ class PixKeyResource extends BaseResource
      */
     public function get(string $id): PixKeyResponseDTO
     {
-        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], PixKeyResponseDTO::class);
+        return $this->getDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id, [], PixKeyResponseDTO::class);
     }
 
     /**
@@ -52,7 +52,7 @@ class PixKeyResource extends BaseResource
      */
     public function create(array $data): PixKeyResponseDTO
     {
-        return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $data, PixKeyResponseDTO::class);
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH, $data, PixKeyResponseDTO::class);
     }
 
     /**
@@ -63,7 +63,7 @@ class PixKeyResource extends BaseResource
      */
     public function delete(string $id): array
     {
-        return $this->deleteRaw(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id);
+        return $this->deleteRaw(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id);
     }
 
     /**
@@ -75,7 +75,7 @@ class PixKeyResource extends BaseResource
     public function resendVerificationCode(string $id): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$id.'/resendVerificationCode',
             accountId: $this->accountId,
         );
@@ -91,7 +91,7 @@ class PixKeyResource extends BaseResource
     public function verify(string $id, string $code): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$id.'/verify',
             ['code' => $code],
             $this->accountId,
@@ -109,7 +109,7 @@ class PixKeyResource extends BaseResource
     public function claim(string $key): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             '/pix/key/'.$key.'/claim',
             accountId: $this->accountId,
         );
@@ -124,7 +124,7 @@ class PixKeyResource extends BaseResource
     public function confirmClaim(string $id): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$id.'/claim/confirm',
             accountId: $this->accountId,
         );
@@ -139,7 +139,7 @@ class PixKeyResource extends BaseResource
     public function cancelClaim(string $id): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$id.'/claim/cancel',
             accountId: $this->accountId,
         );

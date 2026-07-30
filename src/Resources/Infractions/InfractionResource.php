@@ -51,7 +51,7 @@ class InfractionResource extends BaseResource
      */
     public function list(array $filters = []): array
     {
-        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, InfractionResponseDTO::class);
+        return $this->getDTOList(Connector::DOMAIN_INFRACTIONS, self::BASE_PATH, $filters, InfractionResponseDTO::class);
     }
 
     /**
@@ -61,7 +61,7 @@ class InfractionResource extends BaseResource
      */
     public function get(string $id): InfractionResponseDTO
     {
-        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], InfractionResponseDTO::class);
+        return $this->getDTO(Connector::DOMAIN_INFRACTIONS, self::BASE_PATH.'/'.$id, [], InfractionResponseDTO::class);
     }
 
     /**
@@ -76,7 +76,7 @@ class InfractionResource extends BaseResource
     public function submitAnalysis(string $id, array $data): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_INFRACTIONS,
             self::BASE_PATH.'/'.$id.'/analysis',
             $data,
             $this->accountId,
@@ -92,7 +92,7 @@ class InfractionResource extends BaseResource
     public function submitBatchAnalysis(array $analyses): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_INFRACTIONS,
             self::BASE_PATH.'/analysis',
             $analyses,
             $this->accountId,

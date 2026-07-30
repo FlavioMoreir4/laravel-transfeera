@@ -34,7 +34,7 @@ class PixQrCodeResource extends BaseResource
     public function createStatic(array $data): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/static',
             $data,
             $this->accountId,
@@ -50,7 +50,7 @@ class PixQrCodeResource extends BaseResource
     public function createImmediate(array $data): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/collection/immediate',
             $data,
             $this->accountId,
@@ -66,7 +66,7 @@ class PixQrCodeResource extends BaseResource
     public function createDue(array $data): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/collection/dueDate',
             $data,
             $this->accountId,
@@ -81,7 +81,7 @@ class PixQrCodeResource extends BaseResource
      */
     public function list(array $filters = []): array
     {
-        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, PixQrCodeResponseDTO::class);
+        return $this->getDTOList(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH, $filters, PixQrCodeResponseDTO::class);
     }
 
     /**
@@ -91,7 +91,7 @@ class PixQrCodeResource extends BaseResource
      */
     public function get(string $id): PixQrCodeResponseDTO
     {
-        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], PixQrCodeResponseDTO::class);
+        return $this->getDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id, [], PixQrCodeResponseDTO::class);
     }
 
     /**
@@ -102,6 +102,6 @@ class PixQrCodeResource extends BaseResource
      */
     public function revoke(string $id): array
     {
-        return $this->deleteRaw(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id);
+        return $this->deleteRaw(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id);
     }
 }

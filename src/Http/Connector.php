@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\Http;
 
 use FlavioMoreir4\Transfeera\Auth\TokenManager;
+use FlavioMoreir4\Transfeera\Events\TransfeeraRequestComplete;
 use FlavioMoreir4\Transfeera\Exceptions\AccountException;
 use FlavioMoreir4\Transfeera\Exceptions\ContaCertaException;
 use FlavioMoreir4\Transfeera\Exceptions\InfractionException;
@@ -39,8 +40,33 @@ class Connector
     /** API de Pagamentos/Recebimentos */
     public const DOMAIN_PAYMENTS = 'payments';
 
+    /** API de Recebimentos */
+    public const DOMAIN_RECEIVABLES = 'receivables';
+
+    /** API Pix Automático */
+    public const DOMAIN_PIX_AUTOMATICO = 'pix_automatico';
+
+    /** API Hub de Contas */
+    public const DOMAIN_ACCOUNTS = 'accounts';
+
+    /** API MED/Infrações */
+    public const DOMAIN_INFRACTIONS = 'infractions';
+
     /** API Conta Certa */
     public const DOMAIN_CONTA_CERTA = 'conta_certa';
+
+    /**
+     * Mapa de domínios lógicos para domínios de base URL.
+     * Domínios que compartilham a mesma base URL (payments) são mapeados aqui.
+     */
+    private const array DOMAIN_BASE_MAP = [
+        self::DOMAIN_PAYMENTS => self::DOMAIN_PAYMENTS,
+        self::DOMAIN_RECEIVABLES => self::DOMAIN_PAYMENTS,
+        self::DOMAIN_PIX_AUTOMATICO => self::DOMAIN_PAYMENTS,
+        self::DOMAIN_ACCOUNTS => self::DOMAIN_PAYMENTS,
+        self::DOMAIN_INFRACTIONS => self::DOMAIN_PAYMENTS,
+        self::DOMAIN_CONTA_CERTA => self::DOMAIN_CONTA_CERTA,
+    ];
 
     public function __construct(
         private readonly TokenManager $tokenManager,
@@ -170,6 +196,15 @@ class Connector
                     duration: $duration,
                 );
             }
+
+            TransfeeraRequestComplete::dispatch(
+                domain: $domain,
+                method: $method,
+                url: $url,
+                status: $response?->status() ?? 0,
+                duration: $duration,
+                responseData: $response?->json() ?? [],
+            );
         }
     }
 
@@ -178,7 +213,9 @@ class Connector
      */
     private function url(string $domain, string $path): string
     {
-        $baseUrl = $this->baseUrls[$domain] ?? throw new TransfeeraException(
+        $resolvedDomain = self::DOMAIN_BASE_MAP[$domain] ?? $domain;
+
+        $baseUrl = $this->baseUrls[$resolvedDomain] ?? throw new TransfeeraException(
             message: "Domínio desconhecido: {$domain}",
         );
 
@@ -214,7 +251,8 @@ class Connector
         ]);
 
         // Aplica mTLS apenas nos domínios que exigem (payments e conta_certa)
-        if (in_array($domain, [self::DOMAIN_PAYMENTS, self::DOMAIN_CONTA_CERTA], true)) {
+        $resolvedMtlsDomain = self::DOMAIN_BASE_MAP[$domain] ?? $domain;
+        if (in_array($resolvedMtlsDomain, [self::DOMAIN_PAYMENTS, self::DOMAIN_CONTA_CERTA], true)) {
             return $this->mtls->apply($request);
         }
 
@@ -290,13 +328,13 @@ class Connector
                 payload: $payload,
                 previous: $baseException,
             ),
-            'receivables' => throw new ReceivableException(
+            self::DOMAIN_RECEIVABLES => throw new ReceivableException(
                 message: $baseException->getMessage(),
                 statusCode: $baseException->getCode(),
                 payload: $payload,
                 previous: $baseException,
             ),
-            'pix_automatico' => throw new PixAutomaticoException(
+            self::DOMAIN_PIX_AUTOMATICO => throw new PixAutomaticoException(
                 message: $baseException->getMessage(),
                 statusCode: $baseException->getCode(),
                 payload: $payload,
@@ -308,13 +346,13 @@ class Connector
                 payload: $payload,
                 previous: $baseException,
             ),
-            'accounts' => throw new AccountException(
+            self::DOMAIN_ACCOUNTS => throw new AccountException(
                 message: $baseException->getMessage(),
                 statusCode: $baseException->getCode(),
                 payload: $payload,
                 previous: $baseException,
             ),
-            'infractions' => throw new InfractionException(
+            self::DOMAIN_INFRACTIONS => throw new InfractionException(
                 message: $baseException->getMessage(),
                 statusCode: $baseException->getCode(),
                 payload: $payload,

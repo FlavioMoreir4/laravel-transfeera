@@ -4,7 +4,7 @@ Instruções para qualquer agente de IA (Hermes, Claude Code, Copilot, etc.) que
 
 ## O que é este projeto
 
-Pacote Laravel (`flaviomoreir4/laravel-transfeera`) versão **v1.12.0** — SDK completo da API Transfeera cobrindo **7 domínios**: Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa/Validações, Hub de Contas e MED/Infrações. É consumido como dependência por projetos Laravel de terceiros — não tem acoplamento a nenhuma aplicação específica.
+Pacote Laravel (`flaviomoreir4/laravel-transfeera`) versão **v1.13.0** — SDK completo da API Transfeera cobrindo **7 domínios**: Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa/Validações, Hub de Contas e MED/Infrações. É consumido como dependência por projetos Laravel de terceiros — não tem acoplamento a nenhuma aplicação específica.
 
 Documentação oficial da API (consultar antes de tocar em qualquer Resource — nunca inferir schema por analogia):
 - https://docs.transfeera.dev/reference/endpoints
@@ -124,6 +124,7 @@ Todo o conteúdo de `docs/` está criado e sincronizado com a v1.9.0:
 | `docs/primeiro-pagamento.md` | Guia passo a passo inicial |
 | `docs/primeiro-recebimento.md` | Guia passo a passo inicial |
 | `docs/changelog.md` | Histórico de versões (atalho local) |
+| `docs/cookbook.md` | Guia prático com 10 receitas (7 domínios) |
 | `docs/roadmap.md` | Planejamento de versões futuras |
 | `docs/adr/README.md` + 10 ADRs | Registro de Decisões Arquiteturais |
 | **`REQUISITOS.md`** | Especificação de requisitos completa (52 RFs, 17 RNFs) |
@@ -161,10 +162,10 @@ Todo o conteúdo de `docs/` está criado e sincronizado com a v1.9.0:
 
 | Item | Valor |
 |------|-------|
-| **Versão** | v1.12.0 |
-| **Commit** | `4c238a9` (chore: v1.11.0 — patches docs) |
+| **Versão** | v1.13.0 |
+| **Commit** | `b136ac4` (feat: v1.12.0 — PaymentLinkResource::list()) |
 | **Testes** | 203 passing, 291 assertions |
 | **PHPStan** | Level 8 — 0 erros |
 | **Rector** | Clean |
-| **Documentação** | 15 docs + README + CHANGELOG + UPGRADE + REQUISITOS — todos sincronizados |
+| **Documentação** | 16 docs + README + CHANGELOG + UPGRADE + REQUISITOS — todos sincronizados |
 | **Data** | Julho 2025 |

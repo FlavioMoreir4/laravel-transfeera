@@ -34,7 +34,7 @@ class PaymentIntentResource extends BaseResource
     public function create(string $authorizationId, array $data): PaymentIntentResponseDTO
     {
         return $this->postDTO(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_PIX_AUTOMATICO,
             self::BASE_PATH,
             array_merge($data, ['authorization_id' => $authorizationId]),
             PaymentIntentResponseDTO::class,
@@ -49,7 +49,7 @@ class PaymentIntentResource extends BaseResource
      */
     public function list(array $filters = []): array
     {
-        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, PaymentIntentResponseDTO::class);
+        return $this->getDTOList(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH, $filters, PaymentIntentResponseDTO::class);
     }
 
     /**
@@ -59,7 +59,7 @@ class PaymentIntentResource extends BaseResource
      */
     public function get(string $id): PaymentIntentResponseDTO
     {
-        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], PaymentIntentResponseDTO::class);
+        return $this->getDTO(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH.'/'.$id, [], PaymentIntentResponseDTO::class);
     }
 
     /**
@@ -71,7 +71,7 @@ class PaymentIntentResource extends BaseResource
     public function cancel(string $id): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_PIX_AUTOMATICO,
             self::BASE_PATH.'/'.$id.'/cancellations',
             accountId: $this->accountId,
         );
@@ -87,7 +87,7 @@ class PaymentIntentResource extends BaseResource
     public function getCancellation(string $id, string $cancellationId): array
     {
         return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_PIX_AUTOMATICO,
             self::BASE_PATH.'/'.$id.'/cancellations/'.$cancellationId,
             accountId: $this->accountId,
         );
@@ -102,7 +102,7 @@ class PaymentIntentResource extends BaseResource
     public function resendRetry(string $id): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_PIX_AUTOMATICO,
             self::BASE_PATH.'/'.$id.'/retry',
             accountId: $this->accountId,
         );

@@ -32,7 +32,7 @@ class PixCashInResource extends BaseResource
      */
     public function list(array $filters = []): array
     {
-        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, PixCashInResponseDTO::class);
+        return $this->getDTOList(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH, $filters, PixCashInResponseDTO::class);
     }
 
     /**
@@ -42,7 +42,7 @@ class PixCashInResource extends BaseResource
      */
     public function getByEnd2EndId(string $end2EndId): PixCashInResponseDTO
     {
-        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$end2EndId, [], PixCashInResponseDTO::class);
+        return $this->getDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$end2EndId, [], PixCashInResponseDTO::class);
     }
 
     /**
@@ -57,7 +57,7 @@ class PixCashInResource extends BaseResource
     public function requestRefund(string $end2EndId, array $data): array
     {
         return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$end2EndId.'/refund',
             $data,
             $this->accountId,
@@ -73,7 +73,7 @@ class PixCashInResource extends BaseResource
     public function getRefunds(string $end2EndId): array
     {
         return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
+            Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$end2EndId.'/refund',
             accountId: $this->accountId,
         );

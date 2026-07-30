@@ -9,6 +9,24 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [1.13.0] — 2025-07-30
+
+### Added
+
+- **`TransfeeraRequestComplete` event** — novo evento disparado após cada requisição à API, carregando domínio, método, URL, status, duração e payload de resposta. Ideal para tracing (OpenTelemetry) e métricas (Prometheus/StatsD).
+- **`transfeera:debug` command** — novo comando artisan para diagnóstico completo do SDK: exibe ambiente, configuração (com valores mascarados), URLs base por domínio, lista de Resources disponíveis e status do token em cache. Use `--verbose` para detalhes adicionais.
+- **`docs/cookbook.md`** — guia prático com 10 receitas reais cobrindo todos os 7 domínios: pagamento em lote, cobrança boleto+Pix, devolução de Pix, portabilidade de chave, Pix Automático, Conta Certa, webhooks, MED, Hub de Contas e observabilidade.
+- **`Connector` domain constants** — 4 novas constantes (`DOMAIN_RECEIVABLES`, `DOMAIN_PIX_AUTOMATICO`, `DOMAIN_ACCOUNTS`, `DOMAIN_INFRACTIONS`) para mapeamento semântico de sub-APIs. Adicionado `DOMAIN_BASE_MAP` para resolução de URL base.
+- **mTLS aprimorado** — `buildRequest()` resolve domínios via `DOMAIN_BASE_MAP` antes de decidir aplicar mTLS.
+
+### Changed
+
+- **`Connector::handleResponse()`** — `match` de domínios agora usa constantes (e.g. `self::DOMAIN_RECEIVABLES`) em vez de strings literais.
+- **Todos os Resources de Recebimentos, Pix Automático, Accounts e Infractions** — `DOMAIN_PAYMENTS` substituído pela constante específica do domínio.
+- **`composer.json` scripts** — `analyse` e `phpstan` agora rodam com `--memory-limit=512M` para evitar crash em ambientes com 128M.
+- **`docs/changelog.md`** — v1.13.0 entry.
+- **`docs/roadmap.md`** — v1.13.0 marcado como concluído, v1.14.0 adicionado ao backlog.
+
 ## [1.12.0] — 2025-07-30
 
 ### Added

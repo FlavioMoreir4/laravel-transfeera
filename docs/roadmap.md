@@ -2,7 +2,7 @@
 
 > Filosofia**: Estratégia híbrida — v1.x contínua com deprecação lenta, v2.0.0 planejada ~2026 Q1.
 > Apenas **MINORs** (features compatíveis) e **PATCHs** (correções) até lá.
-> Atual — **v1.12.0** (203 testes, 291 asserções, PHPStan 0, Rector clean, Pint PSR-12).
+> Atual — **v1.13.0** (203 testes, 291 asserções, PHPStan 0, Rector clean, Pint PSR-12).
 
 ---
 
@@ -102,7 +102,8 @@
 | **1.10.0** | Qualidade + DX | Response DTOs, testes integração, Laravel 13 migration guide |
 | **1.11.0** | Patches Documentação | AGENTS, README, REQUISITOS, .env.example, ServiceProviderTest |
 || **1.12.0** | Endpoints Faltantes | `PaymentLinkResource::list()` + testes |
-|| **1.13.0** | Debug & Observabilidade | `transfeera:debug`, OpenTelemetry, cookbook de exemplos |
+|| **1.13.0** ✅ | Debug & Observabilidade | `TransfeeraRequestComplete` event, `transfeera:debug`, cookbook, domínios corrigidos |
+|| **1.14.0** | Cookbook expandido | Logging avançado, spans OpenTelemetry, dashboards |
 || **2.0.0** 🎯 ~2026 Q1 | **Breaking planejado** | Drop Laravel 12/PHP 8.3, remove `*Raw()`, Connector interno, API unificada (DTOs everywhere), UPGRADE.md completo |
 
 ---
@@ -139,9 +140,15 @@ FASE 5 — MINOR 1.12.0 (endpoint faltante)
   ├── PaymentLinkResource::list()
   └── Testes do PaymentLinkResource
 
+FASE 6 — MINOR 1.13.0 (debug + observabilidade)
+  ├── Connector: constantes de domínio
+  ├── Evento TransfeeraRequestComplete
+  ├── Comando transfeera:debug
+  ├── docs/cookbook.md (10 receitas, 7 domínios)
+  └── PHPStan --memory-limit=512M
+
 FASE 6+ — Backlog
-  ├── 1.13.0: Debug/Observabilidade
-  ├── 1.14.0: Cookbook + exemplos
+  ├── 1.14.0: Cookbook expandido + logging avançado
   └── 2.0.0: Breaking planejado ~2026 Q1
 ```
 
