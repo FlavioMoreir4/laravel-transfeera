@@ -73,7 +73,7 @@ it('loga request e response quando habilitado', function () {
     expect($result['id'])->toBe('batch_1');
 });
 
-it('usa level warning em resposta com erro', function () {
+it('usa level error em resposta com erro 5xx', function () {
     $middleware = new LoggingMiddleware(enabled: true);
 
     Http::fake([
@@ -86,7 +86,7 @@ it('usa level warning em resposta com erro', function () {
         ->once();
 
     Log::shouldReceive('log')
-        ->with('warning', \Mockery::type('string'), \Mockery::type('array'))
+        ->with('error', \Mockery::type('string'), \Mockery::type('array'))
         ->once();
 
     $connector = new Connector(

@@ -28,7 +28,7 @@ class DebugCommand extends Command
      * @var string
      */
     protected $signature = 'transfeera:debug
-        {--verbose : Exibe payloads completos e detalhes adicionais}';
+        {--detailed : Exibe payloads completos e detalhes adicionais}';
 
     /**
      * A descrição do comando.
@@ -113,7 +113,7 @@ class DebugCommand extends Command
 
         $this->displayMtls($config);
 
-        if ($this->option('verbose')) {
+        if ($this->option('detailed')) {
             $this->line('  Logging:         '.($config['logging']['enabled'] ?? false ? '✅ ativo' : '⬜ inativo'));
             $this->line('  Metrics:         '.($config['metrics']['enabled'] ?? false ? '✅ ativo' : '⬜ inativo'));
         }
@@ -272,7 +272,7 @@ class DebugCommand extends Command
             $this->line('  Status:    <comment>cacheado</comment> ✅');
             $this->line("  Expira em: <comment>{$remaining}s</comment> (".date('H:i:s', $expiresAt).')');
 
-            if ($this->option('verbose')) {
+            if ($this->option('detailed')) {
                 $this->line('  Token:     <comment>'.substr((string) $cached->token(), 0, 20).'...</comment>');
             }
         }

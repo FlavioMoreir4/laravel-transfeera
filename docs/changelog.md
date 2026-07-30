@@ -9,6 +9,20 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [1.14.0] — 2025-07-30
+
+### Added
+
+- **LoggingMiddleware avançado** — sanitização de dados sensíveis (client_secret, document, account, agency), truncamento de payloads grandes (> maxBodyLength), levels configuráveis por domínio (`levelByDomain`) e por status HTTP (`levelByStatus`), e suporte a log de response body (`logResponseBody`).
+- **Seção `logging` no config** — nova configuração completa do LoggingMiddleware com suporte a env vars (`TRANSFEERA_LOGGING_*`).
+- **Seção `metrics` no config** — nova configuração do MetricsMiddleware com env vars (`TRANSFEERA_METRICS_*`).
+- **31 novos testes unitários** — `LoggingMiddlewareTest` (14 testes: sanitização, truncamento, níveis por domínio/status, extração de domínio), `MetricsMiddlewareTest` (5 testes), `TransfeeraRequestCompleteTest` (4 testes), `DebugCommandTest` (8 testes).
+- **Cookbook expandido** — seção de observabilidade reescrita com exemplos reais de OpenTelemetry (spans com SDK PHP), Prometheus (counter + histogram com promphp/prometheus_client_php), Grafana dashboard JSON (4 painéis), Prometheus recording rules com alerta de alta taxa de erro, e comando `transfeera:debug`.
+
+### Changed
+
+- **MiddlewareTest** — teste `usa level error em resposta com erro 5xx` atualizado (5xx agora loga como `error`, não mais `warning`).
+
 ## [1.13.0] — 2025-07-30
 
 ### Added

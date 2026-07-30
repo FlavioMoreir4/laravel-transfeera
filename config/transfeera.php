@@ -113,4 +113,45 @@ return [
         'conta_certa' => env('TRANSFEERA_WEBHOOK_SECRET_CONTA_CERTA'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Logging (Middleware de Log)
+    |--------------------------------------------------------------------------
+    |
+    | Configuração do LoggingMiddleware que registra todas as requisições
+    | à API Transfeera com níveis, sanitização e truncamento.
+    |
+    */
+    'logging' => [
+        'enabled' => env('TRANSFEERA_LOGGING_ENABLED', true),
+        'channel' => env('TRANSFEERA_LOGGING_CHANNEL', 'stack'),
+        'level' => env('TRANSFEERA_LOGGING_LEVEL', 'info'),
+        'log_headers' => env('TRANSFEERA_LOGGING_LOG_HEADERS', false),
+        'log_response_body' => env('TRANSFEERA_LOGGING_LOG_RESPONSE_BODY', false),
+        'sanitize' => env('TRANSFEERA_LOGGING_SANITIZE', true),
+        'max_body_length' => env('TRANSFEERA_LOGGING_MAX_BODY_LENGTH', 4096),
+        'level_by_domain' => [
+            // 'payments' => 'debug',
+            // 'receivables' => 'info',
+        ],
+        'level_by_status' => [
+            // 500 => 'error',
+            // 429 => 'warning',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Métricas (Middleware de Métricas)
+    |--------------------------------------------------------------------------
+    |
+    | Configuração do MetricsMiddleware que coleta métricas das requisições.
+    | O placeholder pode ser substituído por implementação Prometheus/StatsD.
+    |
+    */
+    'metrics' => [
+        'enabled' => env('TRANSFEERA_METRICS_ENABLED', false),
+        'prefix' => env('TRANSFEERA_METRICS_PREFIX', 'transfeera'),
+    ],
+
 ];

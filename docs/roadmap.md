@@ -2,7 +2,7 @@
 
 > Filosofia**: Estratégia híbrida — v1.x contínua com deprecação lenta, v2.0.0 planejada ~2026 Q1.
 > Apenas **MINORs** (features compatíveis) e **PATCHs** (correções) até lá.
-> Atual — **v1.13.0** (203 testes, 291 asserções, PHPStan 0, Rector clean, Pint PSR-12).
+> Atual — **v1.14.0** (234 testes, 342 asserções, PHPStan 0, Rector clean, Pint PSR-12).
 
 ---
 
@@ -103,7 +103,8 @@
 | **1.11.0** | Patches Documentação | AGENTS, README, REQUISITOS, .env.example, ServiceProviderTest |
 || **1.12.0** | Endpoints Faltantes | `PaymentLinkResource::list()` + testes |
 || **1.13.0** ✅ | Debug & Observabilidade | `TransfeeraRequestComplete` event, `transfeera:debug`, cookbook, domínios corrigidos |
-|| **1.14.0** | Cookbook expandido | Logging avançado, spans OpenTelemetry, dashboards |
+|| **1.14.0** ✅ | Cookbook expandido | LoggingMiddleware avançado, OpenTelemetry, Prometheus, Grafana, 31 novos testes |
+|| **1.15.0** | Performance & DX | Rate limit monitor, cache warming, CLI progress, exemplo de fila |
 || **2.0.0** 🎯 ~2026 Q1 | **Breaking planejado** | Drop Laravel 12/PHP 8.3, remove `*Raw()`, Connector interno, API unificada (DTOs everywhere), UPGRADE.md completo |
 
 ---

@@ -347,33 +347,49 @@ Event::listen(TransfeeraRequestComplete::class, function ($event) {
         'status' => $event->status,
         'duration_ms' => round($event->duration * 1000, 2),
     ]);
-
-    // Exemplo: métrica Prometheus (com lib opcional)
-    // prometheus_histogram('transfeera_request_duration_seconds')
-    //     ->observe($event->duration, [
-    //         'domain' => $event->domain,
-    //         'method' => $event->method,
-    //         'status' => (string) $event->status,
-    //     ]);
-
-    // Exemplo: span OpenTelemetry (com lib opcional)
-    // $tracer->span('transfeera.api')
-    //     ->setAttribute('http.method', $event->method)
-    //     ->setAttribute('http.url', $event->url)
-    //     ->setAttribute('http.status_code', $event->status)
-    //     ->end();
 });
 ```
 
-### Middleware de logging
+### Middleware de logging avançado
+
+O `LoggingMiddleware` agora suporta sanitização, truncamento e níveis por domínio:
 
 ```php
 // config/transfeera.php
 'logging' => [
-    'enabled' => true,
-    'level' => 'info',       // 'debug', 'info', 'warning'
-    'headers' => false,      // true para incluir payload no log
+    'enabled' => env('TRANSFEERA_LOGGING_ENABLED', true),
+    'channel' => env('TRANSFEERA_LOGGING_CHANNEL', 'stack'),
+    'level' => env('TRANSFEERA_LOGGING_LEVEL', 'info'),
+    'log_headers' => env('TRANSFEERA_LOGGING_LOG_HEADERS', false),
+    'log_response_body' => env('TRANSFEERA_LOGGING_LOG_RESPONSE_BODY', false),
+    'sanitize' => env('TRANSFEERA_LOGGING_SANITIZE', true),
+    'max_body_length' => env('TRANSFEERA_LOGGING_MAX_BODY_LENGTH', 4096),
+    'level_by_domain' => [
+        'payments' => 'debug',     // pagamentos em debug
+        'conta_certa' => 'info',    // validações em info
+    ],
+    'level_by_status' => [
+        500 => 'error',             // 5xx sempre como error
+        429 => 'warning',           // rate limit como warning
+        200 => 'info',              // sucesso como info
+    ],
 ],
+```
+
+**Sanitização**: campos como `client_secret`, `token`, `document`, `account`, `agency` são automaticamente mascarados:
+
+```log
+# Antes (inseguro):
+"request_data": {"document": "12345678909", "account": "56789-0"}
+
+# Depois (sanitizado):
+"request_data": {"document": "12*****09", "account": "56***0"}
+```
+
+**Truncamento**: payloads acima de `max_body_length` (4096 chars por padrão) são resumidos:
+
+```log
+"request_data": {"_truncated": true, "_original_size": 15000, "_preview": "{\"data\":[{\"name\":...}"}
 ```
 
 ### Middleware de métricas
@@ -381,9 +397,194 @@ Event::listen(TransfeeraRequestComplete::class, function ($event) {
 ```php
 // config/transfeera.php
 'metrics' => [
-    'enabled' => true,
+    'enabled' => env('TRANSFEERA_METRICS_ENABLED', false),
     'prefix' => 'transfeera', // prefixo dos nomes das métricas
 ],
+```
+
+### OpenTelemetry — Tracing Distribuído
+
+Para rastrear requisições ponta a ponta com OpenTelemetry:
+
+```bash
+composer require open-telemetry/opentelemetry open-telemetry/transport-grpc
+```
+
+```php
+// AppServiceProvider::boot()
+use FlavioMoreir4\Transfeera\Events\TransfeeraRequestComplete;
+use Illuminate\Support\Facades\Event;
+use OpenTelemetry\API\Globals;
+
+Event::listen(TransfeeraRequestComplete::class, function ($event) {
+    static $tracer;
+
+    if ($tracer === null) {
+        $tracer = Globals::tracerProvider()
+            ->getTracer('laravel-transfeera');
+    }
+
+    $span = $tracer->spanBuilder('transfeera.api')
+        ->setSpanKind(SpanKind::KIND_CLIENT)
+        ->startSpan();
+
+    $span->setAttribute('http.method', $event->method);
+    $span->setAttribute('http.url', $event->url);
+    $span->setAttribute('http.status_code', $event->status);
+    $span->setAttribute('http.request.duration_ms',
+        round($event->duration * 1000, 2));
+    $span->setAttribute('transfeera.domain', $event->domain);
+
+    $span->end();
+});
+```
+
+### Prometheus — Métricas
+
+Para expor métricas no formato Prometheus:
+
+```bash
+composer require promphp/prometheus_client_php
+```
+
+```php
+// AppServiceProvider::boot()
+use FlavioMoreir4\Transfeera\Events\TransfeeraRequestComplete;
+use Illuminate\Support\Facades\Event;
+use Prometheus\CollectorRegistry;
+use Prometheus\RenderTextFormat;
+use Prometheus\Storage\InMemory;
+
+Event::listen(TransfeeraRequestComplete::class, function ($event) {
+    static $registry;
+    static $histogram;
+    static $counter;
+
+    if ($registry === null) {
+        $registry = new CollectorRegistry(new InMemory());
+        $histogram = $registry->registerHistogram(
+            'transfeera',
+            'request_duration_seconds',
+            'Duração das requisições à API Transfeera',
+            ['domain', 'method', 'status'],
+            [0.01, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0],
+        );
+        $counter = $registry->registerCounter(
+            'transfeera',
+            'requests_total',
+            'Total de requisições à API Transfeera',
+            ['domain', 'method', 'status'],
+        );
+    }
+
+    $labels = [
+        'domain' => $event->domain,
+        'method' => $event->method,
+        'status' => (string) $event->status,
+    ];
+
+    $histogram->observe($event->duration, $labels);
+    $counter->inc($labels);
+});
+```
+
+### Grafana — Dashboard JSON
+
+Importe este dashboard no Grafana para visualizar as métricas da Transfeera:
+
+```json
+{
+  "title": "Transfeera API",
+  "panels": [
+    {
+      "title": "Requisições por minuto",
+      "type": "graph",
+      "targets": [{
+        "expr": "rate(transfeera_requests_total[1m])",
+        "legendFormat": "{{domain}} {{method}}"
+      }]
+    },
+    {
+      "title": "Duração P95 (ms)",
+      "type": "graph",
+      "targets": [{
+        "expr": "histogram_quantile(0.95, rate(transfeera_request_duration_seconds_bucket[5m])) * 1000",
+        "legendFormat": "{{domain}}"
+      }]
+    },
+    {
+      "title": "Taxa de erro (%)",
+      "type": "stat",
+      "targets": [{
+        "expr": "sum(rate(transfeera_requests_total{status=~\"5..\"}[5m])) / sum(rate(transfeera_requests_total[5m])) * 100"
+      }]
+    },
+    {
+      "title": "Status code distribution",
+      "type": "piechart",
+      "targets": [{
+        "expr": "sum(transfeera_requests_total) by (status)"
+      }]
+    }
+  ]
+}
+```
+
+### Prometheus — Recording Rules
+
+```yaml
+# transfeera_rules.yml
+groups:
+  - name: transfeera
+    rules:
+      - record: transfeera:error_rate:5m
+        expr: |
+          sum(rate(transfeera_requests_total{status=~"5.."}[5m]))
+          /
+          sum(rate(transfeera_requests_total[5m]))
+      - record: transfeera:p95_duration_ms:5m
+        expr: |
+          histogram_quantile(0.95,
+            rate(transfeera_request_duration_seconds_bucket[5m])
+          ) * 1000
+      - alert: TransfeeraHighErrorRate
+        expr: transfeera:error_rate:5m > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taxa de erro Transfeera acima de 5%"
+```
+
+### Comando de diagnóstico
+
+Use `php artisan transfeera:debug` para verificar a configuração:
+
+```bash
+$ php artisan transfeera:debug
+
+🔬 Transfeera SDK — Diagnóstico Detalhado
+
+📦 Ambiente
+  PHP:       8.4.6
+  Laravel:   13.0.0
+  Ambiente:  local
+  Debug:     true
+
+⚙️ Configuração
+  Environment:     sandbox ✅
+  Client ID:       test*****2345 ✅
+  Client Secret:   ****cret ✅
+  Timeout:         30s
+  Retry:           3x a cada 100ms
+  Cache Store:     file
+  User-Agent:      Laravel App (contato@exemplo.com)
+  mTLS:            sandbox — não requerido ℹ️
+
+🌐 URLs Base
+  Autenticação:   https://login-api-sandbox.transfeera.com
+  Pagamentos:     https://api-sandbox.transfeera.com
+  (...)
 ```
 
 ---
