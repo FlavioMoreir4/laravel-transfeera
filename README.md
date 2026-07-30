@@ -360,7 +360,7 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 composer test
 ```
 
-Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **118 testes, 153 asserções** — todos passando.
+Testes com Pest, usando `Http::fake()` com payloads mockados. Atualmente **118 testes, 160 asserções** — todos passando.
 
 ```bash
 composer test-coverage
