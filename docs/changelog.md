@@ -7,6 +7,27 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.8.0] — 2025-07-30
+
+### Adicionado
+
+- **Testes de error handling no Connector (13 testes)** — Retry transiente (recuperação após falha), exaustão de tentativas, recuperação após 429 e 422, `ConnectionException` em timeout e falha de DNS, timeout transiente com recuperação
+- **Mapeamento completo de erros HTTP → exceptions tipadas (6 testes)** — Payload reais para payments, receivables, pix_automatico, conta_certa, accounts, infractions mais 401/422/429
+- **Testes dos middlewares (8 testes)** — LoggingMiddleware (log ativo, nível warning em 500+, sanitização de headers, contexto com status/duration) e MetricsMiddleware (prefixo configurável, não interfere em sucesso/erro, executa em exceção)
+- **Cobertura de Resources parciais (13 testes novos)** — `PixResource` (lookupKey, parseEmv, validações), `RecurrenceResource` (list, listPayments, cancel), `StatementResource` (balance, withdraw, requestReport, getReport), `PixKeyResource` (resendVerificationCode)
+- **Testes de concorrência do token (5 testes)** — Lock evita renovação concorrente, lock retorna token válido após espera, cache miss duplo gera apenas uma renovação, cache isolado por accountId
+- **Testes de mTLS condicional por domínio (2 testes)** — Ativa em produção para payments e conta_certa; pula em sandbox mesmo para domínios que exigem
+
+### Alterado
+
+- **Connector** — `retry()` agora usa `throw: false` para compatibilidade com Laravel 13+
+- **Middlewares refatorados** — Migrados de Guzzle HandlerStack (`withMiddleware()`) para chamadas diretas no `finally` do `Connector::execute()`, compatível com Laravel 13+ que mudou a assinatura do `withMiddleware()`
+- **LoggingMiddleware** — Parâmetro `$response` agora nullable; proteção contra `$response` nulo no `finally`
+- **MetricsMiddleware** — Simplificado para método `recordMetric()` chamado diretamente
+- **MtlsConfiguratorTest** — Adicionados testes de ativação por domínio específico
+
+---
+
 ## [1.7.0] — 2025-07-29
 
 ### Adicionado
@@ -265,6 +286,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 | Versão | Foco |
 |--------|------|
 | **1.7.0** | Exceptions tipadas por domínio, testes de integração |
-| **2.0.0** | Breaking: Resources retornam DTOs tipados, exceptions por domínio |
+| **1.8.0** ✅ | Cobertura de testes: error handling, middlewares, concorrência, mTLS, Resources parciais |
+| **1.9.0** | A definir — sugestões no roadmap |
+| **2.0.0** | TBD — Breaking reais (arrays em create/update, métodos *Raw(), Connector público) |
 
 ---

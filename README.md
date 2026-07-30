@@ -5,13 +5,13 @@
 [![Laravel](https://img.shields.io/badge/Laravel-12.x%2F13.x-FF2D20)](https://laravel.com)
 [![License](https://img.shields.io/github/license/flaviomoreir4/laravel-transfeera)](LICENSE)
 [![CI](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml/badge.svg)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-118%2F118-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-169%2F169-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](phpstan.neon)
 [![Rector](https://img.shields.io/badge/Rector-clean-brightgreen)](rector.php)
 
 SDK Laravel para integração completa com a API **Transfeera** — Pagamentos, Recebimentos, Pix Automático, Conta Certa, Hub de Contas e MED/Infrações.
 
-> 🚧 Projeto em desenvolvimento faseado. Versão atual: **v1.7.0** — consulte a [tabela de cobertura](#cobertura-de-endpoints).
+> 🚧 Projeto em desenvolvimento faseado. Versão atual: **v1.8.0** — consulte a [tabela de cobertura](#cobertura-de-endpoints).
 
 ---
 
@@ -355,14 +355,14 @@ Todas as chamadas aceitam `?string $accountId = null` como último parâmetro.
 
 ```bash
 composer test
-# OK (118 tests, 160 assertions)
+# OK (169 tests, 242 assertions)
 ```
 
 ```bash
 composer test-coverage
 ```
 
-Testes com Pest, usando `Http::fake()` com payloads mockados extraídos da documentação oficial. Atualmente **118 testes, 160 asserções** — todos passando.
+Testes com Pest, usando `Http::fake()` com payloads mockados extraídos da documentação oficial. Atualmente **169 testes, 242 asserções** — todos passando.
 
 ---
 
@@ -379,7 +379,7 @@ composer format        # Pint/PSR-12
 
 ## Changelog
 
-Veja [CHANGELOG.md](CHANGELOG.md) para o histórico de alterações.
+Veja [docs/changelog.md](docs/changelog.md) para o histórico de alterações.
 
 ---
 
