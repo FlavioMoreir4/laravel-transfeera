@@ -430,7 +430,7 @@ php artisan transfeera:check
 ## Testes
 
 ```bash
-composer test              # Pest (262 testes, 419 asserções)
+composer test              # Pest (262 testes, 426 asserções)
 composer test-coverage     # Com cobertura (PHP 8.3+)
 composer phpstan           # PHPStan level 8
 composer rector            # Rector dry-run

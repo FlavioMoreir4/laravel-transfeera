@@ -9,7 +9,20 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
-## [1.16.0] — 2025-07-30
+## [1.17.0] — 2025-07-30
+
+### Added
+
+- **Statement DTOs** — `StatementWithdrawResponseDTO` e `StatementReportResponseDTO` para `withdraw()`, `requestReport()` e `getReport()` (antes retornavam `array` puro)
+- **Cookbook expandido** — 3 novas receitas: Saldo/Saque/Extrato, Rate Limit & Filas na Prática, Fluxo Completo Boleto+Pix com Tratamento de Erros
+- **Boas Práticas expandidas** — 10 dicas (antes 7), incluindo RateLimitMonitor, cache-warm, TransfeeraBaseJob e docs/fila.md
+
+### Changed
+
+- `StatementResource::withdraw()` → retorna `StatementWithdrawResponseDTO` (antes `array`)
+- `StatementResource::requestReport()` → retorna `StatementReportResponseDTO` (antes `array`)
+- `StatementResource::getReport()` → retorna `StatementReportResponseDTO` (antes `array`)
+- Testes de Statement atualizados para asserções de DTO (+7 asserções)
 
 ### Added
 

@@ -4,7 +4,7 @@ Instruções para qualquer agente de IA (Hermes, Claude Code, Copilot, etc.) que
 
 ## O que é este projeto
 
-Pacote Laravel (`flaviomoreir4/laravel-transfeera`) versão **v1.16.0** — SDK completo da API Transfeera cobrindo **7 domínios**: Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa/Validações, Hub de Contas e MED/Infrações. É consumido como dependência por projetos Laravel de terceiros — não tem acoplamento a nenhuma aplicação específica.
+Pacote Laravel (`flaviomoreir4/laravel-transfeera`) versão **v1.17.0** — SDK completo da API Transfeera cobrindo **7 domínios**: Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa/Validações, Hub de Contas e MED/Infrações. É consumido como dependência por projetos Laravel de terceiros — não tem acoplamento a nenhuma aplicação específica.
 
 Documentação oficial da API (consultar antes de tocar em qualquer Resource — nunca inferir schema por analogia):
 - https://docs.transfeera.dev/reference/endpoints
@@ -22,7 +22,7 @@ Requer PHP 8.3+, Laravel 12+ como dependência de teste (`orchestra/testbench`).
 ## Comandos de verificação
 
 ```bash
-composer test          # Pest 5 (262 testes, 419 asserções)
+composer test          # Pest 5 (262 testes, 426 asserções)
 composer analyse       # Larastan / PHPStan level 8 — zero erros
 composer rector        # Rector dry-run (verifica)
 composer rector-fix    # Rector (aplica correções)
@@ -162,9 +162,9 @@ Todo o conteúdo de `docs/` está criado e sincronizado com a v1.9.0:
 
 | Item | Valor |
 |------|-------|
-| **Versão** | v1.16.0 |
-| **Commit** | `f691500` (feat: v1.15.0 — Performance & DX) |
-| **Testes** | 262 passing, 419 assertions |
+| **Versão** | v1.17.0 |
+| **Commit** | `cfda1df` (feat: v1.16.0 — Quality & Infra) |
+| **Testes** | 262 passing, 426 assertions |
 | **PHPStan** | Level 8 — 0 erros |
 | **Rector** | Clean |
 | **Documentação** | 16 docs + README + CHANGELOG + UPGRADE + REQUISITOS — todos sincronizados |

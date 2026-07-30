@@ -2,7 +2,7 @@
 
 > Filosofia**: Estratégia híbrida — v1.x contínua com deprecação lenta, v2.0.0 planejada ~2026 Q1.
 > Apenas **MINORs** (features compatíveis) e **PATCHs** (correções) até lá.
-> Atual — **v1.16.0** (262 testes, 419 asserções, PHPStan 0, Rector clean, Pint PSR-12).
+> Atual — **v1.17.0** (262 testes, 426 asserções, PHPStan 0, Rector clean, Pint PSR-12).
 
 ---
 
@@ -106,6 +106,7 @@
 || **1.14.0** ✅ | Cookbook expandido | LoggingMiddleware avançado, OpenTelemetry, Prometheus, Grafana, 31 novos testes |
 || **1.15.0** ✅ | Performance & DX | RateLimitMonitor, cache-warm, TransfeeraBaseJob, docs/fila.md, 25 novos testes |
 || **1.16.0** ✅ | Qualidade & Infra | Webhook DTOs, .env.example, CONTRIBUTING.md, GitHub Release, +3 testes |
+|| **1.17.0** ✅ | Cookbook + Statement DTOs | 3 receitas, StatementWithdraw/Report DTOs, Boas Práticas |
 || **2.0.0** 🎯 ~2026 Q1 | **Breaking planejado** | Drop Laravel 12/PHP 8.3, remove `*Raw()`, Connector interno, API unificada (DTOs everywhere), UPGRADE.md completo |
 
 ---

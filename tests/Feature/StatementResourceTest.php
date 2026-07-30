@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\StatementReportResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\StatementWithdrawResponseDTO;
 use FlavioMoreir4\Transfeera\Exceptions\PaymentException;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Cache;
@@ -51,8 +53,11 @@ test('resgata saldo para conta bancaria', function () {
         'pix_key' => 'financeiro@empresa.com',
     ]);
 
-    expect($response['id'])->toBe('wd_123');
-    expect($response['amount'])->toBe(50000);
+    expect($response)->toBeInstanceOf(StatementWithdrawResponseDTO::class);
+    expect($response->id)->toBe('wd_123');
+    expect($response->amount)->toBe(50000);
+    expect($response->status)->toBe('processing');
+    expect($response->pixKey)->toBe('financeiro@empresa.com');
 });
 
 test('solicita relatorio de extrato', function () {
@@ -74,8 +79,11 @@ test('solicita relatorio de extrato', function () {
         'end_date' => '2025-07-30',
     ]);
 
-    expect($response['id'])->toBe('rep_1');
-    expect($response['status'])->toBe('processing');
+    expect($response)->toBeInstanceOf(StatementReportResponseDTO::class);
+    expect($response->id)->toBe('rep_1');
+    expect($response->status)->toBe('processing');
+    expect($response->startDate)->toBe('2025-01-01');
+    expect($response->endDate)->toBe('2025-07-30');
 });
 
 test('consulta relatorio de extrato por id', function () {
@@ -93,8 +101,9 @@ test('consulta relatorio de extrato por id', function () {
 
     $response = Transfeera::statement()->getReport('rep_1');
 
-    expect($response['status'])->toBe('completed');
-    expect($response['url'])->toContain('reports/rep_1');
+    expect($response)->toBeInstanceOf(StatementReportResponseDTO::class);
+    expect($response->status)->toBe('completed');
+    expect($response->url)->toContain('reports/rep_1');
 });
 
 test('resgata saldo com valor zerado retorna erro', function () {

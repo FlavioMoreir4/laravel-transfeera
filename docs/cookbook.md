@@ -16,6 +16,9 @@ Receitas práticas para cenários reais com a API Transfeera.
 8. [Infração MED — Análise e Devolução](#8-infração-med--análise-e-devolução)
 9. [Hub de Contas — Multi-Tenancy](#9-hub-de-contas--multi-tenancy)
 10. [Observabilidade — Métricas e Tracing](#10-observabilidade--métricas-e-tracing)
+11. [Saldo, Saque e Extrato](#11-saldo-saque-e-extrato)
+12. [Rate Limit — Filas e Cache na Prática](#12-rate-limit--filas-e-cache-na-prática)
+13. [Fluxo Completo — Boleto+Pix com Tratamento de Erros](#13-fluxo-completo--boletopix-com-tratamento-de-erros)
 
 ---
 
@@ -589,7 +592,269 @@ $ php artisan transfeera:debug
 
 ---
 
-## Tratamento de Erros
+## 11. Saldo, Saque e Extrato
+
+Fluxo completo de gestão financeira: consultar saldo, sacar valores e gerar relatórios.
+
+```php
+// 1. Consultar saldo disponível
+$saldo = Transfeera::statement()->getBalance();
+
+echo "Disponível: R$ " . number_format($saldo->balance / 100, 2, ',', '.');
+echo "Bloqueado: R$ " . number_format($saldo->blocked / 100, 2, ',', '.');
+echo "Total: R$ " . number_format($saldo->total / 100, 2, ',', '.');
+
+// 2. Sacar saldo para uma chave Pix
+$saque = Transfeera::statement()->withdraw([
+    'amount' => 50000, // R$ 500,00 em centavos
+    'pix_key' => 'financeiro@empresa.com',
+    'description' => 'Resgate mensal',
+]);
+
+echo "Saque {$saque->id} — Status: {$saque->status}";
+
+// 3. Solicitar relatório de extrato de um período
+$relatorio = Transfeera::statement()->requestReport([
+    'start_date' => '2025-01-01',
+    'end_date' => '2025-07-30',
+    'type' => 'csv',
+]);
+
+echo "Relatório {$relatorio->id} — Status: {$relatorio->status}";
+
+// 4. Consultar relatório gerado
+$resultado = Transfeera::statement()->getReport($relatorio->id);
+
+if ($resultado->status === 'completed' && $resultado->url) {
+    echo "Download: {$resultado->url}";
+}
+```
+
+## 12. Rate Limit — Filas e Cache na Prática
+
+Use o `RateLimitMonitor` para evitar throttling e o `TransfeeraBaseJob` para jobs resilientes.
+
+### Monitorando rate limits em tempo real
+
+```php
+use FlavioMoreir4\Transfeera\Facades\Transfeera;
+
+// RateLimitMonitor é injetado automaticamente no Connector
+// e rastreia TODAS as respostas (não apenas 429)
+
+$monitor = app('transfeera.rate-limit');
+
+// Antes de uma chamada pesada, verificar se pode prosseguir
+foreach (['payments', 'receivables', 'conta_certa'] as $domain) {
+    if ($monitor->isThrottled($domain)) {
+        $remaining = $monitor->getRemaining($domain);
+        $resetsAt = $monitor->getResetAt($domain);
+
+        Log::warning("Rate limit baixo para {$domain}", [
+            'remaining' => $remaining,
+            'resets_at' => $resetsAt,
+        ]);
+
+        // Aguardar até o reset
+        if ($resetsAt) {
+            $wait = max(1, $resetsAt - time());
+            sleep($wait);
+        }
+    }
+}
+```
+
+### Job com backoff consciente de rate limit
+
+```php
+use FlavioMoreir4\Transfeera\Jobs\TransfeeraBaseJob;
+
+class ProcessarPagamentoJob extends TransfeeraBaseJob
+{
+    public function handle(): void
+    {
+        // O backoff já considera RateLimitMonitor:
+        // - Se rate limit estourou, usa Retry-After
+        // - Caso contrário, backoff progressivo 5s→405s
+        // - Log estruturado automático
+
+        $this->logInfo('Processando pagamento', [
+            'batch_id' => $this->data['batch_id'] ?? null,
+        ]);
+
+        // Sua lógica aqui...
+        Transfeera::batches()->get($this->data['batch_id']);
+    }
+
+    public function failed(\Throwable $e): void
+    {
+        $this->logError('Falha definitiva no pagamento', [
+            'error' => $e->getMessage(),
+        ]);
+    }
+}
+
+// Disparar o job
+ProcessarPagamentoJob::dispatch(['batch_id' => 'batch_123']);
+```
+
+### Cache de token (pré-aquecimento)
+
+Use o comando `transfeera:cache-warm` para evitar a latência do primeiro request:
+
+```bash
+# Pré-aquecer cache do token OAuth
+php artisan transfeera:cache-warm
+
+# Para operação multi-tenant (Hub de Contas)
+php artisan transfeera:cache-warm --account-id=acc_123
+
+# Forçar renovação mesmo com cache válido
+php artisan transfeera:cache-warm --force
+```
+
+Agende no `Kernel` para produção:
+
+```php
+// app/Console/Kernel.php
+protected function schedule(Schedule $schedule): void
+{
+    $schedule->command('transfeera:cache-warm')
+        ->everyFiveMinutes()
+        ->runInBackground();
+}
+```
+
+### Configuração de fila
+
+```php
+// config/queue.php — conexão padrão
+'default' => env('QUEUE_CONNECTION', 'redis'),
+
+// Job na fila 'transfeera'
+ProcessarPagamentoJob::dispatch(['batch_id' => 'batch_123'])
+    ->onQueue('transfeera');
+```
+
+```bash
+# Worker dedicado
+php artisan queue:work redis --queue=transfeera --tries=3 --delay=5
+```
+
+> Veja o guia completo em [docs/fila.md](fila.md) para exemplos avançados com Horizon e RateLimitMonitor.
+
+## 13. Fluxo Completo — Boleto+Pix com Tratamento de Erros
+
+Criação de cobrança com fallback entre boleto e Pix, tratamento de erros reais e boas práticas.
+
+```php
+use FlavioMoreir4\Transfeera\Exceptions\{
+    TransfeeraValidationException,
+    TransfeeraRateLimitException,
+    TransfeeraAuthenticationException,
+    ReceivableException,
+};
+use FlavioMoreir4\Transfeera\Facades\Transfeera;
+
+/**
+ * Cria cobrança com tratamento completo de erros.
+ */
+function criarCobrancaSegura(array $dados): array
+{
+    $maxTentativas = 3;
+    $tentativa = 0;
+
+    while ($tentativa < $maxTentativas) {
+        $tentativa++;
+
+        try {
+            // 1. Criar a cobrança
+            $charge = Transfeera::charges()->create([
+                'payer_name' => $dados['nome'],
+                'payer_document' => $dados['documento'],
+                'value' => $dados['valor'], // centavos
+                'due_date' => $dados['vencimento'],
+                'description' => $dados['descricao'],
+                'fine_rate' => 2.0,
+                'interest_rate' => 0.033,
+            ]);
+
+            // 2. Disponibilizar meios de pagamento
+            return [
+                'id' => $charge->id,
+                'status' => $charge->status,
+                'boleto_url' => $charge->boletoUrl,
+                'pix_qr_code' => $charge->pixQrCode,
+                'pix_emv' => $charge->pixEmv,
+            ];
+
+        } catch (TransfeeraValidationException $e) {
+            // Dados inválidos — não adianta retentar
+            Log::warning('Dados inválidos na cobrança', [
+                'errors' => $e->getErrors(),
+                'dados' => $dados,
+            ]);
+            throw $e;
+
+        } catch (TransfeeraRateLimitException $e) {
+            // Rate limit — aguardar e retentar
+            $wait = $e->getRetryAfter() ?? (10 * $tentativa);
+            Log::warning("Rate limit atingido (tentativa {$tentativa})", [
+                'retry_after' => $wait,
+            ]);
+
+            if ($tentativa < $maxTentativas) {
+                sleep($wait);
+                continue;
+            }
+            throw $e;
+
+        } catch (TransfeeraAuthenticationException $e) {
+            // Credenciais inválidas — não retentar
+            Log::error('Falha de autenticação Transfeera');
+            throw $e;
+
+        } catch (ReceivableException $e) {
+            // Erro específico de recebíveis
+            Log::error('Erro no módulo de recebíveis', [
+                'status' => $e->getStatusCode(),
+                'message' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
+    }
+}
+
+// Uso:
+try {
+    $resultado = criarCobrancaSegura([
+        'nome' => 'Empresa XYZ Ltda',
+        'documento' => '11222333444455',
+        'valor' => 50000,       // R$ 500,00
+        'vencimento' => '2025-09-15',
+        'descricao' => 'Consultoria Mensal',
+    ]);
+
+    echo "Cobrança criada: {$resultado['id']}";
+    echo "Boleto: {$resultado['boleto_url']}";
+    echo "Pix: {$resultado['pix_emv']}";
+
+    // Download do comprovante
+    $pdf = Transfeera::charges()->downloadPdf($resultado['id'], $resultado['id']);
+    echo "Comprovante: {$pdf['url']}";
+
+} catch (TransfeeraValidationException $e) {
+    foreach ($e->getErrors() as $erro) {
+        echo "Erro de validação: {$erro}";
+    }
+} catch (\Throwable $e) {
+    Log::error('Falha ao criar cobrança', [
+        'error' => $e->getMessage(),
+    ]);
+}
+```
+
+---
 
 Sempre capture exceções específicas para responder adequadamente:
 
@@ -631,7 +896,10 @@ try {
 1. **Sempre use centavos (int)** para valores monetários — nunca float.
 2. **Configure mTLS em produção** via `TRANSFEERA_MTLS_CERT_PATH` e `TRANSFEERA_MTLS_KEY_PATH`.
 3. **Use o comando `transfeera:debug`** para verificar a configuração antes de integrar.
-4. **Monitore rate limits** com as headers `X-RateLimit-Remaining` expostas nas exceptions.
+4. **Monitore rate limits** com `RateLimitMonitor::isThrottled()` antes de chamadas pesadas.
 5. **Valide webhooks** com `verifySignature()` antes de processar o payload.
 6. **Use Hub de Contas** para operar múltiplos clientes com uma única credencial.
 7. **Cache do token** é automático — o SDK gerencia renovação com lock.
+8. **Pré-aqueça o token** com `php artisan transfeera:cache-warm` em schedules para evitar latência.
+9. **Use `TransfeeraBaseJob`** para jobs com retry consciente de rate limit e log estruturado.
+10. **Consulte `docs/fila.md`** para integração com Horizon, múltiplas filas e RateLimitMonitor avançado.
