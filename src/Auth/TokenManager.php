@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Http;
 class TokenManager
 {
     private const string CACHE_KEY = 'transfeera_access_token';
+
     private const string CACHE_LOCK_KEY = 'transfeera_token_lock';
 
     /**
@@ -39,7 +40,7 @@ class TokenManager
     public function getToken(?string $accountId = null): AccessToken
     {
         $cacheKey = $accountId
-            ? self::CACHE_KEY . ':' . $accountId
+            ? self::CACHE_KEY.':'.$accountId
             : self::CACHE_KEY;
 
         /** @var AccessToken|null $cached */
@@ -112,13 +113,13 @@ class TokenManager
             $params['scope'] = "account_id:{$accountId}";
         }
 
-        $url = rtrim($this->authBaseUrl, '/') . '/authorization';
+        $url = rtrim($this->authBaseUrl, '/').'/authorization';
 
         $response = Http::asForm()->post($url, $params);
 
         if ($response->failed()) {
             throw new TransfeeraAuthenticationException(
-                message: 'Falha na autenticação: ' . $response->body(),
+                message: 'Falha na autenticação: '.$response->body(),
                 statusCode: $response->status(),
                 payload: $response->json(),
             );
@@ -133,7 +134,7 @@ class TokenManager
     public function clearCache(?string $accountId = null): void
     {
         $cacheKey = $accountId
-            ? self::CACHE_KEY . ':' . $accountId
+            ? self::CACHE_KEY.':'.$accountId
             : self::CACHE_KEY;
 
         Cache::store($this->config['cache_store'] ?? null)->forget($cacheKey);

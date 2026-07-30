@@ -49,7 +49,7 @@ class PixCashInResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $end2EndId,
+            self::BASE_PATH.'/'.$end2EndId,
             accountId: $this->accountId,
         );
     }
@@ -67,7 +67,7 @@ class PixCashInResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $end2EndId . '/refund',
+            self::BASE_PATH.'/'.$end2EndId.'/refund',
             $data,
             $this->accountId,
         );
@@ -83,7 +83,7 @@ class PixCashInResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $end2EndId . '/refund',
+            self::BASE_PATH.'/'.$end2EndId.'/refund',
             accountId: $this->accountId,
         );
     }

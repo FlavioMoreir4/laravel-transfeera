@@ -12,11 +12,11 @@ namespace FlavioMoreir4\Transfeera\DTOs;
 readonly class PixQrCodeDueDTO
 {
     /**
-     * @param  string  $key             Chave Pix
-     * @param  int     $value           Valor em centavos
-     * @param  string  $dueDate         Data de vencimento (Y-m-d)
-     * @param  string|null $description Descrição
-     * @param  string|null $additionalData Dados adicionais
+     * @param  string  $key  Chave Pix
+     * @param  int  $value  Valor em centavos
+     * @param  string  $dueDate  Data de vencimento (Y-m-d)
+     * @param  string|null  $description  Descrição
+     * @param  string|null  $additionalData  Dados adicionais
      */
     public function __construct(
         public string $key,

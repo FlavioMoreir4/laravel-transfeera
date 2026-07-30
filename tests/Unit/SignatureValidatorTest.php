@@ -59,6 +59,6 @@ test('usa hash_equals para comparacao timing-safe', function () {
     expect($validator->isValid($payload, $validSig))->toBeTrue();
 
     // Assinatura inválida (trocando último char)
-    $tampered = substr($validSig, 0, -1) . '0';
+    $tampered = substr($validSig, 0, -1).'0';
     expect($validator->isValid($payload, $tampered))->toBeFalse();
 });

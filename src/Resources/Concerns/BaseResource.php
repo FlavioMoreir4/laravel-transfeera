@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Concerns;
 
-use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
+use FlavioMoreir4\Transfeera\Http\Connector;
 
 /**
  * Classe base para todos os Resources da API.
@@ -79,6 +79,7 @@ abstract class BaseResource
     protected function getDTO(string $domain, string $path, array $params, string $dtoClass): BaseResponseDTO
     {
         $response = $this->connector->get($domain, $path, $params, $this->accountId);
+
         return $this->toDTO($dtoClass, $response);
     }
 
@@ -92,6 +93,7 @@ abstract class BaseResource
     {
         $response = $this->connector->get($domain, $path, $params, $this->accountId);
         $dataList = $this->extractDataList($response);
+
         return $this->toDTOList($dtoClass, $dataList);
     }
 
@@ -104,6 +106,7 @@ abstract class BaseResource
     protected function postDTO(string $domain, string $path, array $data, string $dtoClass): BaseResponseDTO
     {
         $response = $this->connector->post($domain, $path, $data, $this->accountId);
+
         return $this->toDTO($dtoClass, $response);
     }
 
@@ -116,6 +119,7 @@ abstract class BaseResource
     protected function putDTO(string $domain, string $path, array $data, string $dtoClass): BaseResponseDTO
     {
         $response = $this->connector->put($domain, $path, $data, $this->accountId);
+
         return $this->toDTO($dtoClass, $response);
     }
 
@@ -128,6 +132,7 @@ abstract class BaseResource
     protected function patchDTO(string $domain, string $path, array $data, string $dtoClass): BaseResponseDTO
     {
         $response = $this->connector->patch($domain, $path, $data, $this->accountId);
+
         return $this->toDTO($dtoClass, $response);
     }
 

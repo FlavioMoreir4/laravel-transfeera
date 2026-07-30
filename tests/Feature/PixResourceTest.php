@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\Exceptions\PaymentException;
+use FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Http;
 
@@ -45,7 +47,7 @@ test('consulta chave pix inexistente retorna erro', function () {
     ]);
 
     expect(fn () => Transfeera::pix()->lookupKey('00000000000'))
-        ->toThrow(\FlavioMoreir4\Transfeera\Exceptions\PaymentException::class, 'Chave Pix não encontrada');
+        ->toThrow(PaymentException::class, 'Chave Pix não encontrada');
 });
 
 test('parseia emv pix copia e cola', function () {
@@ -83,5 +85,5 @@ test('parseia emv invalido retorna erro de validacao', function () {
     ]);
 
     expect(fn () => Transfeera::pix()->parseEmv('invalido'))
-        ->toThrow(\FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException::class, 'EMV inválido');
+        ->toThrow(TransfeeraValidationException::class, 'EMV inválido');
 });

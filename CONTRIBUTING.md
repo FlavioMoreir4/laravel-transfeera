@@ -153,7 +153,7 @@ readonly class TransferResponseDTO extends BaseResponseDTO
 
 ### Testes
 
-- **Pest 4** com `Http::fake()` e fixtures reais
+- **Pest 5** com `Http::fake()` e fixtures reais
 - Cobertura mínima: 90% Resources, 100% TokenManager/Exceptions
 - Fixtures em `tests/Fixtures/` extraídas da doc oficial
 

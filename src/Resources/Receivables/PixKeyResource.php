@@ -48,7 +48,7 @@ class PixKeyResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             accountId: $this->accountId,
         );
     }
@@ -79,7 +79,7 @@ class PixKeyResource extends BaseResource
     {
         return $this->connector->delete(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             $this->accountId,
         );
     }
@@ -94,7 +94,7 @@ class PixKeyResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/resendVerificationCode',
+            self::BASE_PATH.'/'.$id.'/resendVerificationCode',
             accountId: $this->accountId,
         );
     }
@@ -102,7 +102,7 @@ class PixKeyResource extends BaseResource
     /**
      * Verifica uma chave Pix com o código recebido.
      *
-     * @param  string  $id    ID da chave Pix
+     * @param  string  $id  ID da chave Pix
      * @param  string  $code  Código de verificação
      * @return array<string, mixed>
      */
@@ -110,7 +110,7 @@ class PixKeyResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/verify',
+            self::BASE_PATH.'/'.$id.'/verify',
             ['code' => $code],
             $this->accountId,
         );
@@ -128,7 +128,7 @@ class PixKeyResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            '/pix/key/' . $key . '/claim',
+            '/pix/key/'.$key.'/claim',
             accountId: $this->accountId,
         );
     }
@@ -143,7 +143,7 @@ class PixKeyResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/claim/confirm',
+            self::BASE_PATH.'/'.$id.'/claim/confirm',
             accountId: $this->accountId,
         );
     }
@@ -158,7 +158,7 @@ class PixKeyResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/claim/cancel',
+            self::BASE_PATH.'/'.$id.'/claim/cancel',
             accountId: $this->accountId,
         );
     }

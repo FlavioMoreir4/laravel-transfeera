@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\DTOs\Response;
 
 use Override;
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 
 /**
  * DTO de resposta para Cobrança (Charge).
@@ -15,16 +14,16 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 class ChargeResponseDTO extends BaseResponseDTO
 {
     /**
-     * @param  string  $id              ID da cobrança
-     * @param  string  $status          Status: pending, completed, canceled, expired
-     * @param  string  $payerName       Nome do pagador
-     * @param  int     $value           Valor em centavos
-     * @param  string|null $payerDocument CPF/CNPJ
-     * @param  string|null $dueDate     Data vencimento
-     * @param  string|null $pixKey      Chave Pix (se for Pix)
-     * @param  array<string, mixed>|null $receivables Recebíveis associados
-     * @param  string|null $createdAt   Data criação
-     * @param  string|null $updatedAt   Data atualização
+     * @param  string  $id  ID da cobrança
+     * @param  string  $status  Status: pending, completed, canceled, expired
+     * @param  string  $payerName  Nome do pagador
+     * @param  int  $value  Valor em centavos
+     * @param  string|null  $payerDocument  CPF/CNPJ
+     * @param  string|null  $dueDate  Data vencimento
+     * @param  string|null  $pixKey  Chave Pix (se for Pix)
+     * @param  array<string, mixed>|null  $receivables  Recebíveis associados
+     * @param  string|null  $createdAt  Data criação
+     * @param  string|null  $updatedAt  Data atualização
      */
     public function __construct(
         public string $payerName,

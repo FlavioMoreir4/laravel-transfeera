@@ -2,6 +2,8 @@
 
 namespace FlavioMoreir4\Transfeera\Tests;
 
+use FlavioMoreir4\Transfeera\Facades\Transfeera;
+use FlavioMoreir4\Transfeera\TransfeeraServiceProvider;
 use Illuminate\Support\Facades\Cache;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
@@ -29,7 +31,7 @@ abstract class TestCase extends OrchestraTestCase
     protected function getPackageProviders($app): array
     {
         return [
-            \FlavioMoreir4\Transfeera\TransfeeraServiceProvider::class,
+            TransfeeraServiceProvider::class,
         ];
     }
 
@@ -39,7 +41,7 @@ abstract class TestCase extends OrchestraTestCase
     protected function getPackageAliases($app): array
     {
         return [
-            'Transfeera' => \FlavioMoreir4\Transfeera\Facades\Transfeera::class,
+            'Transfeera' => Transfeera::class,
         ];
     }
 

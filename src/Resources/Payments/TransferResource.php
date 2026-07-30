@@ -6,8 +6,8 @@ namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
 use FlavioMoreir4\Transfeera\DTOs\Response\TransferResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\TransferDTO;
-use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 use FlavioMoreir4\Transfeera\Http\Connector;
+use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
 /**
  * Resource para gerenciamento de transferências dentro de um lote.
@@ -30,6 +30,7 @@ class TransferResource extends BaseResource
     public function create(string $batchId, TransferDTO|array $data): TransferResponseDTO
     {
         $payload = $data instanceof TransferDTO ? $data->toArray() : $data;
+
         return $this->postDTO(self::DOMAIN, "/batch/{$batchId}/transfer", $payload, TransferResponseDTO::class);
     }
 
@@ -66,7 +67,7 @@ class TransferResource extends BaseResource
     /**
      * Atualiza os dados de uma transferência.
      *
-     * @param  string  $batchId     Identificador do lote
+     * @param  string  $batchId  Identificador do lote
      * @param  string  $transferId  Identificador da transferência
      * @param  array<string, mixed>  $data  Dados a serem atualizados
      */
@@ -78,7 +79,7 @@ class TransferResource extends BaseResource
     /**
      * Remove uma transferência de um lote.
      *
-     * @param  string  $batchId     Identificador do lote
+     * @param  string  $batchId  Identificador do lote
      * @param  string  $transferId  Identificador da transferência
      * @return array<string, mixed> Confirmação de exclusão
      */

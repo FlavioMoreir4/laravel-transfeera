@@ -68,7 +68,7 @@ class InfractionResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             accountId: $this->accountId,
         );
     }
@@ -78,7 +78,7 @@ class InfractionResource extends BaseResource
      *
      * A infraction_id vai na URL: POST /med/infractions/{id}/analysis
      *
-     * @param  string  $id    ID da infração
+     * @param  string  $id  ID da infração
      * @param  array{type: string, refund_amount?: int, description?: string}  $data  Dados da análise
      * @return array<string, mixed>
      */
@@ -86,7 +86,7 @@ class InfractionResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/analysis',
+            self::BASE_PATH.'/'.$id.'/analysis',
             $data,
             $this->accountId,
         );
@@ -102,7 +102,7 @@ class InfractionResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/analysis',
+            self::BASE_PATH.'/analysis',
             $analyses,
             $this->accountId,
         );

@@ -12,12 +12,12 @@ namespace FlavioMoreir4\Transfeera\DTOs;
 readonly class PaymentLinkDTO
 {
     /**
-     * @param  string  $name            Nome do produto/serviço
-     * @param  int     $value           Valor em centavos
-     * @param  string|null $description Descrição
-     * @param  int|null $expiresIn      Expiração em dias
-     * @param  string|null $redirectUrl URL de redirecionamento após pagamento
-     * @param  array<string, mixed>|null $metadata Metadados
+     * @param  string  $name  Nome do produto/serviço
+     * @param  int  $value  Valor em centavos
+     * @param  string|null  $description  Descrição
+     * @param  int|null  $expiresIn  Expiração em dias
+     * @param  string|null  $redirectUrl  URL de redirecionamento após pagamento
+     * @param  array<string, mixed>|null  $metadata  Metadados
      */
     public function __construct(
         public string $name,

@@ -6,7 +6,6 @@ namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
 use FlavioMoreir4\Transfeera\Events\TransfeeraWebhookReceived;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Route;
 
 test('recebe webhook de pagamentos com assinatura valida', function () {
     Event::fake([TransfeeraWebhookReceived::class]);

@@ -17,7 +17,7 @@ test('loga webhook recebido', function () {
         payload: ['id' => 'batch_1'],
     );
 
-    (new LogTransfeeraWebhook())->handle($event);
+    (new LogTransfeeraWebhook)->handle($event);
 
     Log::shouldHaveReceived('info')
         ->with('[Transfeera Webhook]', \Mockery::on(fn ($context) => $context['domain'] === 'payments'))

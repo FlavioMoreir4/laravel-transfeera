@@ -2,8 +2,6 @@
 
 namespace FlavioMoreir4\Transfeera\Tests;
 
-use Illuminate\Foundation\Testing\Concerns\InteractsWithContainer;
-
 /*
 |--------------------------------------------------------------------------
 | Pest — Configuração
@@ -23,7 +21,7 @@ uses(TestCase::class)->in(__DIR__);
  */
 function fixturePath(string $name): string
 {
-    return __DIR__ . '/Fixtures/' . $name;
+    return __DIR__.'/Fixtures/'.$name;
 }
 
 /**

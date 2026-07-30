@@ -52,7 +52,7 @@ class PaymentLinkResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             accountId: $this->accountId,
         );
     }
@@ -67,7 +67,7 @@ class PaymentLinkResource extends BaseResource
     {
         return $this->connector->delete(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             $this->accountId,
         );
     }

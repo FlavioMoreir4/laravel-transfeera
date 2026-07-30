@@ -12,12 +12,12 @@ namespace FlavioMoreir4\Transfeera\DTOs;
 readonly class ValidationDTO
 {
     /**
-     * @param  string  $bankCode      Código do banco (ex.: '341')
-     * @param  string  $agency        Agência
-     * @param  string  $account       Conta
-     * @param  string  $document      CPF/CNPJ
-     * @param  string  $accountType   Tipo: checking, savings, salary, payment
-     * @param  string|null $name      Nome do titular
+     * @param  string  $bankCode  Código do banco (ex.: '341')
+     * @param  string  $agency  Agência
+     * @param  string  $account  Conta
+     * @param  string  $document  CPF/CNPJ
+     * @param  string  $accountType  Tipo: checking, savings, salary, payment
+     * @param  string|null  $name  Nome do titular
      */
     public function __construct(
         public string $bankCode,

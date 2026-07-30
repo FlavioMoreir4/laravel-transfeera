@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\Tests\Unit;
 
 use FlavioMoreir4\Transfeera\Auth\TokenManager;
+use FlavioMoreir4\Transfeera\Exceptions\TransfeeraAuthenticationException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -117,7 +118,7 @@ test('lanca excecao em falha de autenticacao', function () {
     );
 
     expect(fn () => $manager->getToken())
-        ->toThrow(\FlavioMoreir4\Transfeera\Exceptions\TransfeeraAuthenticationException::class);
+        ->toThrow(TransfeeraAuthenticationException::class);
 });
 
 test('limpa cache manualmente', function () {

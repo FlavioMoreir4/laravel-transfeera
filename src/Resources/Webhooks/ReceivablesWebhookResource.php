@@ -23,6 +23,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 class ReceivablesWebhookResource extends BaseResource
 {
     private const string BASE_PATH_URLS = '/webhook';
+
     private const string BASE_PATH_EVENTS = '/webhook/event';
 
     /**
@@ -51,7 +52,7 @@ class ReceivablesWebhookResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH_URLS . '/' . $id,
+            self::BASE_PATH_URLS.'/'.$id,
             accountId: $this->accountId,
         );
     }
@@ -73,7 +74,7 @@ class ReceivablesWebhookResource extends BaseResource
     /**
      * Atualiza uma URL de webhook.
      *
-     * @param  string  $id    ID da URL de webhook
+     * @param  string  $id  ID da URL de webhook
      * @param  array{url?: string, events?: string[]}  $data  Dados a serem atualizados
      * @return array<string, mixed>
      */
@@ -81,7 +82,7 @@ class ReceivablesWebhookResource extends BaseResource
     {
         return $this->connector->put(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH_URLS . '/' . $id,
+            self::BASE_PATH_URLS.'/'.$id,
             $data,
             $this->accountId,
         );
@@ -97,7 +98,7 @@ class ReceivablesWebhookResource extends BaseResource
     {
         return $this->connector->delete(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH_URLS . '/' . $id,
+            self::BASE_PATH_URLS.'/'.$id,
             $this->accountId,
         );
     }
@@ -128,7 +129,7 @@ class ReceivablesWebhookResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH_EVENTS . '/' . $eventId . '/retry',
+            self::BASE_PATH_EVENTS.'/'.$eventId.'/retry',
             accountId: $this->accountId,
         );
     }

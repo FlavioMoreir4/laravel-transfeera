@@ -93,6 +93,28 @@ test('lista qrcodes', function () {
     expect($response['data'])->toHaveCount(2);
 });
 
+test('consulta qrcode por id', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/pix/qrcode/qr_imm_1' => Http::response([
+            'id' => 'qr_imm_1',
+            'type' => 'immediate',
+            'status' => 'active',
+            'value' => 5000,
+            'key' => 'email@example.com',
+        ]),
+        'login-api-sandbox.transfeera.com/*' => Http::response([
+            'access_token' => 'test-token',
+            'expires_in' => 1800,
+        ]),
+    ]);
+
+    $response = Transfeera::pixQrCodes()->get('qr_imm_1');
+
+    expect($response['id'])->toBe('qr_imm_1');
+    expect($response['status'])->toBe('active');
+    expect($response['value'])->toBe(5000);
+});
+
 test('revoga cobranca', function () {
     Http::fake([
         'api-sandbox.transfeera.com/pix/qrcode/qr_1' => Http::response([

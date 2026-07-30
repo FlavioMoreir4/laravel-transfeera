@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
 use FlavioMoreir4\Transfeera\DTOs\Response\BankResponseDTO;
-use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 use FlavioMoreir4\Transfeera\Http\Connector;
+use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
 /**
  * Resource para consulta de bancos disponíveis para pagamentos.

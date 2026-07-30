@@ -72,7 +72,7 @@ class ValidationResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_CONTA_CERTA,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             accountId: $this->accountId,
         );
     }

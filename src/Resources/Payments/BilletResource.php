@@ -59,7 +59,7 @@ class BilletResource extends BaseResource
      * Atualiza os dados de um boleto dentro de um lote.
      *
      * @param  string  $batchId  Identificador do lote
-     * @param  string  $id       Identificador do boleto
+     * @param  string  $id  Identificador do boleto
      * @param  array<string, mixed>  $data  Dados a serem atualizados
      * @return array<string, mixed>
      */
@@ -76,7 +76,7 @@ class BilletResource extends BaseResource
     /**
      * Atualiza os dados de um boleto avulso.
      *
-     * @param  string  $id    Identificador do boleto
+     * @param  string  $id  Identificador do boleto
      * @param  array<string, mixed>  $data  Dados a serem atualizados
      * @return array<string, mixed>
      */
@@ -143,7 +143,7 @@ class BilletResource extends BaseResource
      * Remove um boleto de um lote.
      *
      * @param  string  $batchId  Identificador do lote
-     * @param  string  $id       Identificador do boleto
+     * @param  string  $id  Identificador do boleto
      * @return array<string, mixed>
      */
     public function delete(string $batchId, string $id): array

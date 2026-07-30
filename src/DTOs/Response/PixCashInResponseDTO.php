@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\DTOs\Response;
 
 use Override;
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 
 /**
  * DTO de resposta para Pix recebido (Cash-in).
@@ -15,16 +14,16 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 class PixCashInResponseDTO extends BaseResponseDTO
 {
     /**
-     * @param  string  $id              ID do cash-in (end2endId)
-     * @param  string  $status          Status: completed, returned
-     * @param  int     $value           Valor em centavos
-     * @param  string  $payerName       Nome do pagador
-     * @param  string  $payerDocument   CPF/CNPJ do pagador
-     * @param  string  $payerPixKey     Chave Pix do pagador
+     * @param  string  $id  ID do cash-in (end2endId)
+     * @param  string  $status  Status: completed, returned
+     * @param  int  $value  Valor em centavos
+     * @param  string  $payerName  Nome do pagador
+     * @param  string  $payerDocument  CPF/CNPJ do pagador
+     * @param  string  $payerPixKey  Chave Pix do pagador
      * @param  string  $receiverPixKey  Chave Pix do recebedor
-     * @param  string|null $description Descrição
-     * @param  string|null $createdAt   Data criação
-     * @param  string|null $updatedAt   Data atualização
+     * @param  string|null  $description  Descrição
+     * @param  string|null  $createdAt  Data criação
+     * @param  string|null  $updatedAt  Data atualização
      */
     public function __construct(
         public int $value,

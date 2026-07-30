@@ -12,7 +12,7 @@ namespace FlavioMoreir4\Transfeera\DTOs;
 readonly class InfractionBatchAnalysisDTO
 {
     /**
-     * @param  array<InfractionAnalysisDTO> $analyses Lista de análises
+     * @param  array<InfractionAnalysisDTO>  $analyses  Lista de análises
      */
     public function __construct(
         public array $analyses,

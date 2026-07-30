@@ -66,7 +66,7 @@ class AuthorizationResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             accountId: $this->accountId,
         );
     }
@@ -81,7 +81,7 @@ class AuthorizationResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/cancellations',
+            self::BASE_PATH.'/'.$id.'/cancellations',
             accountId: $this->accountId,
         );
     }
@@ -89,15 +89,15 @@ class AuthorizationResource extends BaseResource
     /**
      * Consulta o cancelamento de uma autorização.
      *
-     * @param  string  $id               ID da autorização
-     * @param  string  $cancellationId   ID do cancelamento
+     * @param  string  $id  ID da autorização
+     * @param  string  $cancellationId  ID do cancelamento
      * @return array<string, mixed>
      */
     public function getCancellation(string $id, string $cancellationId): array
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/cancellations/' . $cancellationId,
+            self::BASE_PATH.'/'.$id.'/cancellations/'.$cancellationId,
             accountId: $this->accountId,
         );
     }
@@ -105,7 +105,7 @@ class AuthorizationResource extends BaseResource
     /**
      * Atualiza uma autorização (ex.: alterar split_payment).
      *
-     * @param  string  $id    ID da autorização
+     * @param  string  $id  ID da autorização
      * @param  array<string, mixed>  $data  Dados a serem atualizados
      * @return array<string, mixed>
      */
@@ -113,7 +113,7 @@ class AuthorizationResource extends BaseResource
     {
         return $this->connector->patch(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             $data,
             $this->accountId,
         );

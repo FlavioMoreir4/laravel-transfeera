@@ -34,7 +34,7 @@ class PixQrCodeResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/static',
+            self::BASE_PATH.'/static',
             $data,
             $this->accountId,
         );
@@ -50,7 +50,7 @@ class PixQrCodeResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/collection/immediate',
+            self::BASE_PATH.'/collection/immediate',
             $data,
             $this->accountId,
         );
@@ -66,7 +66,7 @@ class PixQrCodeResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/collection/dueDate',
+            self::BASE_PATH.'/collection/dueDate',
             $data,
             $this->accountId,
         );
@@ -98,7 +98,7 @@ class PixQrCodeResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             accountId: $this->accountId,
         );
     }
@@ -113,7 +113,7 @@ class PixQrCodeResource extends BaseResource
     {
         return $this->connector->delete(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             accountId: $this->accountId,
         );
     }

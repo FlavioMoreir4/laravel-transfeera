@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\DTOs\Response;
 
 use Override;
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 
 /**
  * DTO de resposta para Banco (Pagamentos).
@@ -15,12 +14,12 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 class BankResponseDTO extends BaseResponseDTO
 {
     /**
-     * @param  string  $id          ID do banco
-     * @param  string  $name        Nome do banco
-     * @param  string  $code        Código do banco (ISPB)
-     * @param  string  $status      Status
-     * @param  string|null $createdAt Data criação
-     * @param  string|null $updatedAt Data atualização
+     * @param  string  $id  ID do banco
+     * @param  string  $name  Nome do banco
+     * @param  string  $code  Código do banco (ISPB)
+     * @param  string  $status  Status
+     * @param  string|null  $createdAt  Data criação
+     * @param  string|null  $updatedAt  Data atualização
      */
     public function __construct(
         public string $name,

@@ -12,16 +12,16 @@ namespace FlavioMoreir4\Transfeera\DTOs;
 readonly class RecurrenceDTO
 {
     /**
-     * @param  string  $name             Nome da recorrência
-     * @param  int     $value            Valor em centavos
-     * @param  string  $pixKey           Chave Pix do favorecido
-     * @param  string  $pixKeyType       Tipo da chave Pix
-     * @param  string  $startDate        Data de início (Y-m-d)
-     * @param  string  $frequency        Frequência: daily, weekly, monthly, yearly
-     * @param  int     $interval         Intervalo entre pagamentos
-     * @param  string|null $endDate         Data fim (Y-m-d) - opcional
-     * @param  string|null $description  Descrição
-     * @param  array<string, mixed>|null $metadata Metadados
+     * @param  string  $name  Nome da recorrência
+     * @param  int  $value  Valor em centavos
+     * @param  string  $pixKey  Chave Pix do favorecido
+     * @param  string  $pixKeyType  Tipo da chave Pix
+     * @param  string  $startDate  Data de início (Y-m-d)
+     * @param  string  $frequency  Frequência: daily, weekly, monthly, yearly
+     * @param  int  $interval  Intervalo entre pagamentos
+     * @param  string|null  $endDate  Data fim (Y-m-d) - opcional
+     * @param  string|null  $description  Descrição
+     * @param  array<string, mixed>|null  $metadata  Metadados
      */
     public function __construct(
         public string $name,

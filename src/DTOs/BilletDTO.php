@@ -12,23 +12,23 @@ namespace FlavioMoreir4\Transfeera\DTOs;
 readonly class BilletDTO
 {
     /**
-     * @param  string  $payerName        Nome do pagador
-     * @param  int     $value            Valor em centavos
-     * @param  string  $dueDate          Data de vencimento (Y-m-d)
-     * @param  string  $document         CPF/CNPJ do pagador
-     * @param  string  $documentType     Tipo do documento: cpf, cnpj
-     * @param  string|null $email        Email do pagador
-     * @param  string|null $phone        Telefone do pagador
-     * @param  string|null $address      Endereço
-     * @param  string|null $city         Cidade
-     * @param  string|null $state        Estado (UF)
-     * @param  string|null $zipCode      CEP
-     * @param  string|null $neighborhood Bairro
-     * @param  string|null $addressNumber Número
-     * @param  string|null $addressComplement Complemento
-     * @param  string|null $instructions Instruções do boleto
-     * @param  string|null $description  Descrição
-     * @param  array<string, mixed>|null $metadata Metadados
+     * @param  string  $payerName  Nome do pagador
+     * @param  int  $value  Valor em centavos
+     * @param  string  $dueDate  Data de vencimento (Y-m-d)
+     * @param  string  $document  CPF/CNPJ do pagador
+     * @param  string  $documentType  Tipo do documento: cpf, cnpj
+     * @param  string|null  $email  Email do pagador
+     * @param  string|null  $phone  Telefone do pagador
+     * @param  string|null  $address  Endereço
+     * @param  string|null  $city  Cidade
+     * @param  string|null  $state  Estado (UF)
+     * @param  string|null  $zipCode  CEP
+     * @param  string|null  $neighborhood  Bairro
+     * @param  string|null  $addressNumber  Número
+     * @param  string|null  $addressComplement  Complemento
+     * @param  string|null  $instructions  Instruções do boleto
+     * @param  string|null  $description  Descrição
+     * @param  array<string, mixed>|null  $metadata  Metadados
      */
     public function __construct(
         public string $payerName,

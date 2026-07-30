@@ -68,7 +68,7 @@ class ChargeResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             accountId: $this->accountId,
         );
     }
@@ -83,7 +83,7 @@ class ChargeResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/cancel',
+            self::BASE_PATH.'/'.$id.'/cancel',
             accountId: $this->accountId,
         );
     }
@@ -93,7 +93,7 @@ class ChargeResource extends BaseResource
      *
      * Path oficial: GET /charges/{id}/receivables/{receivableId}/pdf
      *
-     * @param  string  $id            ID da cobrança
+     * @param  string  $id  ID da cobrança
      * @param  string  $receivableId  ID do recebível (boleto/pix gerado)
      * @return array<string, mixed>
      */
@@ -101,7 +101,7 @@ class ChargeResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/receivables/' . $receivableId . '/pdf',
+            self::BASE_PATH.'/'.$id.'/receivables/'.$receivableId.'/pdf',
             accountId: $this->accountId,
         );
     }
@@ -118,7 +118,7 @@ class ChargeResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/pdf',
+            self::BASE_PATH.'/'.$id.'/pdf',
             accountId: $this->accountId,
         );
     }

@@ -28,7 +28,7 @@ class PixResource extends BaseResource
     {
         return $this->connector->get(
             self::DOMAIN,
-            '/pix/dict_key/' . $pixKey,
+            '/pix/dict_key/'.$pixKey,
             [],
             $this->accountId,
         );

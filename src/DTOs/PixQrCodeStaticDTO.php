@@ -12,10 +12,10 @@ namespace FlavioMoreir4\Transfeera\DTOs;
 readonly class PixQrCodeStaticDTO
 {
     /**
-     * @param  string  $key             Chave Pix (email, telefone, CPF, CNPJ, EVP)
-     * @param  int|null $value          Valor em centavos (opcional para estático)
-     * @param  string|null $description Descrição
-     * @param  string|null $additionalData Dados adicionais (ex.: reference)
+     * @param  string  $key  Chave Pix (email, telefone, CPF, CNPJ, EVP)
+     * @param  int|null  $value  Valor em centavos (opcional para estático)
+     * @param  string|null  $description  Descrição
+     * @param  string|null  $additionalData  Dados adicionais (ex.: reference)
      */
     public function __construct(
         public string $key,

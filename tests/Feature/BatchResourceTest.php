@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -25,7 +26,7 @@ test('lanca excecao de validacao em erro 422', function () {
     ]);
 
     expect(fn () => Transfeera::batches()->create([]))
-        ->toThrow(\FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException::class);
+        ->toThrow(TransfeeraValidationException::class);
 });
 
 test('cria lote com sucesso', function () {

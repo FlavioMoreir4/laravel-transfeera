@@ -13,7 +13,7 @@ readonly class StatementReportDTO
 {
     /**
      * @param  string  $startDate  Data início (Y-m-d)
-     * @param  string  $endDate    Data fim (Y-m-d)
+     * @param  string  $endDate  Data fim (Y-m-d)
      */
     public function __construct(
         public string $startDate,

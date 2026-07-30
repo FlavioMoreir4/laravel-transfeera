@@ -12,8 +12,8 @@ namespace FlavioMoreir4\Transfeera\Auth;
 readonly class AccessToken
 {
     /**
-     * @param  string  $token    O token JWT de acesso
-     * @param  int     $expiresAt  Timestamp Unix de quando o token expira
+     * @param  string  $token  O token JWT de acesso
+     * @param  int  $expiresAt  Timestamp Unix de quando o token expira
      */
     public function __construct(
         private string $token,

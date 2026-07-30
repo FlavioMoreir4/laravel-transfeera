@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\DTOs\Response;
 
 use Override;
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 
 /**
  * DTO de resposta para Instrução de Pagamento (Payment Intent) Pix Automático.
@@ -15,14 +14,14 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 class PaymentIntentResponseDTO extends BaseResponseDTO
 {
     /**
-     * @param  string  $id                 ID da instrução
-     * @param  string  $status             Status: pending, completed, cancelled, failed
-     * @param  string  $authorizationId    ID da autorização
-     * @param  int     $value              Valor em centavos
-     * @param  string|null $description    Descrição
-     * @param  string|null $dueDate        Data vencimento
-     * @param  string|null $createdAt      Data criação
-     * @param  string|null $updatedAt      Data atualização
+     * @param  string  $id  ID da instrução
+     * @param  string  $status  Status: pending, completed, cancelled, failed
+     * @param  string  $authorizationId  ID da autorização
+     * @param  int  $value  Valor em centavos
+     * @param  string|null  $description  Descrição
+     * @param  string|null  $dueDate  Data vencimento
+     * @param  string|null  $createdAt  Data criação
+     * @param  string|null  $updatedAt  Data atualização
      */
     public function __construct(
         public string $authorizationId,

@@ -67,7 +67,7 @@ class PaymentIntentResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             accountId: $this->accountId,
         );
     }
@@ -82,7 +82,7 @@ class PaymentIntentResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/cancellations',
+            self::BASE_PATH.'/'.$id.'/cancellations',
             accountId: $this->accountId,
         );
     }
@@ -90,15 +90,15 @@ class PaymentIntentResource extends BaseResource
     /**
      * Consulta o cancelamento de uma instrução de pagamento.
      *
-     * @param  string  $id               ID da instrução de pagamento
-     * @param  string  $cancellationId   ID do cancelamento
+     * @param  string  $id  ID da instrução de pagamento
+     * @param  string  $cancellationId  ID do cancelamento
      * @return array<string, mixed>
      */
     public function getCancellation(string $id, string $cancellationId): array
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/cancellations/' . $cancellationId,
+            self::BASE_PATH.'/'.$id.'/cancellations/'.$cancellationId,
             accountId: $this->accountId,
         );
     }
@@ -113,7 +113,7 @@ class PaymentIntentResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/retry',
+            self::BASE_PATH.'/'.$id.'/retry',
             accountId: $this->accountId,
         );
     }

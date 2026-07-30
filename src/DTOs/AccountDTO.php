@@ -12,11 +12,11 @@ namespace FlavioMoreir4\Transfeera\DTOs;
 readonly class AccountDTO
 {
     /**
-     * @param  string  $name        Nome da conta
-     * @param  string  $document    CPF/CNPJ
-     * @param  string  $email       Email
-     * @param  string|null $phone   Telefone
-     * @param  string|null $tradeName Nome fantasia
+     * @param  string  $name  Nome da conta
+     * @param  string  $document  CPF/CNPJ
+     * @param  string  $email  Email
+     * @param  string|null  $phone  Telefone
+     * @param  string|null  $tradeName  Nome fantasia
      */
     public function __construct(
         public string $name,

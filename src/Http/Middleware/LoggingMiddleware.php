@@ -17,27 +17,26 @@ use Illuminate\Support\Facades\Log;
 class LoggingMiddleware
 {
     /**
-     * @param  bool   $enabled    Se o logging está ativo
-     * @param  string $channel    Canal do Log (default: stack)
-     * @param  string $level      Nível padrão: 'info'
-     * @param  bool   $logHeaders Se deve incluir headers no contexto
+     * @param  bool  $enabled  Se o logging está ativo
+     * @param  string  $channel  Canal do Log (default: stack)
+     * @param  string  $level  Nível padrão: 'info'
+     * @param  bool  $logHeaders  Se deve incluir headers no contexto
      */
     public function __construct(
         public readonly bool $enabled = true,
         public readonly string $channel = 'stack',
         public readonly string $level = 'info',
         public readonly bool $logHeaders = false,
-    ) {
-    }
+    ) {}
 
     /**
      * Registra log de uma requisição e resposta da API Transfeera.
      *
-     * @param  string   $method   Método HTTP (GET, POST, etc.)
-     * @param  string   $url      URL completa da requisição
-     * @param  array    $data     Payload enviado
-     * @param  Response|null $response Resposta recebida (pode ser nula em caso de erro antes da requisição)
-     * @param  float    $duration Duração em segundos
+     * @param  string  $method  Método HTTP (GET, POST, etc.)
+     * @param  string  $url  URL completa da requisição
+     * @param  array  $data  Payload enviado
+     * @param  Response|null  $response  Resposta recebida (pode ser nula em caso de erro antes da requisição)
+     * @param  float  $duration  Duração em segundos
      */
     public function log(string $method, string $url, array $data, ?Response $response, float $duration): void
     {

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
-use FlavioMoreir4\Transfeera\DTOs\Response\BatchResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\BatchDTO;
-use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
+use FlavioMoreir4\Transfeera\DTOs\Response\BatchResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
+use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
 /**
  * Resource para gerenciamento de lotes de pagamentos.
@@ -29,6 +29,7 @@ class BatchResource extends BaseResource
     public function create(BatchDTO|array $data): BatchResponseDTO
     {
         $payload = $data instanceof BatchDTO ? $data->toArray() : $data;
+
         return $this->postDTO(self::DOMAIN, '/batch', $payload, BatchResponseDTO::class);
     }
 
@@ -56,7 +57,7 @@ class BatchResource extends BaseResource
     /**
      * Atualiza os dados de um lote.
      *
-     * @param  string  $id    Identificador do lote
+     * @param  string  $id  Identificador do lote
      * @param  array<string, mixed>  $data  Dados a serem atualizados
      */
     public function update(string $id, array $data): BatchResponseDTO
@@ -89,6 +90,7 @@ class BatchResource extends BaseResource
             [],
             $this->accountId,
         );
+
         return $this->toDTO(BatchResponseDTO::class, $response);
     }
 }

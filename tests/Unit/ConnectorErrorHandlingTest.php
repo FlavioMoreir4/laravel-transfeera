@@ -149,6 +149,7 @@ test('retry recupera apos timeout transiente', function () {
             if ($attempts === 1) {
                 throw new ConnectionException('cURL error 28: Timeout');
             }
+
             return Http::response(['id' => 'batch_1'], 200);
         },
     ]);

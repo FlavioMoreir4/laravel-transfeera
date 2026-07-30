@@ -12,9 +12,9 @@ namespace FlavioMoreir4\Transfeera\DTOs;
 readonly class InfractionAnalysisDTO
 {
     /**
-     * @param  string  $type             Tipo: 'refund', 'contest'
-     * @param  int|null $refundAmount    Valor da devolução em centavos (para type=refund)
-     * @param  string|null $description  Descrição da análise
+     * @param  string  $type  Tipo: 'refund', 'contest'
+     * @param  int|null  $refundAmount  Valor da devolução em centavos (para type=refund)
+     * @param  string|null  $description  Descrição da análise
      */
     public function __construct(
         public string $type,

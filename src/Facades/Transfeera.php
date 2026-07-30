@@ -4,26 +4,27 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Facades;
 
-use FlavioMoreir4\Transfeera\Resources\Payments\BatchResource;
-use FlavioMoreir4\Transfeera\Resources\Payments\TransferResource;
-use FlavioMoreir4\Transfeera\Resources\Payments\BilletResource;
+use FlavioMoreir4\Transfeera\Resources\Accounts\AccountResource;
+use FlavioMoreir4\Transfeera\Resources\ContaCerta\ValidationResource;
+use FlavioMoreir4\Transfeera\Resources\Infractions\InfractionResource;
 use FlavioMoreir4\Transfeera\Resources\Payments\BankResource;
-use FlavioMoreir4\Transfeera\Resources\Payments\StatementResource;
-use FlavioMoreir4\Transfeera\Resources\Payments\RecurrenceResource;
+use FlavioMoreir4\Transfeera\Resources\Payments\BatchResource;
+use FlavioMoreir4\Transfeera\Resources\Payments\BilletResource;
 use FlavioMoreir4\Transfeera\Resources\Payments\PixResource;
-use FlavioMoreir4\Transfeera\Resources\Receivables\PixKeyResource;
-use FlavioMoreir4\Transfeera\Resources\Receivables\PixQrCodeResource;
-use FlavioMoreir4\Transfeera\Resources\Receivables\PixCashInResource;
-use FlavioMoreir4\Transfeera\Resources\Receivables\ChargeResource;
-use FlavioMoreir4\Transfeera\Resources\Receivables\PaymentLinkResource;
+use FlavioMoreir4\Transfeera\Resources\Payments\RecurrenceResource;
+use FlavioMoreir4\Transfeera\Resources\Payments\StatementResource;
+use FlavioMoreir4\Transfeera\Resources\Payments\TransferResource;
 use FlavioMoreir4\Transfeera\Resources\PixAutomatico\AuthorizationResource;
 use FlavioMoreir4\Transfeera\Resources\PixAutomatico\PaymentIntentResource;
+use FlavioMoreir4\Transfeera\Resources\Receivables\ChargeResource;
+use FlavioMoreir4\Transfeera\Resources\Receivables\PaymentLinkResource;
+use FlavioMoreir4\Transfeera\Resources\Receivables\PixCashInResource;
+use FlavioMoreir4\Transfeera\Resources\Receivables\PixKeyResource;
+use FlavioMoreir4\Transfeera\Resources\Receivables\PixQrCodeResource;
+use FlavioMoreir4\Transfeera\Resources\Webhooks\ContaCertaWebhookResource;
 use FlavioMoreir4\Transfeera\Resources\Webhooks\PaymentsWebhookResource;
 use FlavioMoreir4\Transfeera\Resources\Webhooks\ReceivablesWebhookResource;
-use FlavioMoreir4\Transfeera\Resources\Webhooks\ContaCertaWebhookResource;
-use FlavioMoreir4\Transfeera\Resources\ContaCerta\ValidationResource;
-use FlavioMoreir4\Transfeera\Resources\Accounts\AccountResource;
-use FlavioMoreir4\Transfeera\Resources\Infractions\InfractionResource;
+use FlavioMoreir4\Transfeera\TransfeeraClient;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -52,7 +53,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static AccountResource accounts(?string $accountId = null)
  * @method static InfractionResource infractions(?string $accountId = null)
  *
- * @see \FlavioMoreir4\Transfeera\TransfeeraClient
+ * @see TransfeeraClient
  */
 class Transfeera extends Facade
 {

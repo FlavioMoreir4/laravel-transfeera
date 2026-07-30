@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\DTOs\Response;
 
 use Override;
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 
 /**
  * DTO de resposta para Lote (Batch).
@@ -15,15 +14,15 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 class BatchResponseDTO extends BaseResponseDTO
 {
     /**
-     * @param  string  $id              ID do lote
-     * @param  string  $status          Status: pending, processing, completed, failed, closed
-     * @param  string  $name            Nome do lote
-     * @param  string|null $type        Tipo: immediate, scheduled
-     * @param  string|null $scheduledDate Data agendada
-     * @param  int|null $totalTransfers  Total de transferências
-     * @param  int|null $totalValue      Valor total em centavos
-     * @param  string|null $createdAt   Data criação
-     * @param  string|null $updatedAt   Data atualização
+     * @param  string  $id  ID do lote
+     * @param  string  $status  Status: pending, processing, completed, failed, closed
+     * @param  string  $name  Nome do lote
+     * @param  string|null  $type  Tipo: immediate, scheduled
+     * @param  string|null  $scheduledDate  Data agendada
+     * @param  int|null  $totalTransfers  Total de transferências
+     * @param  int|null  $totalValue  Valor total em centavos
+     * @param  string|null  $createdAt  Data criação
+     * @param  string|null  $updatedAt  Data atualização
      */
     public function __construct(
         public string $name,

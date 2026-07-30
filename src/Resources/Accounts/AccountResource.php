@@ -81,7 +81,7 @@ class AccountResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id,
+            self::BASE_PATH.'/'.$id,
             accountId: $this->accountId,
         );
     }
@@ -96,7 +96,7 @@ class AccountResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH . '/' . $id . '/close',
+            self::BASE_PATH.'/'.$id.'/close',
             [],
             $this->accountId,
         );

@@ -36,7 +36,7 @@ class RecurrenceResource extends BaseResource
      * Lista os pagamentos gerados por uma recorrência.
      *
      * @param  string  $recurrenceId  Identificador da recorrência
-     * @param  array<string, mixed>  $params         Filtros
+     * @param  array<string, mixed>  $params  Filtros
      * @return array<string, mixed>
      */
     public function listPayments(string $recurrenceId, array $params = []): array

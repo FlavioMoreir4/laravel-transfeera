@@ -23,7 +23,7 @@ namespace FlavioMoreir4\Transfeera\Webhooks;
 class SignatureValidator
 {
     /**
-     * @param  string  $secret       Chave secreta do webhook
+     * @param  string  $secret  Chave secreta do webhook
      */
     public function __construct(
         private readonly string $secret,
@@ -32,8 +32,8 @@ class SignatureValidator
     /**
      * Valida a assinatura do payload para pagamentos/conta certa.
      *
-     * @param  string  $payload       Corpo bruto da requisição (JSON)
-     * @param  string  $signature     Assinatura enviada no header X-Signature
+     * @param  string  $payload  Corpo bruto da requisição (JSON)
+     * @param  string  $signature  Assinatura enviada no header X-Signature
      */
     public function isValid(string $payload, string $signature): bool
     {
@@ -45,8 +45,8 @@ class SignatureValidator
     /**
      * Valida a assinatura do payload para recebimentos.
      *
-     * @param  string  $payload       Corpo bruto da requisição (JSON)
-     * @param  string  $signature     Assinatura enviada no header X-Signature
+     * @param  string  $payload  Corpo bruto da requisição (JSON)
+     * @param  string  $signature  Assinatura enviada no header X-Signature
      */
     public function isValidForReceivables(string $payload, string $signature): bool
     {

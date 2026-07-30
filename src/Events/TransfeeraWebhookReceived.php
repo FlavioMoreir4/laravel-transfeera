@@ -19,8 +19,8 @@ class TransfeeraWebhookReceived
     use SerializesModels;
 
     /**
-     * @param  string  $domain   Domínio do webhook ('payments', 'receivables', 'conta_certa')
-     * @param  string  $type     Tipo do evento (ex.: 'batch.processed')
+     * @param  string  $domain  Domínio do webhook ('payments', 'receivables', 'conta_certa')
+     * @param  string  $type  Tipo do evento (ex.: 'batch.processed')
      * @param  array<string, mixed>  $payload  Payload completo do webhook
      */
     public function __construct(

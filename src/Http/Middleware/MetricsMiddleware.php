@@ -14,24 +14,23 @@ namespace FlavioMoreir4\Transfeera\Http\Middleware;
 class MetricsMiddleware
 {
     /**
-     * @param  bool   $enabled Se a coleta de métricas está ativa
-     * @param  string $prefix  Prefixo para nomes das métricas
+     * @param  bool  $enabled  Se a coleta de métricas está ativa
+     * @param  string  $prefix  Prefixo para nomes das métricas
      */
     public function __construct(
         public readonly bool $enabled = true,
         public readonly string $prefix = 'transfeera',
-    ) {
-    }
+    ) {}
 
     /**
      * Registra uma métrica de requisição.
      *
      * Implementação placeholder — substitua pelo seu sistema de métricas.
      *
-     * @param  string $domain   Domínio da API (payments, receivables, etc.)
-     * @param  string $method   Método HTTP
-     * @param  int    $status   Status HTTP da resposta
-     * @param  float  $duration Duração em segundos
+     * @param  string  $domain  Domínio da API (payments, receivables, etc.)
+     * @param  string  $method  Método HTTP
+     * @param  int  $status  Status HTTP da resposta
+     * @param  float  $duration  Duração em segundos
      */
     public function recordMetric(string $domain, string $method, int $status, float $duration): void
     {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\DTOs\Response;
 
 use Override;
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 
 /**
  * DTO de resposta para Autorização Pix Automático.
@@ -15,15 +14,15 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 class AuthorizationResponseDTO extends BaseResponseDTO
 {
     /**
-     * @param  string  $id              ID da autorização
-     * @param  string  $status          Status: active, cancelled, expired
-     * @param  string  $payerPixKey     Chave Pix do pagador
-     * @param  int     $limitValue      Limite em centavos
-     * @param  string|null $startDate   Data início
-     * @param  string|null $endDate     Data fim
-     * @param  array<string, mixed>|null $splitPayment Split de pagamento
-     * @param  string|null $createdAt   Data criação
-     * @param  string|null $updatedAt   Data atualização
+     * @param  string  $id  ID da autorização
+     * @param  string  $status  Status: active, cancelled, expired
+     * @param  string  $payerPixKey  Chave Pix do pagador
+     * @param  int  $limitValue  Limite em centavos
+     * @param  string|null  $startDate  Data início
+     * @param  string|null  $endDate  Data fim
+     * @param  array<string, mixed>|null  $splitPayment  Split de pagamento
+     * @param  string|null  $createdAt  Data criação
+     * @param  string|null  $updatedAt  Data atualização
      */
     public function __construct(
         public string $payerPixKey,

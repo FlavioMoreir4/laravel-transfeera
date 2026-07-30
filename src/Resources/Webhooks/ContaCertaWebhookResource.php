@@ -22,6 +22,7 @@ use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 class ContaCertaWebhookResource extends BaseResource
 {
     private const string BASE_PATH_URLS = '/webhook';
+
     private const string BASE_PATH_EVENTS = '/webhook/event';
 
     /**
@@ -50,7 +51,7 @@ class ContaCertaWebhookResource extends BaseResource
     {
         return $this->connector->get(
             Connector::DOMAIN_CONTA_CERTA,
-            self::BASE_PATH_URLS . '/' . $id,
+            self::BASE_PATH_URLS.'/'.$id,
             accountId: $this->accountId,
         );
     }
@@ -72,7 +73,7 @@ class ContaCertaWebhookResource extends BaseResource
     /**
      * Atualiza uma URL de webhook.
      *
-     * @param  string  $id    ID da URL de webhook
+     * @param  string  $id  ID da URL de webhook
      * @param  array{url?: string, events?: string[]}  $data  Dados a serem atualizados
      * @return array<string, mixed>
      */
@@ -80,7 +81,7 @@ class ContaCertaWebhookResource extends BaseResource
     {
         return $this->connector->put(
             Connector::DOMAIN_CONTA_CERTA,
-            self::BASE_PATH_URLS . '/' . $id,
+            self::BASE_PATH_URLS.'/'.$id,
             $data,
             $this->accountId,
         );
@@ -96,7 +97,7 @@ class ContaCertaWebhookResource extends BaseResource
     {
         return $this->connector->delete(
             Connector::DOMAIN_CONTA_CERTA,
-            self::BASE_PATH_URLS . '/' . $id,
+            self::BASE_PATH_URLS.'/'.$id,
             $this->accountId,
         );
     }
@@ -127,7 +128,7 @@ class ContaCertaWebhookResource extends BaseResource
     {
         return $this->connector->post(
             Connector::DOMAIN_CONTA_CERTA,
-            self::BASE_PATH_EVENTS . '/' . $eventId . '/retry',
+            self::BASE_PATH_EVENTS.'/'.$eventId.'/retry',
             accountId: $this->accountId,
         );
     }

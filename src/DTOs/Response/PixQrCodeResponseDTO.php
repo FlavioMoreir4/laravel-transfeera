@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\DTOs\Response;
 
 use Override;
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 
 /**
  * DTO de resposta para QR Code Pix.
@@ -15,16 +14,16 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 class PixQrCodeResponseDTO extends BaseResponseDTO
 {
     /**
-     * @param  string  $id              ID do QR Code
-     * @param  string  $status          Status: active, revoked, expired
-     * @param  string  $key             Chave Pix associada
-     * @param  string  $type            Tipo: static, immediate, due_date
-     * @param  int|null $value          Valor em centavos
-     * @param  string|null $dueDate     Data vencimento
-     * @param  string|null $emv         EMV copia e cola
-     * @param  string|null $imageUrl    URL da imagem
-     * @param  string|null $createdAt   Data criação
-     * @param  string|null $updatedAt   Data atualização
+     * @param  string  $id  ID do QR Code
+     * @param  string  $status  Status: active, revoked, expired
+     * @param  string  $key  Chave Pix associada
+     * @param  string  $type  Tipo: static, immediate, due_date
+     * @param  int|null  $value  Valor em centavos
+     * @param  string|null  $dueDate  Data vencimento
+     * @param  string|null  $emv  EMV copia e cola
+     * @param  string|null  $imageUrl  URL da imagem
+     * @param  string|null  $createdAt  Data criação
+     * @param  string|null  $updatedAt  Data atualização
      */
     public function __construct(
         public string $key,

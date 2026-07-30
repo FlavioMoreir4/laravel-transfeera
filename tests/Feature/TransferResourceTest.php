@@ -85,6 +85,33 @@ test('lista transferencias de lote', function () {
     expect($result[1]->id)->toBe('transfer_2');
 });
 
+test('atualiza transferencia no lote', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/batch/batch_123/transfer/transfer_1' => Http::response([
+            'id' => 'transfer_1',
+            'batch_id' => 'batch_123',
+            'amount' => 20000,
+            'pix_key' => 'fulano@email.com',
+            'pix_key_type' => 'email',
+            'status' => 'pending',
+            'description' => 'Valor corrigido',
+        ]),
+        'login-api-sandbox.transfeera.com/*' => Http::response([
+            'access_token' => 'test-token',
+            'expires_in' => 1800,
+        ]),
+    ]);
+
+    $result = Transfeera::transfers()->update('batch_123', 'transfer_1', [
+        'amount' => 20000,
+        'description' => 'Valor corrigido',
+    ]);
+
+    expect($result->amount)->toBe(20000);
+    expect($result->description)->toBe('Valor corrigido');
+    expect($result->status)->toBe('pending');
+});
+
 test('remove transferencia do lote', function () {
     Http::fake([
         'api-sandbox.transfeera.com/batch/batch_123/transfer/transfer_1' => Http::response([], 204),

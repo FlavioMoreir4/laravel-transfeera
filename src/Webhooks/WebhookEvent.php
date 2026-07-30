@@ -28,8 +28,8 @@ class WebhookEvent
     use Dispatchable, SerializesModels;
 
     /**
-     * @param  string  $domain   Domínio de origem (payments|receivables|conta_certa)
-     * @param  string  $type     Tipo do evento (ex.: batch.processed, pix.received)
+     * @param  string  $domain  Domínio de origem (payments|receivables|conta_certa)
+     * @param  string  $type  Tipo do evento (ex.: batch.processed, pix.received)
      * @param  array<string, mixed>  $payload  Dados do evento
      */
     public function __construct(
@@ -41,8 +41,8 @@ class WebhookEvent
     /**
      * Cria uma instância a partir de um payload bruto de webhook.
      *
-     * @param  string  $domain   Domínio de origem
-     * @param  array<string, mixed>  $data     Dados do webhook recebido
+     * @param  string  $domain  Domínio de origem
+     * @param  array<string, mixed>  $data  Dados do webhook recebido
      */
     public static function fromPayload(string $domain, array $data): self
     {

@@ -38,7 +38,7 @@ return [
     */
     'mtls' => [
         'cert_path' => env('TRANSFEERA_MTLS_CERT_PATH', ''),
-        'key_path'  => env('TRANSFEERA_MTLS_KEY_PATH', ''),
+        'key_path' => env('TRANSFEERA_MTLS_KEY_PATH', ''),
     ],
 
     /*
@@ -75,7 +75,7 @@ return [
     'timeout' => env('TRANSFEERA_TIMEOUT', 30),
     'retry' => [
         'max_attempts' => env('TRANSFEERA_RETRY_MAX', 3),
-        'delay_ms'     => env('TRANSFEERA_RETRY_DELAY', 100),
+        'delay_ms' => env('TRANSFEERA_RETRY_DELAY', 100),
     ],
 
     /*
@@ -88,12 +88,12 @@ return [
     |
     */
     'enabled_apis' => [
-        'payments'     => env('TRANSFEERA_ENABLE_PAYMENTS', true),
-        'receivables'  => env('TRANSFEERA_ENABLE_RECEIVABLES', true),
+        'payments' => env('TRANSFEERA_ENABLE_PAYMENTS', true),
+        'receivables' => env('TRANSFEERA_ENABLE_RECEIVABLES', true),
         'pix_automatico' => env('TRANSFEERA_ENABLE_PIX_AUTOMATICO', true),
-        'conta_certa'  => env('TRANSFEERA_ENABLE_CONTA_CERTA', true),
-        'accounts'     => env('TRANSFEERA_ENABLE_ACCOUNTS', true),
-        'infractions'  => env('TRANSFEERA_ENABLE_INFRACTIONS', true),
+        'conta_certa' => env('TRANSFEERA_ENABLE_CONTA_CERTA', true),
+        'accounts' => env('TRANSFEERA_ENABLE_ACCOUNTS', true),
+        'infractions' => env('TRANSFEERA_ENABLE_INFRACTIONS', true),
     ],
 
     /*

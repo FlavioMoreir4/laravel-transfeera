@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\DTOs\Response;
 
 use Override;
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 
 /**
  * DTO de resposta para Link de Pagamento.
@@ -15,15 +14,15 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 class PaymentLinkResponseDTO extends BaseResponseDTO
 {
     /**
-     * @param  string  $id              ID do link
-     * @param  string  $status          Status: active, inactive, expired
-     * @param  string  $name            Nome do produto
-     * @param  int     $value           Valor em centavos
-     * @param  string|null $description Descrição
-     * @param  string|null $url         URL do link
-     * @param  string|null $expiresAt   Data expiração
-     * @param  string|null $createdAt   Data criação
-     * @param  string|null $updatedAt   Data atualização
+     * @param  string  $id  ID do link
+     * @param  string  $status  Status: active, inactive, expired
+     * @param  string  $name  Nome do produto
+     * @param  int  $value  Valor em centavos
+     * @param  string|null  $description  Descrição
+     * @param  string|null  $url  URL do link
+     * @param  string|null  $expiresAt  Data expiração
+     * @param  string|null  $createdAt  Data criação
+     * @param  string|null  $updatedAt  Data atualização
      */
     public function __construct(
         public string $name,

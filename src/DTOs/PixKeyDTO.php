@@ -12,7 +12,7 @@ namespace FlavioMoreir4\Transfeera\DTOs;
 readonly class PixKeyDTO
 {
     /**
-     * @param  string  $type   Tipo da chave: cpf, cnpj, email, phone, evp
+     * @param  string  $type  Tipo da chave: cpf, cnpj, email, phone, evp
      * @param  string  $value  Valor da chave Pix
      */
     public function __construct(

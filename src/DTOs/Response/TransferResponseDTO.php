@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\DTOs\Response;
 
 use Override;
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 
 /**
  * DTO de resposta para Transferência.
@@ -15,13 +14,13 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 class TransferResponseDTO extends BaseResponseDTO
 {
     /**
-     * @param  string  $batchId         ID do lote
-     * @param  int     $amount          Valor em centavos
-     * @param  string  $pixKey          Chave Pix do favorecido
-     * @param  string|null $pixKeyType  Tipo da chave
-     * @param  string|null $description Descrição
-     * @param  string|null $createdAt   Data criação
-     * @param  string|null $updatedAt   Data atualização
+     * @param  string  $batchId  ID do lote
+     * @param  int  $amount  Valor em centavos
+     * @param  string  $pixKey  Chave Pix do favorecido
+     * @param  string|null  $pixKeyType  Tipo da chave
+     * @param  string|null  $description  Descrição
+     * @param  string|null  $createdAt  Data criação
+     * @param  string|null  $updatedAt  Data atualização
      */
     public function __construct(
         public string $batchId,
@@ -63,6 +62,7 @@ class TransferResponseDTO extends BaseResponseDTO
         );
         $dto->id = $data['id'] ?? '';
         $dto->status = $data['status'] ?? '';
+
         return $dto;
     }
 }

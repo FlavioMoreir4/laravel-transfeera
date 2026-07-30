@@ -30,6 +30,7 @@ class ContaCertaException extends TransfeeraException
     public static function fromResponse(array $payload, int $statusCode): self
     {
         $message = $payload['message'] ?? $payload['error'] ?? "Erro na API de Conta Certa (HTTP {$statusCode})";
+
         return new self($message, $statusCode, $payload);
     }
 }

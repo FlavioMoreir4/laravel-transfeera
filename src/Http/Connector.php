@@ -6,15 +6,15 @@ namespace FlavioMoreir4\Transfeera\Http;
 
 use FlavioMoreir4\Transfeera\Auth\TokenManager;
 use FlavioMoreir4\Transfeera\Exceptions\AccountException;
+use FlavioMoreir4\Transfeera\Exceptions\ContaCertaException;
 use FlavioMoreir4\Transfeera\Exceptions\InfractionException;
 use FlavioMoreir4\Transfeera\Exceptions\PaymentException;
+use FlavioMoreir4\Transfeera\Exceptions\PixAutomaticoException;
 use FlavioMoreir4\Transfeera\Exceptions\ReceivableException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraAuthenticationException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraRateLimitException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException;
-use FlavioMoreir4\Transfeera\Exceptions\PixAutomaticoException;
-use FlavioMoreir4\Transfeera\Exceptions\ContaCertaException;
 use FlavioMoreir4\Transfeera\Http\Middleware\LoggingMiddleware;
 use FlavioMoreir4\Transfeera\Http\Middleware\MetricsMiddleware;
 use Illuminate\Http\Client\PendingRequest;
@@ -35,8 +35,10 @@ class Connector
 {
     /** API de Autenticação */
     public const DOMAIN_AUTH = 'auth';
+
     /** API de Pagamentos/Recebimentos */
     public const DOMAIN_PAYMENTS = 'payments';
+
     /** API Conta Certa */
     public const DOMAIN_CONTA_CERTA = 'conta_certa';
 
@@ -52,9 +54,9 @@ class Connector
     /**
      * Envia uma requisição GET.
      *
-     * @param  string  $domain    Domínio da API (self::DOMAIN_*)
-     * @param  string  $path      Caminho do endpoint (ex.: /batch)
-     * @param  array<string, mixed>  $query    Parâmetros de query string
+     * @param  string  $domain  Domínio da API (self::DOMAIN_*)
+     * @param  string  $path  Caminho do endpoint (ex.: /batch)
+     * @param  array<string, mixed>  $query  Parâmetros de query string
      * @param  string|null  $accountId  ID da conta digital (Hub de Contas)
      */
     public function get(
@@ -69,9 +71,9 @@ class Connector
     /**
      * Envia uma requisição POST com payload JSON.
      *
-     * @param  string  $domain    Domínio da API
-     * @param  string  $path      Caminho do endpoint
-     * @param  array<string, mixed>  $data      Payload da requisição
+     * @param  string  $domain  Domínio da API
+     * @param  string  $path  Caminho do endpoint
+     * @param  array<string, mixed>  $data  Payload da requisição
      * @param  string|null  $accountId  ID da conta digital
      */
     public function post(
@@ -121,10 +123,10 @@ class Connector
     /**
      * Executa uma requisição HTTP genérica.
      *
-     * @param  string  $method    Método HTTP (GET, POST, PUT, PATCH, DELETE)
-     * @param  string  $domain    Domínio da API
-     * @param  string  $path      Caminho do endpoint
-     * @param  array<string, mixed>  $data      Payload ou query params
+     * @param  string  $method  Método HTTP (GET, POST, PUT, PATCH, DELETE)
+     * @param  string  $domain  Domínio da API
+     * @param  string  $path  Caminho do endpoint
+     * @param  array<string, mixed>  $data  Payload ou query params
      * @param  string|null  $accountId  ID da conta digital
      */
     private function execute(
@@ -180,7 +182,7 @@ class Connector
             message: "Domínio desconhecido: {$domain}",
         );
 
-        return rtrim($baseUrl, '/') . '/' . ltrim($path, '/');
+        return rtrim($baseUrl, '/').'/'.ltrim($path, '/');
     }
 
     /**
@@ -233,7 +235,7 @@ class Connector
      * @throws ContaCertaException
      * @throws AccountException
      * @throws InfractionException
-    */
+     */
     private function handleResponse(Response $response, string $domain): array
     {
         if ($response->successful()) {

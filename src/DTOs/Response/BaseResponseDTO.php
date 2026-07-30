@@ -12,10 +12,10 @@ namespace FlavioMoreir4\Transfeera\DTOs\Response;
 abstract class BaseResponseDTO
 {
     /**
-     * @param  string  $id        Identificador único
-     * @param  string  $status    Status do recurso
-     * @param  string|null $createdAt  Data de criação
-     * @param  string|null $updatedAt  Data de atualização
+     * @param  string  $id  Identificador único
+     * @param  string  $status  Status do recurso
+     * @param  string|null  $createdAt  Data de criação
+     * @param  string|null  $updatedAt  Data de atualização
      */
     public function __construct(
         public string $id,

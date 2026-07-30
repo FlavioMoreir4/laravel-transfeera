@@ -16,6 +16,7 @@ test('lock evita renovacao concorrente do token', function () {
         'login-api-sandbox.transfeera.com/*' => function () use (&$requestCount) {
             $requestCount++;
             usleep(50_000); // simula latência de rede
+
             return Http::response([
                 'access_token' => "token-{$requestCount}",
                 'expires_in' => 1800,
@@ -56,6 +57,7 @@ test('lock retorna token valido apos espera quando outra requisicao esta renovan
             $callOrder[] = 'http';
             // Latência de 200ms para garantir que o lock seja testado
             usleep(200_000);
+
             return Http::response([
                 'access_token' => 'fresh-token',
                 'expires_in' => 1800,
@@ -89,6 +91,7 @@ test('cache miss duplo apos expiracao gera apenas uma renovacao', function () {
     Http::fake([
         'login-api-sandbox.transfeera.com/*' => function () use (&$requestCount) {
             $requestCount++;
+
             return Http::response([
                 'access_token' => 'refreshed-token',
                 'expires_in' => 3600,

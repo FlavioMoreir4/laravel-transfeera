@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\DTOs\Response;
 
 use Override;
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 
 /**
  * DTO de resposta para Chave Pix.
@@ -15,13 +14,13 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
 class PixKeyResponseDTO extends BaseResponseDTO
 {
     /**
-     * @param  string  $id              ID da chave
-     * @param  string  $status          Status: active, inactive, verification_pending
-     * @param  string  $type            Tipo: cpf, cnpj, email, phone, evp
-     * @param  string  $value           Valor da chave
-     * @param  string|null $claimedAt   Data de reivindicação
-     * @param  string|null $createdAt   Data criação
-     * @param  string|null $updatedAt   Data atualização
+     * @param  string  $id  ID da chave
+     * @param  string  $status  Status: active, inactive, verification_pending
+     * @param  string  $type  Tipo: cpf, cnpj, email, phone, evp
+     * @param  string  $value  Valor da chave
+     * @param  string|null  $claimedAt  Data de reivindicação
+     * @param  string|null  $createdAt  Data criação
+     * @param  string|null  $updatedAt  Data atualização
      */
     public function __construct(
         public string $type,

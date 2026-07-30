@@ -6,10 +6,11 @@ namespace FlavioMoreir4\Transfeera\Tests\Unit;
 
 use FlavioMoreir4\Transfeera\Auth\AccessToken;
 use FlavioMoreir4\Transfeera\Auth\TokenManager;
+use FlavioMoreir4\Transfeera\Exceptions\PaymentException;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Http\Middleware\LoggingMiddleware;
 use FlavioMoreir4\Transfeera\Http\Middleware\MetricsMiddleware;
-use Illuminate\Http\Client\Response;
+use FlavioMoreir4\Transfeera\Http\MtlsConfigurator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -19,7 +20,7 @@ beforeEach(function () {
         AccessToken::fromResponse(['access_token' => 'test-token', 'expires_in' => 1800])
     );
 
-    $this->mtls = mock(\FlavioMoreir4\Transfeera\Http\MtlsConfigurator::class);
+    $this->mtls = mock(MtlsConfigurator::class);
     $this->mtls->shouldReceive('apply')->andReturnArg(0);
 
     // Base connector com middlewares desabilitados para testar isoladamente
@@ -103,7 +104,7 @@ it('usa level warning em resposta com erro', function () {
     );
 
     expect(fn () => $connector->get(Connector::DOMAIN_PAYMENTS, '/batches'))
-        ->toThrow(\FlavioMoreir4\Transfeera\Exceptions\PaymentException::class);
+        ->toThrow(PaymentException::class);
 });
 
 it('inclui status e duration na resposta logada', function () {
@@ -230,7 +231,7 @@ it('metrica nao interfere em resposta de erro', function () {
     );
 
     expect(fn () => $connector->get(Connector::DOMAIN_PAYMENTS, '/batches'))
-        ->toThrow(\FlavioMoreir4\Transfeera\Exceptions\PaymentException::class);
+        ->toThrow(PaymentException::class);
 });
 
 it('usa prefixo configurado nas metricas', function () {
@@ -280,5 +281,5 @@ it('metrica executa inclusive em excecao lancada pelo next', function () {
     );
 
     expect(fn () => $connector->get(Connector::DOMAIN_PAYMENTS, '/batches'))
-        ->toThrow(\FlavioMoreir4\Transfeera\Exceptions\PaymentException::class);
+        ->toThrow(PaymentException::class);
 });
