@@ -1,73 +1,219 @@
-# Contribuindo
+# Contribuindo — laravel-transfeera
 
-## Padrão de Commits
+Obrigado por contribuir! Este guia explica o fluxo de trabalho, padrões de código e requisitos para PRs.
 
-Usamos **Conventional Commits** para manter o histórico legível e gerar changelogs automaticamente.
+---
 
-```
-<tipo>(<escopo>): <descrição curta>
+## Como Contribuir
 
-<corpo opcional (wrap em 72 caracteres)>
+### 1. Preparação
 
-<rodapé opcional>
-```
+```bash
+# Fork + clone
+git clone https://github.com/seu-usuario/laravel-transfeera.git
+cd laravel-transfeera
 
-### Tipos
+# Instalar dependências
+composer install
 
-| Tipo     | Quando usar                       | Exemplo                                          |
-|----------|-----------------------------------|--------------------------------------------------|
-| `feat`   | Nova funcionalidade               | `feat(pix): add EMV parsing method`              |
-| `fix`    | Correção de bug                   | `fix(auth): handle null expires_in response`     |
-| `refactor` | Refatoração sem mudança de comportamento | `refactor(http): extract error mapping`     |
-| `docs`   | Somente documentação              | `docs: add usage examples for BatchResource`     |
-| `test`   | Adicionar ou atualizar testes     | `test(token): add renewal edge cases`            |
-| `chore`  | Manutenção, dependências, tooling | `chore: upgrade pest to 3.x`                     |
-| `ci`     | Pipeline CI/CD                    | `ci: add PHP 8.4 to test matrix`                 |
-| `style`  | Formatação, espaços, lint         | `style: apply rector rules`                      |
-
-### Escopo (opcional)
-
-Indica a área do código: `auth`, `http`, `pix`, `batch`, `token`, `config`, etc.
-
-### Breaking Changes
-
-Adicione `!` após o tipo e inclua `BREAKING CHANGE` no rodapé:
-
-```
-feat(auth)!: change authentication flow
-
-BREAKING CHANGE: client_credentials now requires client_secret
+# Configurar ambiente de teste
+cp .env.example .env.testing
+# Editar .env.testing com credenciais sandbox se quiser testes de integração
 ```
 
-## Padrão de PRs
+### 2. Branch
 
-### Nomenclatura de Branches
-
-```
-<tipo>/<descrição-curta>
-```
-
-Exemplos: `feat/pix-automatico-webhooks`, `fix/token-expired-cache`, `chore/upgrade-pest`.
-
-### Abertura de PR
-
-1. **Título**: mesmo formato do Conventional Commit
-2. **Template**: preencher o `PULL_REQUEST_TEMPLATE.md` com:
-   - Summary do que foi feito
-   - Test Plan com checkboxes
-   - Breaking Changes se aplicável
-
-### Checklist antes de abrir PR
-
-- [ ] `composer test` — todos os testes passam
-- [ ] `composer phpstan` — nível 8 sem erros
-- - `composer rector` — sem mudanças inesperadas
-- [ ] Cobertura adequada de testes para novas funcionalidades
-
-## Pull Request Lifecycle
-
-```
-feature branch → PR (draft) → CI green → PR (ready) → review → merge (squash)
+```bash
+git checkout -b feat/nova-funcionalidade
+# ou
+git checkout -b fix/correcao-bug
 ```
 
-Usamos **squash merge** para manter o histórico limpo na `main`.
+> Use o padrão: `<tipo>/<descrição-curta>` (ex: `feat/pix-automatico-webhooks`, `fix/token-expired-cache`)
+
+### 3. Desenvolvimento
+
+- Escreva o teste primeiro (TDD leve)
+- Implemente a funcionalidade
+- Rode os verificadores:
+
+```bash
+composer test          # Pest - todos os testes
+composer phpstan       # PHPStan nível 8
+composer rector        # Rector dry-run
+composer format        # Pint/PSR-12
+```
+
+### 4. Commit
+
+Use **Conventional Commits**:
+
+```bash
+git add .
+git commit -m "feat(pix): add webhook retry endpoint
+
+- Add resendRetry() to PaymentIntentResource
+- Add tests for retry flow
+- Update pix-automatico.md docs
+
+Closes #123"
+```
+
+> Tipos: `feat`, `fix`, `chore`, `ci`, `docs`, `refactor`, `style`, `test`
+> Breaking change: adicione `!` após o tipo e `BREAKING CHANGE` no rodapé
+
+### 5. Push + PR
+
+```bash
+git push origin feat/nova-funcionalidade
+```
+
+Abra o PR no GitHub preenchendo o template.
+
+---
+
+## Padrões de Código
+
+### PHP
+
+- **PHP 8.3+**, **strict_types=1**
+- **readonly classes** para DTOs
+- **Type hints** completos (params + return)
+- **PHPDoc** em métodos públicos
+- **Native enums** quando aplicável (PHP 8.1+)
+
+### DTOs (Request/Response)
+
+```php
+// Request DTO - readonly, validação no constructor se necessário
+readonly class TransferDTO
+{
+    public function __construct(
+        public int $amount,
+        public string $pixKey,
+        public string $pixKeyType,
+        public ?string $description = null,
+    ) {}
+
+    public function toArray(): array
+    {
+        return array_filter([
+            'amount' => $this->amount,
+            'pix_key' => $this->pixKey,
+            'pix_key_type' => $this->pixKeyType,
+            'description' => $this->description,
+        ], fn ($v) => $v !== null);
+    }
+}
+
+// Response DTO - fromResponse() factory
+readonly class TransferResponseDTO extends BaseResponseDTO
+{
+    public function __construct(
+        public string $batchId,
+        public int $amount,
+        public string $pixKey,
+        public ?string $pixKeyType = null,
+        public ?string $description = null,
+        string $id = '',
+        string $status = '',
+        ?string $createdAt = null,
+        ?string $updatedAt = null,
+    ) {
+        parent::__construct($id, $status, $createdAt, $updatedAt);
+    }
+
+    public static function fromResponse(array $data): self
+    {
+        return new self(
+            batchId: $data['batch_id'] ?? '',
+            amount: $data['amount'] ?? 0,
+            pixKey: $data['pix_key'] ?? '',
+            pixKeyType: $data['pix_key_type'] ?? null,
+            description: $data['description'] ?? null,
+            id: $data['id'] ?? '',
+            status: $data['status'] ?? '',
+            createdAt: $data['created_at'] ?? null,
+            updatedAt: $data['updated_at'] ?? null,
+        );
+    }
+}
+```
+
+### Resources
+
+- Herdam de `BaseResource`
+- Usam métodos tipados: `getDTO()`, `getDTOList()`, `postDTO()`, `putDTO()`, `patchDTO()`
+- Retornam DTOs de Response, não arrays
+
+### Exceptions
+
+- Hierarquia clara: `TransfeeraException` base → específicas por domínio
+- Factory `fromResponse(array $payload, int $status)` nas exceptions de domínio
+
+### Testes
+
+- **Pest 4** com `Http::fake()` e fixtures reais
+- Cobertura mínima: 90% Resources, 100% TokenManager/Exceptions
+- Fixtures em `tests/Fixtures/` extraídas da doc oficial
+
+```php
+test('cria transferência', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/batch/batch_123/transfer' => Http::response([
+            'id' => 'transfer_1',
+            'batch_id' => 'batch_123',
+            'amount' => 15000,
+            'pix_key' => 'a@b.com',
+            'status' => 'pending',
+        ], 201),
+    ]);
+
+    $result = Transfeera::transfers()->create('batch_123', [
+        'amount' => 15000,
+        'pix_key' => 'a@b.com',
+    ]);
+
+    expect($result->id)->toBe('transfer_1');
+});
+```
+
+### Documentação
+
+- Atualize `docs/<dominio>.md` quando adicionar/alterar recurso
+- Exemplos extraídos de testes reais
+- Seção "Roadmap" para features documentadas mas não implementadas
+
+---
+
+## CI/CD
+
+### GitHub Actions
+
+- **Test Matrix**: PHP 8.3/8.4 × Laravel 12/13
+- **Scripts**: `test`, `analyse`, `rector`, `format`
+- **Badges**: CI, Tests, PHPStan, Rector no README
+
+### Versionamento
+
+- **SemVer estrito**: MAJOR = breaking API pública do pacote
+- Tags: `vMAJOR.MINOR.PATCH` (assinadas GPG)
+- CHANGELOG: Keep a Changelog (pt-BR)
+
+---
+
+## Regras de Ouro
+
+1. **Não inventar payloads** — sempre consultar https://docs.transfeera.dev/llms.txt
+2. **Minimalismo de dependências** — usar `illuminate/*`, `Http::`, `Cache::`, `Str::`
+3. **Segurança first** — nunca commitar secrets, validar assinatura webhook com `hash_equals`
+4. **Documentação viva** — código e docs mudam juntos
+5. **Qualidade não negociável** — CI verde = obrigatório
+
+---
+
+## Dúvidas?
+
+- Abra uma **Issue** para bugs/features
+- Abra um **Discussion** para dúvidas de design/arquitetura
+- Consulte [AGENTS.md](AGENTS.md) para instruções detalhadas de agentes IA
