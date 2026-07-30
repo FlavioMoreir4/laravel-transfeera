@@ -287,7 +287,10 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 |--------|------|
 | **1.7.0** | Exceptions tipadas por domínio, testes de integração |
 | **1.8.0** ✅ | Cobertura de testes: error handling, middlewares, concorrência, mTLS, Resources parciais |
+| **1.8.1** ♻️ | PATCH: correções rápidas (testes faltantes, scripts, docs) |
 | **1.9.0+** | Apenas MINORs — compatibilidade garantida para sempre |
 | **v2** | ❌ Cancelado — decisão de nunca quebrar |
+
+Consulte [docs/roadmap.md](docs/roadmap.md) para o plano completo.
 
 ---

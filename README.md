@@ -32,6 +32,7 @@ SDK Laravel para integração completa com a API **Transfeera** — Pagamentos, 
 | [Exceptions](docs/exceptions.md) | Referência completa: hierarquia, quando catchar, métodos úteis |
 | [Middlewares](docs/middlewares.md) | LoggingMiddleware, MetricsMiddleware, configuração, exportação Prometheus |
 | [Changelog](docs/changelog.md) | Histórico versionado (Keep a Changelog) |
+| [Roadmap](docs/roadmap.md) | Planejamento de versões futuras |
 
 ---
 
