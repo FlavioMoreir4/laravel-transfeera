@@ -2,7 +2,14 @@
 
 Este documento descreve todos os recursos da API de **Pix Automático** implementados no SDK.
 
-> Referência oficial: https://docs.transfeera.dev/reference/tag/Pix-Autom%C3%A1tico
+> Referência oficial: https://docs.transfeera.dev/reference/endpoints.md
+> Guia: https://docs.transfeera.dev/docs/pix-automatico-como-funciona.md
+> 
+> URLs da API:
+> - Sandbox: https://api-sandbox.transfeera.com
+> - Produção: https://api.mtls.transfeera.com
+> - Autenticação Sandbox: https://login-api-sandbox.transfeera.com/authorization
+> - Autenticação Produção: https://login-api.transfeera.com/authorization
 
 ---
 
@@ -333,7 +340,7 @@ test('cria payment intent', function () {
 
 ## Links Úteis
 
-- [Referência API Pix Automático](https://docs.transfeera.dev/reference/tag/Pix-Autom%C3%A1tico)
+- [Referência API Pix Automático](https://docs.transfeera.dev/docs/pix-automatico-como-funciona.md)
 - [Primeiro Pagamento](primeiro-pagamento.md) — Conceitos de lotes/transferências
 - [Webhooks](webhooks.md) — Configuração e segurança
 - [Tratamento de Erros](erros.md) — Exceptions e retry

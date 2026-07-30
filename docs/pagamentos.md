@@ -2,7 +2,14 @@
 
 Este documento descreve todos os recursos da API de **Pagamentos** implementados no SDK.
 
-> Referência oficial: https://docs.transfeera.dev/reference/tag/Pagamentos
+> Referência oficial: https://docs.transfeera.dev/reference/endpoints.md
+> Guia: https://docs.transfeera.dev/docs/pagamentos-lotes-como-funciona.md
+> 
+> URLs da API:
+> - Sandbox: https://api-sandbox.transfeera.com
+> - Produção (mTLS): https://api.mtls.transfeera.com
+> - Autenticação Sandbox: https://login-api-sandbox.transfeera.com/authorization
+> - Autenticação Produção: https://login-api.transfeera.com/authorization
 
 ---
 
@@ -330,7 +337,7 @@ test('cria transferencia em lote', function () {
 
 ## Links Úteis
 
-- [Referência API Pagamentos](https://docs.transfeera.dev/reference/tag/Pagamentos)
+- [Referência API Pagamentos](https://docs.transfeera.dev/reference/endpoints.md)
 - [Primeiro Pagamento](primeiro-pagamento.md) — Guia passo a passo
 - [Webhooks](webhooks.md) — Eventos de pagamento
 - [Tratamento de Erros](erros.md) — Exceptions e retry

@@ -11,7 +11,7 @@ use Throwable;
  *
  * Cobre: validações de contas bancárias, bancos suportados.
  *
- * @see https://docs.transfeera.dev/reference/tag/Conta-Certa
+ * @see https://docs.transfeera.dev/reference/endpoints.md
  */
 class ContaCertaException extends TransfeeraException
 {

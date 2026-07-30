@@ -6,7 +6,15 @@ Este guia explica como configurar, validar e processar webhooks da Transfeera de
 
 A Transfeera envia eventos via HTTP POST para URLs configuradas. O SDK já expõe rotas prontas e valida a assinatura HMAC-SHA256 automaticamente.
 
-## 1. Rotas Expostas pelo SDK
+## URLs da API
+
+> Referência oficial: https://docs.transfeera.dev/reference/endpoints.md
+> 
+> URLs da API:
+- Sandbox: https://api-sandbox.transfeera.com
+- Produção (mTLS): https://api.mtls.transfeera.com
+- Autenticação Sandbox: https://login-api-sandbox.transfeera.com/authorization
+- Autenticação Produção: https://login-api.transfeera.com/authorization
 
 O ServiceProvider registra automaticamente:
 

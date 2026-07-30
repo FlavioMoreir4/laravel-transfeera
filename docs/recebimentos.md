@@ -2,7 +2,14 @@
 
 Este documento descreve todos os recursos da API de **Recebimentos** implementados no SDK.
 
-> Referência oficial: https://docs.transfeera.dev/reference/tag/Recebimentos
+> Referência oficial: https://docs.transfeera.dev/reference/endpoints.md
+> Guia: https://docs.transfeera.dev/docs/recebimentos-introducao.md
+> 
+> URLs da API:
+> - Sandbox: https://api-sandbox.transfeera.com
+> - Produção: https://api.mtls.transfeera.com
+> - Autenticação Sandbox: https://login-api-sandbox.transfeera.com/authorization
+> - Autenticação Produção: https://login-api.transfeera.com/authorization
 
 ---
 
@@ -513,7 +520,7 @@ class RecebimentoService
 
 ## Links Úteis
 
-- [Referência API Recebimentos](https://docs.transfeera.dev/reference/tag/Recebimentos)
+- [Referência API Recebimentos](https://docs.transfeera.dev/reference/endpoints.md)
 - [Primeiro Recebimento](primeiro-recebimento.md) — Guia passo a passo
 - [Webhooks](webhooks.md) — Configuração e segurança
 - [Tratamento de Erros](erros.md) — Exceptions e retry

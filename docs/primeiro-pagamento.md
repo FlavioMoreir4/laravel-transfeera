@@ -2,6 +2,16 @@
 
 Este guia passo a passo mostra como realizar seu primeiro pagamento (transferência Pix) usando o SDK, do zero à confirmação.
 
+## URLs da API
+
+> Referência oficial: https://docs.transfeera.dev/reference/endpoints
+
+URLs da API:
+- **Sandbox**: https://api-sandbox.transfeera.com
+- **Produção (mTLS)**: https://api.mtls.transfeera.com
+- **Autenticação Sandbox**: https://login-api-sandbox.transfeera.com/authorization
+- **Autenticação Produção**: https://login-api.transfeera.com/authorization
+
 ## Pré-requisitos
 
 - PHP 8.3+

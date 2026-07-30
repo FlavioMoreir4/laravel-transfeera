@@ -2,7 +2,13 @@
 
 Este documento descreve os recursos da API de **MED (Mecanismo Especial de Devolução) / Infrações** implementados no SDK.
 
-> Referência oficial: https://docs.transfeera.dev/reference/tag/MED
+> Referência oficial: https://docs.transfeera.dev/reference/endpoints.md
+> 
+> URLs da API:
+> - Sandbox: https://api-sandbox.transfeera.com
+> - Produção (mTLS): https://api.mtls.transfeera.com
+> - Autenticação Sandbox: https://login-api-sandbox.transfeera.com/authorization
+> - Autenticação Produção: https://login-api.transfeera.com/authorization
 
 ---
 
@@ -358,7 +364,7 @@ TRANSFEERA_WEBHOOK_SECRET_CONTA_CERTA=secret_contacerta_forte
 
 ## Links Úteis
 
-- [Referência API MED/Infrações](https://docs.transfeera.dev/reference/tag/MED)
+- [Referência API MED/Infrações](https://docs.transfeera.dev/reference/endpoints.md)
 - [Primeiro Pagamento](primeiro-pagamento.md) — Conceitos base
 - [Webhooks](webhooks.md) — Configuração e segurança
 - [Tratamento de Erros](erros.md) — Exceptions e retry

@@ -11,7 +11,7 @@ use Throwable;
  *
  * Cobre: contas digitais (criar, listar, consultar, encerrar).
  *
- * @see https://docs.transfeera.dev/reference/tag/Hub-de-Contas
+ * @see https://docs.transfeera.dev/reference/endpoints.md
  */
 class AccountException extends TransfeeraException
 {

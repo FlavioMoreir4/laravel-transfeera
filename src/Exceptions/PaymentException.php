@@ -11,7 +11,7 @@ use Throwable;
  *
  * Cobre: lotes, transferências, boletos, bancos, saldo/extrato, Pix, recorrências.
  *
- * @see https://docs.transfeera.dev/reference/tag/Pagamentos
+ * @see https://docs.transfeera.dev/reference/endpoints.md
  */
 class PaymentException extends TransfeeraException
 {

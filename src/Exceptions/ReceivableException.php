@@ -11,7 +11,7 @@ use Throwable;
  *
  * Cobre: chaves Pix, QR Codes, cash-in, cobranças, links de pagamento.
  *
- * @see https://docs.transfeera.dev/reference/tag/Recebimentos
+ * @see https://docs.transfeera.dev/reference/endpoints.md
  */
 class ReceivableException extends TransfeeraException
 {

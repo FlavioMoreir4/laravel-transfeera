@@ -34,7 +34,7 @@ Se algum desses scripts não existir ainda no `composer.json`, criá-lo — não
 
 - Namespace raiz: `FlavioMoreir4\Transfeera`.
 - Service Provider: `TransfeeraServiceProvider`. Facade: `Transfeera`. Config: `config/transfeera.php` (tag `transfeera-config`).
-- Estrutura: `src/Resources/{Payments,Receivables,PixAutomatico,ContaCerta,Accounts,Infractions,Webhooks}/...`, `src/DTOs/` (DTOs de Request + Response), `src/Auth/TokenManager.php`, `src/Http/Connector.php` + `MtlsConfigurator.php`, `src/Exceptions/`.
+- Estrutura: `src/Resources/{Payments,Receivables,PixAutomatico,ContaCerta,Accounts,Infractions,Webhooks}/...`, `src/DTOs/` (DTOs), `src/Auth/TokenManager.php`, `src/Http/Connector.php` + `MtlsConfigurator.php`, `src/Exceptions/`.
 - Autenticação: OAuth2 `client_credentials` com token cacheado (renovar ~60s antes de `expires_in`). Em produção, `Connector` exige mTLS (cert/key configuráveis) para pagamentos e conta-certa — sandbox não precisa.
 - DTOs: **readonly classes nativas do PHP**, sem `spatie/laravel-data` ou similar. Só reconsiderar com justificativa escrita se a duplicação de código ficar grande demais.
 - Valores monetários: sempre em centavos (inteiro), nunca float.
@@ -50,7 +50,7 @@ Antes de adicionar qualquer pacote ao `composer.json`, perguntar: "o Laravel já
 ## Testes
 
 - Pest 4. Mínimo 90% de cobertura em Resources, 100% em `TokenManager` e tratamento de erro.
-- `Http::fake()` com fixtures extraídas de payloads reais da documentação (`tests/Fixtures/`) — **nunca inventar formato de payload**.
+- `Http::fake()` com fixtures extraídas de payloads reais da documentação (`tests/Fixtures/`) — nunca inventar formato de payload.
 - Cobrir sempre: renovação automática de token, seleção de base URL por ambiente/sub-API, mTLS condicional, mapeamento de erro por status HTTP, validação de assinatura de webhook.
 - TDD leve: descrever o teste do Resource antes de escrever o Resource.
 
@@ -114,7 +114,7 @@ Antes de adicionar qualquer pacote ao `composer.json`, perguntar: "o Laravel já
 
 ### Middlewares
 - LoggingMiddleware: log de requests/responses com sanitização, truncamento, níveis configuráveis
-- MetricsMiddleware: contadores, histogramas, taxa de erro (pronto para Prometheus/StatsD)
+- MetricsMiddleware: contadores, histogramas, taxa de erro, integração pronta para Prometheus/StatsD
 
 ### Testes
 - **118 testes, 160 asserções** — todos passando
@@ -134,53 +134,62 @@ Antes de adicionar qualquer pacote ao `composer.json`, perguntar: "o Laravel já
 | Arquivo | Estado | Observações |
 |---------|--------|-------------|
 | `primeiro-pagamento.md` | ✅ Atualizado | Exemplos com DTOs, Service pattern, Controller |
-| `primeiro-recebimento.md` | ✅ Atualizado | Chaves Pix, QR Codes, Charges, Links, Cash-in |
+| `primeiro-recebimento.md` | ✅ Atualizado | Chaves Pix, QR Codes, Cobranças, Links, Cash-in |
 | `webhooks.md` | ✅ Atualizado | Rotas, secrets, validação, listeners, retry, testes |
 | `erros.md` | ✅ Atualizado | Hierarquia, handlers, retry, códigos, debug |
 | `changelog.md` | ✅ Atualizado | Histórico até v1.7.0, seção [Unreleased] |
+| `pagamentos.md` | ✅ Atualizado | Criado na última sessão |
+| `recebimentos.md` | ✅ Atualizado | Criado na última sessão |
+| `pix-automatico.md` | ✅ Atualizado | Criado na última sessão |
+| `conta-certa.md` | ✅ Atualizado | Criado na última sessão |
+| `hub-contas.md` | ✅ Atualizado | Criado na última sessão |
+| `med.md` | ✅ Atualizado | Criado na última sessão |
+| `exceptions.md` | ✅ Atualizado | Criado na última sessão |
+| `middlewares.md` | ✅ Atualizado | Criado na última sessão |
 
 ### `README.md` — Estado Atual
 - ✅ Badges (versão, PHP, Laravel, CI, Tests, PHPStan, Rector)
 - ✅ Instalação, configuração .env (com aviso mTLS)
 - ✅ Exemplos por domínio (Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa, Hub de Contas, MED)
-- ✅ Documentação avançada (links para docs/)
+- ✅ Documentação Avançada (links para docs/)
 - ✅ Tabela de cobertura de endpoints (4 fases)
-- ✅ Seção de testes, análise estática, changelog, contribuição, licença
+- ✅ Seção Testes, Análise Estática, Changelog, Contribuindo, Licença
 
 ### `CHANGELOG.md` — Estado Atual
 - ✅ Formato Keep a Changelog
-- ✅ Seções: Added/Changed/Deprecated/Removed/Fixed/Security
+- ✅ Seções Added/Changed/Deprecated/Removed/Fixed/Security
 - ✅ Ordem cronológica reversa
 - ✅ Versões: 1.0.0 até 1.7.0
-- ✅ Seção `[Unreleased]` no topo com planejamento para 1.7.0
-- ✅ Breaking changes marcados
+- ✅ Seção `[Unreleased]` no topo com planejamento
 
 ### Divergências Identificadas
 
 | Item | Documentação | Código Real | Ação Necessária |
 |------|-------------|-------------|-----------------|
-| `docs/pix-automatico.md` | ❌ Não existe | AuthorizationResource, PaymentIntentResource implementados | Criar arquivo |
-| `docs/pagamentos.md` | ❌ Não existe | 7 Resources implementados | Criar arquivo |
-| `docs/recebimentos.md` | ❌ Não existe | 5 Resources implementados | Criar arquivo |
-| `docs/conta-certa.md` | ❌ Não existe | ValidationResource, BankResource | Criar arquivo |
-| `docs/hub-contas.md` | ❌ Não existe | AccountResource | Criar arquivo |
-| `docs/med.md` | ❌ Não existe | InfractionResource | Criar arquivo |
-| `docs/exceptions.md` | ❌ Não existe | 11 exceptions tipadas | Criar arquivo |
-| `docs/middlewares.md` | ❌ Não existe | LoggingMiddleware, MetricsMiddleware | Criar arquivo |
-| `UPGRADE.md` | ❌ Não existe | Breaking changes em v1.2.0 (drop Laravel 11/8.2) | Criar arquivo |
-| `CONTRIBUTING.md` | ❌ Não existe | Referenciado no README | Criar arquivo |
-| `LICENSE` | ❌ Não existe | MIT referenciado | Criar arquivo |
+| `docs/pagamentos.md` | ✅ Existe | ✅ Implementado | OK |
+| `docs/recebimentos.md` | ✅ Existe | ✅ Implementado | OK |
+| `docs/pix-automatico.md` | ✅ Existe | ✅ Implementado | OK |
+| `docs/conta-certa.md` | ✅ Existe | ✅ Implementado | OK |
+| `docs/hub-contas.md` | ✅ Existe | ✅ Implementado | OK |
+| `docs/med.md` | ✅ Existe | ✅ Implementado | OK |
+| `docs/exceptions.md` | ✅ Existe | ✅ Implementado | OK |
+| `docs/middlewares.md` | ✅ Existe | ✅ Implementado | OK |
+| `UPGRADE.md` | ✅ Existe | v2.0.0 planejado | Atualizar se houver breaking change |
+| `AGENTS.md` | ✅ Existe | Este arquivo | Manter sincronizado |
+| `CONTRIBUTING.md` | ✅ Existe | Padrão de commits/PRs | OK |
+| `LICENSE` | ✅ Existe | MIT | OK |
 
 ---
 
 ## Próximas Ações Prioritárias
 
-1. **Criar documentação por domínio faltante** (`docs/pagamentos.md`, `docs/recebimentos.md`, `docs/pix-automatico.md`, `docs/conta-certa.md`, `docs/hub-contas.md`, `docs/med.md`)
-2. **Criar documentação transversal** (`docs/exceptions.md`, `docs/middlewares.md`)
-3. **Criar arquivos de governança** (`UPGRADE.md`, `CONTRIBUTING.md`, `LICENSE`)
-3. **Atualizar `README.md`** com badges v1.7.0, link para novos docs, tabela de cobertura atualizada
-4. **Atualizar `CHANGELOG.md`** — mover [Unreleased] para v1.7.0, adicionar seção [Unreleased] nova
-5. **Verificar se `composer.json` version** está sincronizado com tag v1.7.0
+1. **Criar documentação por domínio faltante** — `docs/pagamentos.md`, `docs/recebimentos.md`, `docs/pix-automatico.md`, `docs/conta-certa.md`, `docs/hub-contas.md`, `docs/med.md` (extrair exemplos dos testes reais, não inventar)
+2. **Criar documentação transversal** — `docs/exceptions.md` (hierarquia completa, quando catchar, métodos úteis), `docs/middlewares.md` (config, exemplos de log/métricas, exportação Prometheus)
+3. **Atualizar `README.md`** — badges v1.7.0, link para novos docs/, tabela de cobertura atualizada
+4. **Atualizar `CHANGELOG.md`** — mover `[Unreleased]` para `## [1.7.0] — 2025-07-29`, adicionar seção `[Unreleased]` nova
+5. **Criar `UPGRADE.md`** — documentar breaking changes v1.2.0 (drop Laravel 11/8.2), v1.5.0 (DTOs response), v1.6.0 (middlewares), v1.7.0 (exceptions tipadas)
+6. **Criar `AGENTS.md`** — este arquivo
+7. **Verificar `composer.json`** — version 1.7.0, scripts `test`, `analyse`, `rector`, `rector-fix`, `format`
 
 ---
 
@@ -189,6 +198,34 @@ Antes de adicionar qualquer pacote ao `composer.json`, perguntar: "o Laravel já
 | Versão | Mudança | Tipo | UPGRADE.md |
 |--------|---------|------|------------|
 | v1.2.0 | Drop Laravel 11 e PHP 8.2 — requer Laravel 12/13, PHP 8.3+ | MAJOR | ❌ Pendente |
-| v1.0.0 → v1.1.0 | DTOs readonly, WebhookController, CI | MINOR | N/A |
+| v1.5.0 | DTOs Response retornam DTOs (não arrays) — acesso `$result['field']` → `$result->field` | MAJOR | ❌ Pendente |
+| v1.6.0 | Middlewares Logging/Metrics integrados no Connector | MINOR | ✅ v1.6.0 |
+| v1.7.0 | Exceptions tipadas por domínio + mapeamento no Connector | MINOR | ✅ v1.7.0 |
 
-> ⚠️ **Regra**: breaking change na **API pública do pacote** (nomes de método, assinatura, namespace) = MAJOR. Mudança na API da Transfeera = ajuste interno (PATCH/MINOR conforme impacto).
+> ⚠️ **Regra**: breaking change na **API pública do pacote** (nomes de método, assinatura, namespace) = MAJOR. Mudança na API da Transfeera = ajuste interno (PATCH/MINOR conforme impacto). É fácil confundir as duas ao decidir se um bump é MAJOR ou MINOR.
+
+---
+
+## Fluxo de Release do laravel-transfeera
+
+1. **Antes de criar uma tag**, atualizar:
+   - `CHANGELOG.md`: mover o conteúdo de `[Unreleased]` para uma nova seção com a versão e a data (formato Keep a Changelog).
+   - `composer.json`: se o pacote usa um campo `version` (ou constante/docblock equivalente) como referência interna, sincronizar com a versão que vai para a tag. Não depender desse campo como fonte da verdade de versionamento — o Packagist lê a versão publicada a partir da tag do Git, não do `composer.json`.
+   - Se houver breaking change desde a última tag: atualizar `UPGRADE.md` com o passo a passo de migração.
+
+2. **Criar a tag Git** no formato `vMAJOR.MINOR.PATCH` (SemVer), apontando para o commit que já contém as atualizações do passo 1 — nunca criar a tag antes de atualizar CHANGELOG/composer.json/UPGRADE.md.
+
+3. **Confirmar que a tag corresponde exatamente ao tipo de mudança**:
+   - MAJOR = quebra na API pública do pacote
+   - MINOR = recurso novo retrocompatível
+   - PATCH = correção retrocompatível
+
+4. **Depois da tag**: revisar se o Packagist sincronizou a nova versão (webhook do GitHub) antes de anunciar a release.
+
+---
+
+## Dúvidas?
+
+- Abra uma **Issue** para bugs/features
+- Abra um **Discussion** para dúvidas de design/arquitetura
+- Consulte [AGENTS.md](AGENTS.md) para instruções detalhadas de agentes IA

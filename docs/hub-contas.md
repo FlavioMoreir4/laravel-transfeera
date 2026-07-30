@@ -2,7 +2,13 @@
 
 Este documento descreve os recursos da API de **Hub de Contas** implementados no SDK.
 
-> Referência oficial: https://docs.transfeera.dev/reference/tag/Hub-de-Contas
+> Referência oficial: https://docs.transfeera.dev/reference/endpoints.md
+> 
+> URLs da API:
+> - Sandbox: https://api-sandbox.transfeera.com
+> - Produção (mTLS): https://api.mtls.transfeera.com
+> - Autenticação Sandbox: https://login-api-sandbox.transfeera.com/authorization
+> - Autenticação Produção: https://login-api.transfeera.com/authorization
 
 ---
 
@@ -277,7 +283,7 @@ Transfeera::receivablesWebhooks('acc_abc123')->createUrl([
 
 ## Links Úteis
 
-- [Referência API Hub de Contas](https://docs.transfeera.dev/reference/tag/Hub-de-Contas)
+- [Referência API Hub de Contas](https://docs.transfeera.dev/reference/endpoints.md)
 - [Primeiro Pagamento](primeiro-pagamento.md) — Conceitos base
 - [Webhooks](webhooks.md) — Configuração por conta
 - [Tratamento de Erros](erros.md) — Exceptions e retry

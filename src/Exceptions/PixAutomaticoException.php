@@ -11,7 +11,7 @@ use Throwable;
  *
  * Cobre: autorizações, instruções de pagamento (payment intents).
  *
- * @see https://docs.transfeera.dev/reference/tag/Pix-Autom%C3%A1tico
+ * @see https://docs.transfeera.dev/reference/endpoints.md
  */
 class PixAutomaticoException extends TransfeeraException
 {

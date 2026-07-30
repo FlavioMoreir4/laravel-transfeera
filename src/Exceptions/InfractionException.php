@@ -11,7 +11,7 @@ use Throwable;
  *
  * Cobre: listar infrações, consultar, enviar análise individual/lote.
  *
- * @see https://docs.transfeera.dev/reference/tag/MED/Infrações
+ * @see https://docs.transfeera.dev/reference/endpoints.md
  */
 class InfractionException extends TransfeeraException
 {

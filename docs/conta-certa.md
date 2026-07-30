@@ -2,7 +2,14 @@
 
 Este documento descreve os recursos da API de **Conta Certa / Validações** implementados no SDK.
 
-> Referência oficial: https://docs.transfeera.dev/reference/tag/Conta-Certa
+> Referência oficial: https://docs.transfeera.dev/reference/endpoints.md
+> Guia: https://docs.transfeera.dev/docs/conta-certa-introducao.md
+> 
+> URLs da API:
+> - Sandbox: https://contacerta-api-sandbox.transfeera.com
+> - Produção (mTLS): https://contacerta-api.mtls.transfeera.com
+> - Autenticação Sandbox: https://login-api-sandbox.transfeera.com/authorization
+> - Autenticação Produção: https://login-api.transfeera.com/authorization
 
 ---
 
@@ -273,7 +280,7 @@ TRANSFEERA_WEBHOOK_SECRET_CONTA_CERTA=secret_contacerta_forte
 
 ## Links Úteis
 
-- [Referência API Conta Certa](https://docs.transfeera.dev/reference/tag/Conta-Certa)
+- [Referência API Conta Certa](https://docs.transfeera.dev/docs/conta-certa-introducao.md)
 - [Primeiro Pagamento](primeiro-pagamento.md) — Pagamentos que usam validação
 - [Webhooks](webhooks.md) — Configuração e segurança
 - [Tratamento de Erros](erros.md) — Exceptions e retry

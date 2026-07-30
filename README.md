@@ -383,6 +383,17 @@ Veja [CHANGELOG.md](CHANGELOG.md) para o histórico de alterações.
 
 ---
 
+## Documentação da API Transfeera
+
+- [Endpoints](https://docs.transfeera.dev/reference/endpoints.md) — Referência completa da API
+- [Guia de Pagamentos](https://docs.transfeera.dev/docs/pagamentos-lotes-como-funciona.md)
+- [Guia de Recebimentos](https://docs.transfeera.dev/docs/recebimentos-introducao.md)
+- [Guia de Pix Automático](https://docs.transfeera.dev/docs/pix-automatico-como-funciona.md)
+- [Guia de Conta Certa](https://docs.transfeera.dev/docs/conta-certa-introducao.md)
+- [Índice completo (llms.txt)](https://docs.transfeera.dev/llms.txt)
+
+---
+
 ## Contribuindo
 
 Veja [CONTRIBUTING.md](CONTRIBUTING.md) para o padrão de commits, branches, PRs e requisitos de qualidade.
