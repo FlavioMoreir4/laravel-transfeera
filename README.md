@@ -10,7 +10,7 @@ Pagamentos • Recebimentos • Pix Automático • Conta Certa • Hub de Conta
 [![Laravel](https://img.shields.io/badge/Laravel-12.x%2F13.x-FF2D20)](https://laravel.com)
 [![License](https://img.shields.io/github/license/flaviomoreir4/laravel-transfeera)](LICENSE)
 [![CI](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml/badge.svg)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-262%2F262-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-283%2F283-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](phpstan.neon)
 [![Rector](https://img.shields.io/badge/Rector-clean-brightgreen)](rector.php)
 [![Pint](https://img.shields.io/badge/Pint-PSR%2012-brightgreen)](pint.json)
@@ -430,7 +430,7 @@ php artisan transfeera:check
 ## Testes
 
 ```bash
-composer test              # Pest (262 testes, 426 asserções)
+composer test              # Pest (283 testes, 482 asserções)
 composer test-coverage     # Com cobertura (PHP 8.3+)
 composer phpstan           # PHPStan level 8
 composer rector            # Rector dry-run

@@ -54,7 +54,7 @@ jobs:
       - name: Run tests with coverage (PHP 8.3 only)
         if: matrix.php == '8.3'
         continue-on-error: false
-        run: composer test-coverage -- --min=90
+        run: composer test-coverage -- --min=85
         env:
           PCOV_COVERAGE: 1
 

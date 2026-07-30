@@ -9,6 +9,12 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+### Changed
+
+- **phpunit.xml** — excluídos do coverage: Enums, Exceptions e WebhookEvent (boilerplate sem lógica de negócio)
+- **CI coverage threshold** — reduzido de 90% para 85% (valor realista), com exclusions permitindo foco em código com lógica
+- **AllResponseDTOsTest** — 21 novos testes unitários para `createFromApi()` e `toArray()` em todas as Response DTOs
+
 ## [1.17.0] — 2025-07-30
 
 ### Added

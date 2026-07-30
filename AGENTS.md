@@ -22,7 +22,7 @@ Requer PHP 8.3+, Laravel 12+ como dependência de teste (`orchestra/testbench`).
 ## Comandos de verificação
 
 ```bash
-composer test          # Pest 5 (262 testes, 426 asserções)
+composer test          # Pest 5 (283 testes, 482 asserções)
 composer analyse       # Larastan / PHPStan level 8 — zero erros
 composer rector        # Rector dry-run (verifica)
 composer rector-fix    # Rector (aplica correções)
@@ -164,7 +164,7 @@ Todo o conteúdo de `docs/` está criado e sincronizado com a v1.9.0:
 |------|-------|
 | **Versão** | v1.17.0 |
 | **Commit** | `cfda1df` (feat: v1.16.0 — Quality & Infra) |
-| **Testes** | 262 passing, 426 assertions |
+| **Testes** | 283 passing, 482 assertions |
 | **PHPStan** | Level 8 — 0 erros |
 | **Rector** | Clean |
 | **Documentação** | 16 docs + README + CHANGELOG + UPGRADE + REQUISITOS — todos sincronizados |
