@@ -138,6 +138,10 @@ Todo o conteúdo de `docs/` está criado e sincronizado com a v1.9.0:
 ## Versionamento e release
 
 - **SemVer estrito**: MAJOR = quebra na API pública do **pacote** (não da API da Transfeera), MINOR = recurso novo retrocompatível, PATCH = correção retrocompatível.
+- **Estratégia híbrida**: v1.x contínua com deprecação lenta, v2.0.0 planejada ~2026 Q1.
+  - `@deprecated` introduzido em v1.10+ com ~6 meses de aviso antes da remoção em v2.0.
+  - Arrays em create/update, métodos `*Raw()` e Connector público mantidos até v2.0.
+  - Ver `docs/adr/006-never-break-compatibility.md`.
 - **Fluxo**:
   1. Antes da tag: mover `[Unreleased]` do CHANGELOG para versão+data; atualizar `UPGRADE.md` se houver breaking; sincronizar versão no `composer.json` (referência interna, pois o Packagist lê da tag).
   2. Criar tag `vMAJOR.MINOR.PATCH` — nunca antes do passo 1.

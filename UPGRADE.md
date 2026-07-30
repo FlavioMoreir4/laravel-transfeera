@@ -6,163 +6,108 @@ Este documento descreve os passos necessários para migrar entre versões princi
 
 ---
 
-## v2.0.0 — Cancelado
+## Timeline Planejada
 
-> ❌ **Decisão: nunca quebrar.** As mudanças previstas para v2.0.0 que já foram entregues
-> (DTOs nos Resources, exceptions tipadas) couberam como MINOR porque convivem com o
-> fallback. As breakings restantes (arrays em create/update, métodos `*Raw()`, Connector
-> público) serão mantidas como estão — compatibilidade garantida para sempre.
->
-> Este pacote seguirá apenas versões MINOR (features compatíveis) e PATCH (correções).
-> Se um dia houver motivo real para breaking, será comunicado com aviso prévio de duas
-> MINORs.
-
-### Mudanças Anteriores (v1.x — entregues como MINOR)
-
-| Área | Mudança | Versão |
-|------|---------|--------|
-| **Resources** | Retornam DTOs tipados (e também aceitam arrays) | v1.5.0 |
-| **Exceptions** | Exceptions tipadas por domínio (com fallback preservado) | v1.7.0 |
+```
+v1.9.x ─── v1.10.x ─── v1.11.x ─── ... ─── v1.13.x ─── v2.0.0
+│           │             │                     │            │
+│ atual     @deprecated   Deprecação            Última       🎯
+│ v1.9.0    em *Raw()     avançada              v1.x         2026 Q1
+```
 
 ---
 
-### Passo a Passo de Migração (Quando v2.0.0 for lançada)
+## v2.0.0 (Planejado ~2026 Q1)
+
+> ⚠️ **Esta versão ainda não foi lançada.** As mudanças abaixo estão documentadas para planejamento. Deprecações começarão na v1.10.0 com 6+ meses de aviso.
+
+### Breaking Changes
+
+| Mudança | Impacto | Migração |
+|---------|---------|----------|
+| **Laravel 12 removido** | Requer Laravel 13+ | `composer require laravel/framework:^13.0` |
+| **PHP 8.4+ obrigatório** | Requer PHP 8.4 | Atualize PHP |
+| **Métodos `*Raw()` removidos** | `BaseResource::deleteRaw()` | Use métodos específicos do Resource |
+| **Connector interno** | `Connector` não será mais público | Use `TransfeeraClient` ou Facade |
+| **Retornos de API sem DTO** | Resources que retornam `array` passam a retornar DTO | Ajuste acesso a propriedades |
+
+### Passo a Passo de Migração
 
 #### 1. Atualizar Dependências
 
 ```bash
-composer require flaviomoreir4/laravel-transfeera:^2.0
+# v2.0 requer Laravel 13+ e PHP 8.4+
+composer require flaviomoreir4/laravel-transfeera:^2.0 \
+    laravel/framework:^13.0 \
+    --update-with-dependencies
 ```
 
-#### 2. Substituir Acesso a Arrays por Propriedades de DTO
+#### 2. Substituir Métodos `*Raw()`
 
 **Antes (v1.x):**
 ```php
-$batch = Transfeera::batches()->create(['name' => 'Lote']);
-echo $batch['id'];
-echo $batch['status'];
-
-$transfers = Transfeera::transfers()->list('batch_123');
-foreach ($transfers as $t) {
-    echo $t['amount'];
-}
+$response = $batch->deleteRaw('payments', '/batch/123');
 ```
 
 **Depois (v2.0):**
 ```php
-$batch = Transfeera::batches()->create(new BatchDTO(name: 'Lote'));
-echo $batch->id;
-echo $batch->status;
-
-$transfers = Transfeera::transfers()->list('batch_123');
-foreach ($transfers as $t) {
-    echo $t->amount;
-}
+$response = Transfeera::batches()->delete('123');
 ```
 
-#### 3. Atualizar Try/Catch de Exceptions
+#### 3. Acessar Propriedades de DTO em vez de Array
 
-**Antes (v1.x):**
+Para Resources que retornam DTO, acesse com `->`:
+
 ```php
-try {
-    Transfeera::batches()->create([...]);
-} catch (TransfeeraException $e) {
-    // Capturava tudo
-}
+// v1.x (array, funciona)
+$batch = Transfeera::batches()->get('123');
+echo $batch['id'];     // string 'batch_123'
+
+// v2.0 (DTO)
+$batch = Transfeera::batches()->get('123');
+echo $batch->id;       // string 'batch_123'
 ```
 
-**Depois (v2.0):**
+#### 4. Tratamento de Erros
+
 ```php
 use FlavioMoreir4\Transfeera\Exceptions\{
+    TransfeeraException,
+    TransfeeraValidationException,    // 422
+    TransfeeraRateLimitException,     // 429
     PaymentException,
-    ReceivableException,
-    PixAutomaticoException,
-    ContaCertaException,
-    AccountException,
-    InfractionException,
-    TransfeeraAuthenticationException,
-    TransfeeraValidationException,
-    TransfeeraRateLimitException,
-    TransfeeraException
+    // ... demais por domínio
 };
 
 try {
-    Transfeera::batches()->create(new BatchDTO(...));
+    $batch = Transfeera::batches()->create([...]);
 } catch (TransfeeraValidationException $e) {
-    // 422
-    return response()->json(['errors' => $e->getErrors()], 422);
-} catch (TransfeeraAuthenticationException $e) {
-    // 401
-    return response()->json(['error' => 'unauthorized'], 401);
+    // $e->getErrors() retorna array de erros de validação
 } catch (TransfeeraRateLimitException $e) {
-    // 429
-    return response()->json(['error' => 'rate_limit'], 429)
-        ->header('Retry-After', $e->getRetryAfter() ?? 60);
+    $retryAfter = $e->getRetryAfter();
 } catch (PaymentException $e) {
-    // Erros da API de pagamentos (outros códigos)
-    return response()->json(['error' => $e->getMessage()], $e->getStatusCode() ?: 500);
+    // Erro específico de pagamentos
 } catch (TransfeeraException $e) {
     // Fallback genérico
-    return response()->json(['error' => 'transfeera_error'], 500);
 }
 ```
 
-#### 4. Substituir Arrays por DTOs em Create/Update
-
-**Antes (v1.x):**
-```php
-Transfeera::batches()->create(['name' => 'Lote', 'type' => 'scheduled', 'scheduled_date' => '2025-01-15']);
-Transfeera::transfers()->create('batch_123', ['amount' => 15000, 'pix_key' => 'a@b.com']);
-```
-
-**Depois (v2.0):**
-```php
-use FlavioMoreir4\Transfeera\DTOs\BatchDTO;
-use FlavioMoreir4\Transfeera\DTOs\TransferDTO;
-
-Transfeera::batches()->create(new BatchDTO(
-    name: 'Lote',
-    type: 'scheduled',
-    scheduledDate: '2025-01-15',
-));
-
-Transfeera::transfers()->create('batch_123', new TransferDTO(
-    amount: 15000,
-    pixKey: 'a@b.com',
-    pixKeyType: 'email',
-));
-```
-
-> **Dica**: Se precisar migrar gradualmente, use `$dto->toArray()`:
-> ```php
-> $batch = Transfeera::batches()->create(new BatchDTO(...)->toArray());
-> ```
-
-#### 5. Remover Uso de Métodos `*Raw()`
+#### 5. Remover Acesso Direto ao Connector
 
 **Antes (v1.x):**
 ```php
 $connector = app(\FlavioMoreir4\Transfeera\Http\Connector::class);
-$response = $connector->getRaw(Connector::DOMAIN_PAYMENTS, '/batch/123');
-$data = $connector->postRaw(Connector::DOMAIN_PAYMENTS, '/batch', ['name' => 'X']);
+$response = $connector->get('payments', '/batch/123');
 ```
 
 **Depois (v2.0):**
 ```php
 // Via Facade (recomendado)
-$batch = Transfeera::batches()->get('123');
-$batch = Transfeera::batches()->create(new BatchDTO(name: 'X'));
+$response = Transfeera::batches()->get('123');
 
 // Ou via Client
 $client = app(\FlavioMoreir4\Transfeera\TransfeeraClient::class);
-$batch = $client->batches()->get('123');
-```
-
-#### 6. Atualizar Configuração (se aplicável)
-
-```php
-// config/transfeera.php — v2.0 pode adicionar novas chaves
-// Verifique o arquivo publicado após `php artisan vendor:publish --tag=transfeera-config`
+$response = $client->batches()->get('123');
 ```
 
 ---
@@ -173,9 +118,8 @@ $batch = $client->batches()->get('123');
 
 | Mudança | Tipo | Migração |
 |---------|------|----------|
-| Requer **PHP 8.3+** (era 8.2) | MAJOR | Atualize PHP: `sudo apt upgrade php` ou `brew upgrade php` |
-| Requer **Laravel 12/13** (era 11/12) | MAJOR | `composer require laravel/framework:^12.0\|^13.0` |
-| Rector só roda no PHP 8.3 | INTERNO | CI roda Rector só no PHP 8.3 |
+| Requer **PHP 8.3+** (era 8.2) | MAJOR | Atualize PHP |
+| Requer **Laravel 12/13** (era 11/12) | MAJOR | `composer require laravel/framework:^12.0\|\|^13.0` |
 
 ### Migração
 
@@ -197,43 +141,20 @@ composer rector
 
 ---
 
-## v1.0.0 → v1.1.0 (Jul 2025)
-
-### Mudanças (MINOR — Retrocompatível)
-
-| Feature | Descrição |
-|---------|-----------|
-| **DTOs readonly** | `BatchDTO`, `TransferDTO`, `PixKeyDTO`, `ChargeDTO`, `AuthorizationDTO`, `PaymentIntentDTO` |
-| **Webhooks prontos** | `WebhookController`, rotas, `SignatureValidator`, `TransfeeraWebhookReceived` event, `LogTransfeeraWebhook` listener |
-| **CI/CD** | GitHub Actions matrix PHP 8.2/8.3/8.4 × Laravel 11/12 |
-| **Badges** | CI, Tests, PHPStan, Rector no README |
-
-### Migração (Opcional)
-
-```php
-// Antes: arrays
-Transfeera::batches()->create(['name' => 'Lote']);
-
-// Depois: DTOs (recomendado, arrays ainda funcionam)
-use FlavioMoreir4\Transfeera\DTOs\BatchDTO;
-Transfeera::batches()->create(new BatchDTO(name: 'Lote'));
-```
-
----
-
 ## Referência Rápida: Quando Bump MAJOR vs MINOR vs PATCH
 
 | Cenário | Versão | Exemplo |
 |---------|--------|---------|
-| Remover método público | **MAJOR** | `BatchResource::getRaw()` removido |
-| Mudar assinatura de método público | **MAJOR** | `create(array $data)` → `create(BatchDTO $dto)` |
-| Renomear classe/namespace público | **MAJOR** | `TransfeeraClient` → `TransfeeraSDK` |
-| Adicionar método público | **MINOR** | `BatchResource::duplicate()` novo |
-| Adicionar parâmetro opcional | **MINOR** | `list(array $params = [])` → `list(array $params = [], ?string $accountId = null)` |
-| Corrigir bug sem mudar API | **PATCH** | Fix no `TokenManager` cache lock |
+| Remover método público | **MAJOR** | `deleteRaw()` removido |
+| Mudar assinatura de método público | **MAJOR** | `create(array $data)` → `create(array\|DTO $data)` |
+| Tornar classe interna | **MAJOR** | `Connector` deixa de ser público |
+| Remover suporte a Laravel/PHP | **MAJOR** | Laravel 12 → Laravel 13+ |
+| Adicionar método público | **MINOR** | novo Resource `duplicate()` |
+| Adicionar parâmetro opcional | **MINOR** | `list(array $params = [], ?string $accountId = null)` |
+| Corrigir bug sem mudar API | **PATCH** | Fix no TokenManager cache lock |
 | Ajuste interno (refatoração) | **PATCH** | Renomear variável privada |
-| Nova exception pública | **MINOR** | `PaymentException` nova |
-| Remover exception pública | **MAJOR** | `TransfeeraException` não pega mais `PaymentException` |
+| Adicionar exception pública | **MINOR** | Nova `PaymentException` |
+| Marcar método como `@deprecated` | **MINOR** | `deleteRaw()` com `@deprecated` |
 
 ---
 
@@ -242,18 +163,17 @@ Transfeera::batches()->create(new BatchDTO(name: 'Lote'));
 - [ ] `CHANGELOG.md` atualizado com `[Unreleased]` → nova versão + data
 - [ ] `UPGRADE.md` atualizado se houver breaking changes
 - [ ] `composer.json` version sincronizado com tag
-- [ ] `php artisan vendor:publish --tag=transfeera-config` testado
 - [ ] `composer test` + `composer phpstan` + `composer rector` passando
-- [ ] Tag criada: `git tag -s vX.Y.Z -m "release: vX.Y.Z - ..."`
+- [ ] Tag criada: `git tag --no-sign vX.Y.Z -m "release: vX.Y.Z"` (usar `--no-sign` se GPG não configurado)
 - [ ] Push tag: `git push origin vX.Y.Z`
 - [ ] Packagist sincronizou (verificar webhook GitHub)
-- [ ] Anunciar release (GitHub Releases, changelog link)
 
 ---
 
 ## Links Úteis
 
-- [CHANGELOG.md](CHANGELOG.md) — Histórico completo
-- [CHANGELOG.md (docs/)](docs/changelog.md) — Versão amigável
-- [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/) — Padrão de commits
-- [SemVer PT-BR](https://semver.org/lang/pt-BR/) — Versionamento semântico
+- [CHANGELOG.md](docs/changelog.md) — Histórico completo
+- [docs/adr/006-never-break-compatibility.md](docs/adr/006-never-break-compatibility.md) — Decisão arquitetural sobre v2.0.0
+- [docs/roadmap.md](docs/roadmap.md) — Planejamento de versões
+- [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/)
+- [SemVer PT-BR](https://semver.org/lang/pt-BR/)

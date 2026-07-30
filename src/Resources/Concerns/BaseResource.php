@@ -140,6 +140,9 @@ abstract class BaseResource
      * Faz requisição DELETE.
      *
      * @return array<string, mixed> Resposta bruta (confirmação)
+     *
+     * @deprecated v2.0.0 será removido. Use o método específico do Resource.
+     * @see BaseResource::deleteRaw()
      */
     protected function deleteRaw(string $domain, string $path): array
     {

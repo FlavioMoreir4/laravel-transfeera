@@ -1,7 +1,7 @@
 # Roadmap — laravel-transfeera
 
-> **Filosofia**: Compatibilidade garantida para sempre (v2 cancelado).
-> Apenas **MINORs** (features compatíveis) e **PATCHs** (correções).
+> **Filosofia**: Estratégia híbrida — v1.x contínua com deprecação lenta, v2.0.0 planejada ~2026 Q1.
+> Apenas **MINORs** (features compatíveis) e **PATCHs** (correções) até lá.
 > Atual — v1.9.0 (199 testes, 283 asserções, PHPStan 0, Rector clean, Pint PSR-12).
 
 ---
@@ -101,10 +101,9 @@
 
 | Versão | Foco | Itens |
 |--------|------|-------|
-| **1.11.0** | Ferramentas de debug | Comando `transfeera:debug` (log raw requests), CLI de teste de autenticação |
-| **1.12.0** | Observabilidade | OpenTelemetry span integration (placeholder como MetricsMiddleware), mais métricas |
-| **1.13.0** | SDK Cookbook | Exemplos reais de fluxos completos em `docs/cookbook/` |
-| **1.14+** | Segurança | Dependabot config, token rotation helper, audit logging |
+| **1.10.0** | Qualidade + DX | Response DTOs, testes integração, Laravel 13 migration guide |
+| **1.11.0+** | Debug & Observabilidade | `transfeera:debug`, OpenTelemetry, cookbook de exemplos |
+| **2.0.0** 🎯 ~2026 Q1 | **Breaking planejado** | Drop Laravel 12/PHP 8.3, remove `*Raw()`, Connector interno, API unificada (DTOs everywhere), UPGRADE.md completo |
 
 ---
 

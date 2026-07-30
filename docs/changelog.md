@@ -7,6 +7,25 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [Unreleased]
+
+### Alterado
+
+- **Estratégia de versionamento revisada**: v2.0.0 não está mais cancelado.
+  Adotada **estratégia híbrida** — v1.x contínua com deprecação lenta, v2.0.0
+  planejada para ~2026 Q1. `@deprecated` introduzido em v1.10+ com ~6 meses
+  de aviso antes da remoção em v2.0. Ver ADR-006 e UPGRADE.md para detalhes.
+- **`@deprecated` adicionado** ao método `BaseResource::deleteRaw()` —
+  será removido na v2.0.0.
+
+### Corrigido
+
+- **Documentação reescrita**: README.md, REQUISITOS.md, ADRs (10),
+  UPGRADE.md — todos reestruturados com modelos de referência do ecossistema
+  Laravel.
+
+---
+
 ## [1.9.0] — 2025-07-30
 
 ### Adicionado
