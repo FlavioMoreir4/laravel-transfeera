@@ -9,6 +9,26 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [1.16.0] — 2025-07-30
+
+### Added
+
+- **WebhookResponseDTO** e **WebhookEventResponseDTO** — DTOs tipados para URLs e eventos de webhook
+- **Webhook resources tipados** — PaymentsWebhookResource, ReceivablesWebhookResource e ContaCertaWebhookResource agora retornam DTOs (createUrl, getUrl, listUrls, updateUrl, listEvents)
+- `.env.example` — template completo de configuração com todas as variáveis de ambiente
+- `CONTRIBUTING.md` — guia de contribuição com padrões, convenções e comandos
+- **GitHub Release workflow** — `.github/workflows/release.yml` — release automático ao criar tag
+
+### Fixed
+
+- Webhook resources retornavam `array` puro; agora retornam `WebhookResponseDTO`/`WebhookEventResponseDTO` com tipos e `createFromApi()`
+- Testes de webhook atualizados para validar DTOs em vez de arrays
+
+### Changed
+
+- **+3 testes, +23 asserções** (262 no total, 419 asserções)
+- Testes de webhook: 18 testes refatorados para usar asserções de DTO
+
 ## [1.15.0] — 2025-07-30
 
 ### Added

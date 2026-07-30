@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Webhooks;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\WebhookEventResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\WebhookResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -30,45 +32,30 @@ class PaymentsWebhookResource extends BaseResource
      * Cria uma nova URL de webhook para pagamentos.
      *
      * @param  array{url: string, events?: string[]}  $data  URL e eventos opcionais
-     * @return array<string, mixed>
      */
-    public function createUrl(array $data): array
+    public function createUrl(array $data): WebhookResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH_URLS,
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH_URLS, $data, WebhookResponseDTO::class);
     }
 
     /**
      * Consulta uma URL de webhook pelo ID.
      *
      * @param  string  $id  ID da URL de webhook
-     * @return array<string, mixed>
      */
-    public function getUrl(string $id): array
+    public function getUrl(string $id): WebhookResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH_URLS.'/'.$id,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH_URLS.'/'.$id, [], WebhookResponseDTO::class);
     }
 
     /**
      * Lista todas as URLs de webhook cadastradas.
      *
-     * @return array<string, mixed>
+     * @return array<int, WebhookResponseDTO>
      */
     public function listUrls(): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH_URLS,
-            accountId: $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH_URLS, [], WebhookResponseDTO::class);
     }
 
     /**
@@ -76,16 +63,10 @@ class PaymentsWebhookResource extends BaseResource
      *
      * @param  string  $id  ID da URL de webhook
      * @param  array{url?: string, events?: string[]}  $data  Dados a serem atualizados
-     * @return array<string, mixed>
      */
-    public function updateUrl(string $id, array $data): array
+    public function updateUrl(string $id, array $data): WebhookResponseDTO
     {
-        return $this->connector->put(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH_URLS.'/'.$id,
-            $data,
-            $this->accountId,
-        );
+        return $this->putDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH_URLS.'/'.$id, $data, WebhookResponseDTO::class);
     }
 
     /**
@@ -107,16 +88,11 @@ class PaymentsWebhookResource extends BaseResource
      * Lista os eventos de webhook.
      *
      * @param  array<string, mixed>  $filters  Filtros opcionais
-     * @return array<string, mixed>
+     * @return array<int, WebhookEventResponseDTO>
      */
     public function listEvents(array $filters = []): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH_EVENTS,
-            $filters,
-            $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH_EVENTS, $filters, WebhookEventResponseDTO::class);
     }
 
     /**
