@@ -10,7 +10,7 @@ Pagamentos • Recebimentos • Pix Automático • Conta Certa • Hub de Conta
 [![Laravel](https://img.shields.io/badge/Laravel-12.x%2F13.x-FF2D20)](https://laravel.com)
 [![License](https://img.shields.io/github/license/flaviomoreir4/laravel-transfeera)](LICENSE)
 [![CI](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml/badge.svg)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-199%2F199-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-201%2F201-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](phpstan.neon)
 [![Rector](https://img.shields.io/badge/Rector-clean-brightgreen)](rector.php)
 [![Pint](https://img.shields.io/badge/Pint-PSR%2012-brightgreen)](pint.json)
@@ -164,11 +164,11 @@ class PaymentService
 |----------|---------|-------------|
 | `batches()` | `create()`, `list()`, `get()`, `update()`, `delete()` | `BatchResponseDTO` |
 | `transfers()` | `create()`, `get()`, `update()`, `delete()` | `TransferResponseDTO` |
-| `billets()` | `create()`, `get()`, `list()`, `update()`, `delete()` | `array` (raw) |
+| `billets()` | `create()`, `get()`, `list()`, `update()`, `delete()` | `BilletResponseDTO` |
 | `banks()` | `list()` | `BankResponseDTO[]` |
-| `statement()` | `getBalance()`, `getTransactions()` | `array` (raw) |
-| `recurrences()` | `create()`, `get()`, `list()`, `update()`, `delete()` | `array` (raw) |
-| `pix()` | `consultKey()`, `parseEMV()` | `array` (raw) |
+| `statement()` | `getBalance()`, `getTransactions()` | `StatementResponseDTO` / `array` |
+| `recurrences()` | `create()`, `get()`, `list()`, `update()`, `delete()` | `RecurrenceResponseDTO` |
+| `pix()` | `consultKey()`, `parseEMV()` | `PixResponseDTO` / `array` |
 
 ```php
 // Criar lote com transferências
@@ -249,7 +249,7 @@ $intent = Transfeera::pixAutomaticoPaymentIntents()->create([
 
 | Resource | Métodos | Response DTO |
 |----------|---------|-------------|
-| `contaCertaValidations()` | `validate()`, `get()`, `list()`, `listBanks()` | `array` (raw) |
+| `contaCertaValidations()` | `validate()`, `get()`, `list()`, `listBanks()` | `ValidationResponseDTO` / `array` |
 | `contaCertaBanks()` | `list()` | `BankResponseDTO[]` |
 
 ```php
@@ -267,7 +267,7 @@ $result = Transfeera::contaCertaValidations()->validate([
 
 | Resource | Métodos | Response DTO |
 |----------|---------|-------------|
-| `accounts()` | `create()`, `list()`, `get()`, `update()`, `delete()` | `array` (raw) |
+| `accounts()` | `create()`, `list()`, `get()`, `update()`, `delete()` | `AccountResponseDTO` |
 
 ```php
 // Criar conta digital
@@ -282,7 +282,7 @@ $account = Transfeera::accounts()->create([
 
 | Resource | Métodos | Response DTO |
 |----------|---------|-------------|
-| `infractions()` | `analyze()`, `analyzeBatch()`, `list()`, `get()`, `return()`, `returnBatch()` | `array` (raw) |
+| `infractions()` | `analyze()`, `analyzeBatch()`, `list()`, `get()`, `return()`, `returnBatch()` | `InfractionResponseDTO` / `array` |
 
 ```php
 // Analisar infração individual
@@ -430,7 +430,7 @@ php artisan transfeera:check
 ## Testes
 
 ```bash
-composer test              # Pest (199 testes, 283 asserções)
+composer test              # Pest (201 testes, 283 asserções)
 composer test-coverage     # Com cobertura (PHP 8.3+)
 composer phpstan           # PHPStan level 8
 composer rector            # Rector dry-run

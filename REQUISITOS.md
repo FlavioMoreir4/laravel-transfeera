@@ -1,6 +1,6 @@
 # Especificação de Requisitos — Laravel Transfeera SDK
 
-> **Versão:** v1.9.0  
+> **Versão:** v1.10.0  
 > **Última atualização:** 2025-07-30  
 > **Status:** ✅ Implementado
 
@@ -404,7 +404,7 @@ public function handle(TransfeeraWebhookReceived $event): void
 2. **DTOs nativos** — `readonly class` do PHP 8.3+, sem bibliotecas de mapeamento.
 3. **Valores monetários em centavos** — Inteiros, nunca float.
 4. **Multi-tenancy via `accountId`** — Todas as Resources aceitam `$accountId` opcional.
-5. **"Nunca quebrar"** — v2.0.0 oficialmente cancelado. Arrays em `create`/`update`, métodos `*Raw()` e Connector público mantidos.
+5. **Estratégia híbrida** — v1.x contínua com deprecação lenta, v2.0.0 planejada ~2026 Q1. Arrays em `create`/`update`, métodos `*Raw()` e Connector público mantidos até v2.0.
 6. **Testes com `Http::fake()`** — Sem chamadas reais à API durante testes unitários/feature.
 
 ---
@@ -417,8 +417,8 @@ public function handle(TransfeeraWebhookReceived $event): void
 | PHPStan | Level 8, 0 erros | ✅ |
 | Rector | OK | ✅ |
 | Pint | PSR-12 | ✅ |
-| Testes passando | 100% | ✅ 199/199 |
-| Asserções | ≥ 250 | ✅ 283 |
+| Testes passando | 100% | ✅ 201/201 |
+|| Asserções | ≥ 250 | ✅ 283 |
 | Resources implementados | 24/24 | ✅ |
 | Documentos em `docs/` | 14+ | ✅ 15 |
 
@@ -433,3 +433,4 @@ public function handle(TransfeeraWebhookReceived $event): void
 | 1.8.0 | 2025-07-30 | Cobertura de testes: error handling, middlewares, concorrência |
 | 1.8.1 | 2025-07-30 | Pint, scripts, 14 novos testes, docs |
 | **1.9.0** | 2025-07-30 | Release workflow, check command, rate limit headers, config validation, ServiceProvider/InstallCommand tests |
+| **1.10.0** | 2025-07-30 | Response DTOs, Laravel 13 migration guide, integration tests, rate limit docs |

@@ -32,6 +32,16 @@ test('resolve transfeera client via class name', function () {
     expect($instance)->toBeInstanceOf(TransfeeraClient::class);
 });
 
+test('connector e token manager sao singletons', function () {
+    $connector1 = $this->app->make(Connector::class);
+    $connector2 = $this->app->make(Connector::class);
+    expect($connector1)->toBe($connector2);
+
+    $tm1 = $this->app->make(TokenManager::class);
+    $tm2 = $this->app->make(TokenManager::class);
+    expect($tm1)->toBe($tm2);
+});
+
 test('resolve connector via class name', function () {
     $instance = $this->app->make(Connector::class);
 

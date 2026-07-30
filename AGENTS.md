@@ -4,7 +4,7 @@ Instruções para qualquer agente de IA (Hermes, Claude Code, Copilot, etc.) que
 
 ## O que é este projeto
 
-Pacote Laravel (`flaviomoreir4/laravel-transfeera`) versão **v1.9.0** — SDK completo da API Transfeera cobrindo **7 domínios**: Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa/Validações, Hub de Contas e MED/Infrações. É consumido como dependência por projetos Laravel de terceiros — não tem acoplamento a nenhuma aplicação específica.
+Pacote Laravel (`flaviomoreir4/laravel-transfeera`) versão **v1.10.0** — SDK completo da API Transfeera cobrindo **7 domínios**: Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa/Validações, Hub de Contas e MED/Infrações. É consumido como dependência por projetos Laravel de terceiros — não tem acoplamento a nenhuma aplicação específica.
 
 Documentação oficial da API (consultar antes de tocar em qualquer Resource — nunca inferir schema por analogia):
 - https://docs.transfeera.dev/reference/endpoints
@@ -22,7 +22,7 @@ Requer PHP 8.3+, Laravel 12+ como dependência de teste (`orchestra/testbench`).
 ## Comandos de verificação
 
 ```bash
-composer test          # Pest 5 (199 testes, 283 asserções)
+composer test          # Pest 5 (201 testes, 283 asserções)
 composer analyse       # Larastan / PHPStan level 8 — zero erros
 composer rector        # Rector dry-run (verifica)
 composer rector-fix    # Rector (aplica correções)
@@ -38,7 +38,7 @@ Se algum desses scripts não existir ainda no `composer.json`, criá-lo — não
 - **Estrutura de diretórios**:
   - `src/Resources/` — 7 subdiretórios por domínio: `Payments`, `Receivables`, `PixAutomatico`, `ContaCerta`, `Accounts`, `Infractions`, `Webhooks`
   - `src/DTOs/` — 15 Request DTOs (readonly classes)
-  - `src/DTOs/Response/` — 11 Response DTOs (com `fromResponse()`)
+  - `src/DTOs/Response/` — 15 Response DTOs (com `createFromApi()`)
   - `src/Auth/TokenManager.php` — OAuth2 `client_credentials` com cache
   - `src/Http/Connector.php` — requisições HTTP + middlewares
   - `src/Http/MtlsConfigurator.php` — mTLS condicional
@@ -161,10 +161,10 @@ Todo o conteúdo de `docs/` está criado e sincronizado com a v1.9.0:
 
 | Item | Valor |
 |------|-------|
-| **Versão** | v1.7.0 |
-| **Commit** | `1f4a28e` (docs: fix broken reference URLs) |
-| **Testes** | 118 passing, 160 assertions |
+| **Versão** | v1.10.0 |
+| **Commit** | `f53db3a` (feat: v1.10.0 — Response DTOs) |
+| **Testes** | 201 passing, 283 assertions |
 | **PHPStan** | Level 8 — 0 erros |
 | **Rector** | Clean |
-| **Documentação** | 13 docs + README + CHANGELOG + UPGRADE — todos sincronizados |
+| **Documentação** | 15 docs + README + CHANGELOG + UPGRADE + REQUISITOS — todos sincronizados |
 | **Data** | Julho 2025 |
