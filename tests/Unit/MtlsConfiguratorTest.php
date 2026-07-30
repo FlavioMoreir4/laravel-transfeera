@@ -71,3 +71,58 @@ test('lanca excecao se certificado nao existe', function () {
     expect(fn () => $mtls->apply($request))
         ->toThrow(TransfeeraException::class, 'não encontrado');
 });
+
+// ─── mTLS condicional por domínio ────────────────────────────
+
+test('nao aplica mTLS em sandbox mesmo para domínios que exigem', function () {
+    $mtls = new MtlsConfigurator(
+        mtlsConfig: ['cert_path' => '', 'key_path' => ''],
+        environment: 'sandbox',
+    );
+
+    // Payments em sandbox não deve exigir mTLS
+    $request = Http::baseUrl('https://api-sandbox.transfeera.com');
+    $result = $mtls->apply($request);
+
+    expect($result)->toBe($request);
+});
+
+test('aplica mTLS em producao para domínio payments', function () {
+    $certPath = tempnam(sys_get_temp_dir(), 'mtls_cert_');
+    $keyPath = tempnam(sys_get_temp_dir(), 'mtls_key_');
+    file_put_contents($certPath, 'cert-content');
+    file_put_contents($keyPath, 'key-content');
+
+    $mtls = new MtlsConfigurator(
+        mtlsConfig: ['cert_path' => $certPath, 'key_path' => $keyPath],
+        environment: 'production',
+    );
+
+    $request = Http::baseUrl('https://api.mtls.transfeera.com');
+    $result = $mtls->apply($request);
+
+    expect($result)->not->toBeNull();
+
+    unlink($certPath);
+    unlink($keyPath);
+});
+
+test('aplica mTLS em producao para domínio conta_certa', function () {
+    $certPath = tempnam(sys_get_temp_dir(), 'mtls_cc_');
+    $keyPath = tempnam(sys_get_temp_dir(), 'mtls_cc_key_');
+    file_put_contents($certPath, 'cc-cert');
+    file_put_contents($keyPath, 'cc-key');
+
+    $mtls = new MtlsConfigurator(
+        mtlsConfig: ['cert_path' => $certPath, 'key_path' => $keyPath],
+        environment: 'production',
+    );
+
+    $request = Http::baseUrl('https://contacerta-api.mtls.transfeera.com');
+    $result = $mtls->apply($request);
+
+    expect($result)->not->toBeNull();
+
+    unlink($certPath);
+    unlink($keyPath);
+});

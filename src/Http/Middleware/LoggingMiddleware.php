@@ -4,116 +4,70 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Http\Middleware;
 
-use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Middleware para logging de requisições e respostas HTTP.
+ * Middleware de logging para requisições à API Transfeera.
+ *
+ * Laravel 13+ usa Guzzle HandlerStack diretamente no withMiddleware(),
+ * então este middleware não é mais registrado como handler de pilha.
+ * O Connector chama log() diretamente após cada requisição.
  */
 class LoggingMiddleware
 {
+    /**
+     * @param  bool   $enabled    Se o logging está ativo
+     * @param  string $channel    Canal do Log (default: stack)
+     * @param  string $level      Nível padrão: 'info'
+     * @param  bool   $logHeaders Se deve incluir headers no contexto
+     */
     public function __construct(
-        public readonly bool $enabled = false,
-        public readonly string $logLevel = 'info',
+        public readonly bool $enabled = true,
+        public readonly string $channel = 'stack',
+        public readonly string $level = 'info',
         public readonly bool $logHeaders = false,
-        public readonly bool $logBody = false,
-        public readonly int $maxBodyLength = 2000,
-    ) {}
+    ) {
+    }
 
-    public function handle(PendingRequest $request, callable $next): Response
+    /**
+     * Registra log de uma requisição e resposta da API Transfeera.
+     *
+     * @param  string   $method   Método HTTP (GET, POST, etc.)
+     * @param  string   $url      URL completa da requisição
+     * @param  array    $data     Payload enviado
+     * @param  Response|null $response Resposta recebida (pode ser nula em caso de erro antes da requisição)
+     * @param  float    $duration Duração em segundos
+     */
+    public function log(string $method, string $url, array $data, ?Response $response, float $duration): void
     {
         if (! $this->enabled) {
-            return $next($request);
+            return;
         }
 
-        $startTime = microtime(true);
+        $level = $response instanceof Response && ($response->successful() || $response->status() < 500)
+            ? $this->level
+            : 'warning';
 
-        // Log da requisição
-        $this->logRequest($request);
+        $message = sprintf(
+            'Transfeera API %s %s - %s (%.2fms)',
+            strtoupper($method),
+            $url,
+            (string) ($response?->status() ?? 'N/A'),
+            $duration * 1000,
+        );
 
-        $response = $next($request);
-
-        // Log da resposta
-        $this->logResponse($request, $response, microtime(true) - $startTime);
-
-        return $response;
-    }
-
-    private function logRequest(PendingRequest $request): void
-    {
-        $options = $request->getOptions();
-        $domain = $options['transfeera_domain'] ?? 'unknown';
-        $method = $options['transfeera_method'] ?? 'GET';
-        $url = $options['transfeera_url'] ?? 'unknown';
-
-        $data = [
-            'domain' => $domain,
+        $context = [
             'method' => $method,
             'url' => $url,
-        ];
-
-        if ($this->logHeaders) {
-            $data['headers'] = $this->sanitizeHeaders($request->headers() ?? []);
-        }
-
-        if ($this->logBody) {
-            $data['body'] = $this->truncate((string) $request->getBody() ?? '');
-        }
-
-        Log::log($this->logLevel, 'Transfeera API Request', $data);
-    }
-
-    private function logResponse(PendingRequest $request, Response $response, float $duration): void
-    {
-        $options = $request->getOptions();
-        $domain = $options['transfeera_domain'] ?? 'unknown';
-        $method = $options['transfeera_method'] ?? 'GET';
-        $url = $options['transfeera_url'] ?? 'unknown';
-
-        $data = [
-            'domain' => $domain,
-            'method' => $method,
-            'url' => $url,
-            'status' => $response->status(),
+            'status' => $response?->status(),
             'duration_ms' => round($duration * 1000, 2),
-            'successful' => $response->successful(),
         ];
 
         if ($this->logHeaders) {
-            $data['response_headers'] = $this->sanitizeHeaders($response->headers());
+            $context['request_data'] = $data;
         }
 
-        if ($this->logBody) {
-            $data['response_body'] = $this->truncate($response->body());
-        }
-
-        $level = $response->successful() ? $this->logLevel : 'warning';
-        Log::log($level, 'Transfeera API Response', $data);
-    }
-
-    private function sanitizeHeaders(array $headers): array
-    {
-        $sensitive = ['authorization', 'x-signature', 'cookie', 'set-cookie'];
-        $sanitized = [];
-
-        foreach ($headers as $key => $value) {
-            if (in_array(strtolower((string) $key), $sensitive, true)) {
-                $sanitized[$key] = '[REDACTED]';
-            } else {
-                $sanitized[$key] = $value;
-            }
-        }
-
-        return $sanitized;
-    }
-
-    private function truncate(string $body): string
-    {
-        if (strlen($body) <= $this->maxBodyLength) {
-            return $body;
-        }
-
-        return substr($body, 0, $this->maxBodyLength) . '... [truncated]';
+        Log::channel($this->channel)->log($level, $message, $context);
     }
 }

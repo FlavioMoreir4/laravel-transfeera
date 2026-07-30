@@ -4,62 +4,48 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Http\Middleware;
 
-use Throwable;
-use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\Client\Response;
-
 /**
- * Middleware para coleta de métricas de requisições HTTP.
+ * Middleware de métricas para requisições à API Transfeera.
+ *
+ * O Connector chama recordMetric() diretamente após cada requisição.
+ * A implementação real de envio de métricas (Prometheus, StatsD, etc.)
+ * deve substituir este placeholder ou estendê-lo.
  */
 class MetricsMiddleware
 {
+    /**
+     * @param  bool   $enabled Se a coleta de métricas está ativa
+     * @param  string $prefix  Prefixo para nomes das métricas
+     */
     public function __construct(
-        public readonly bool $enabled = false,
+        public readonly bool $enabled = true,
         public readonly string $prefix = 'transfeera',
-    ) {}
-
-    public function handle(PendingRequest $request, callable $next): Response
-    {
-        if (! $this->enabled) {
-            return $next($request);
-        }
-
-        $startTime = microtime(true);
-
-        try {
-            $response = $next($request);
-
-            $duration = microtime(true) - $startTime;
-            $options = $request->getOptions();
-            $domain = $options['transfeera_domain'] ?? 'unknown';
-            $method = $options['transfeera_method'] ?? 'GET';
-            $status = $response->status();
-
-            $this->recordMetric();
-
-            $this->recordMetric();
-
-            if ($status >= 400) {
-                $this->recordMetric();
-            }
-
-            return $response;
-        } catch (Throwable $e) {
-            $duration = microtime(true) - $startTime;
-            $options = $request->getOptions();
-            $domain = $options['transfeera_domain'] ?? 'unknown';
-            $method = $options['transfeera_method'] ?? 'GET';
-
-            $this->recordMetric();
-
-            throw $e;
-        }
+    ) {
     }
 
-    private function recordMetric(): void
+    /**
+     * Registra uma métrica de requisição.
+     *
+     * Implementação placeholder — substitua pelo seu sistema de métricas.
+     *
+     * @param  string $domain   Domínio da API (payments, receivables, etc.)
+     * @param  string $method   Método HTTP
+     * @param  int    $status   Status HTTP da resposta
+     * @param  float  $duration Duração em segundos
+     */
+    public function recordMetric(string $domain, string $method, int $status, float $duration): void
     {
-        // Placeholder para integração com sistemas de métricas
-        // Exemplo: app('prometheus')->increment($name, $tags);
-        // Exemplo: app('statsd')->histogram($name, $value, $tags);
+        if (! $this->enabled) {
+            return;
+        }
+
+        // Placeholder: registro interno para testes.
+        // Em produção, envie para Prometheus/StatsD/OpenTelemetry:
+        //
+        //     $histogram->observe($duration, [
+        //         'domain' => $domain,
+        //         'method' => $method,
+        //         'status' => (string) $status,
+        //     ]);
     }
 }

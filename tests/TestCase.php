@@ -18,6 +18,9 @@ abstract class TestCase extends OrchestraTestCase
         parent::setUp();
 
         Cache::flush();
+
+        // Limpa também o store 'array' usado pelo TokenManager
+        Cache::store('array')->flush();
     }
 
     /**

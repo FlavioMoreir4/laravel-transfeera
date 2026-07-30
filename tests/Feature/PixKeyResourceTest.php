@@ -85,7 +85,7 @@ test('consulta chave pix por id', function () {
         'api-sandbox.transfeera.com/pix/key/key_1' => Http::response([
             'id' => 'key_1',
             'type' => 'phone',
-            'value' => '+5511999999999',
+            'value' => '+551****9999',
             'status' => 'verified',
         ]),
         'login-api-sandbox.transfeera.com/*' => Http::response([
@@ -127,4 +127,22 @@ test('portabilidade: claim, confirm, cancel', function () {
 
     $cancelled = Transfeera::pixKeys()->cancelClaim('claim_1');
     expect($cancelled['status'])->toBe('cancelled');
+});
+
+test('reenvia codigo de verificacao de chave pix', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/pix/key/key_abc/resendVerificationCode' => Http::response([
+            'id' => 'key_abc',
+            'status' => 'pending',
+            'message' => 'Código reenviado com sucesso',
+        ]),
+        'login-api-sandbox.transfeera.com/*' => Http::response([
+            'access_token' => 'test-token',
+            'expires_in' => 1800,
+        ]),
+    ]);
+
+    $response = Transfeera::pixKeys()->resendVerificationCode('key_abc');
+
+    expect($response['message'])->toContain('reenviado');
 });

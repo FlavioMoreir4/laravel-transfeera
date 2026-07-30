@@ -135,19 +135,40 @@ class Connector
         ?string $accountId,
     ): array {
         $request = $this->buildRequest($domain, $accountId, $method, $path);
+        $url = $this->url($domain, $path);
 
-        $response = match ($method) {
-            'GET' => $request->get($this->url($domain, $path), $data),
-            'POST' => $request->post($this->url($domain, $path), $data),
-            'PUT' => $request->put($this->url($domain, $path), $data),
-            'PATCH' => $request->patch($this->url($domain, $path), $data),
-            'DELETE' => $request->delete($this->url($domain, $path)),
-            default => throw new TransfeeraException(
-                message: "Método HTTP não suportado: {$method}",
-            ),
-        };
+        $startTime = microtime(true);
+        $response = null;
 
-        return $this->handleResponse($response, $domain);
+        try {
+            $response = match ($method) {
+                'GET' => $request->get($url, $data),
+                'POST' => $request->post($url, $data),
+                'PUT' => $request->put($url, $data),
+                'PATCH' => $request->patch($url, $data),
+                'DELETE' => $request->delete($url),
+                default => throw new TransfeeraException(
+                    message: "Método HTTP não suportado: {$method}",
+                ),
+            };
+
+            return $this->handleResponse($response, $domain);
+        } finally {
+            $duration = microtime(true) - $startTime;
+
+            if ($this->loggingMiddleware instanceof LoggingMiddleware && $this->loggingMiddleware->enabled) {
+                $this->loggingMiddleware->log($method, $url, $data, $response ?? null, $duration);
+            }
+
+            if ($this->metricsMiddleware instanceof MetricsMiddleware && $this->metricsMiddleware->enabled) {
+                $this->metricsMiddleware->recordMetric(
+                    domain: $domain,
+                    method: $method,
+                    status: $response?->status() ?? 0,
+                    duration: $duration,
+                );
+            }
+        }
     }
 
     /**
@@ -177,20 +198,11 @@ class Connector
             ->retry(
                 times: $this->config['retry']['max_attempts'] ?? 3,
                 sleepMilliseconds: $this->config['retry']['delay_ms'] ?? 100,
+                throw: false,
             );
 
         // Aplica middlewares se configurados
-        if ($this->loggingMiddleware instanceof LoggingMiddleware && $this->loggingMiddleware->enabled) {
-            $request = $request->withMiddleware(
-                fn(PendingRequest $request, callable $next): Response => $this->loggingMiddleware->handle($request, $next)
-            );
-        }
-
-        if ($this->metricsMiddleware instanceof MetricsMiddleware && $this->metricsMiddleware->enabled) {
-            $request = $request->withMiddleware(
-                fn(PendingRequest $request, callable $next): Response => $this->metricsMiddleware->handle($request, $next)
-            );
-        }
+        // (obsoleto: middlewares são chamados diretamente no execute())
 
         // Armazena metadados para middlewares
         $request = $request->withOptions([
@@ -233,38 +245,38 @@ class Connector
         $message = $payload['message'] ?? $payload['error'] ?? $response->body();
 
         // Mapeia códigos HTTP para exceptions base
-                    $baseException = match (true) {
-                        $status === 401 => new TransfeeraAuthenticationException(
-                            message: $message,
-                            statusCode: $status,
-                            payload: $payload,
-                        ),
-                        $status === 422 => new TransfeeraValidationException(
-                            message: $message,
-                            statusCode: $status,
-                            errors: $payload['errors'] ?? $payload ?? [],
-                            payload: $payload,
-                        ),
-                        $status === 429 => new TransfeeraRateLimitException(
-                            message: $message,
-                            statusCode: $status,
-                            payload: $payload,
-                        ),
-                        default => new TransfeeraException(
-                            message: $message,
-                            statusCode: $status,
-                            payload: $payload,
-                        ),
-                    };
+        $baseException = match (true) {
+            $status === 401 => new TransfeeraAuthenticationException(
+                message: $message,
+                statusCode: $status,
+                payload: $payload,
+            ),
+            $status === 422 => new TransfeeraValidationException(
+                message: $message,
+                statusCode: $status,
+                errors: $payload['errors'] ?? $payload ?? [],
+                payload: $payload,
+            ),
+            $status === 429 => new TransfeeraRateLimitException(
+                message: $message,
+                statusCode: $status,
+                payload: $payload,
+            ),
+            default => new TransfeeraException(
+                message: $message,
+                statusCode: $status,
+                payload: $payload,
+            ),
+        };
 
-                    // Para erros de autenticação/validação/rate-limit, lança a exception base
-                    // (não são específicos de domínio)
-                    if (in_array($status, [401, 422, 429], true)) {
-                        throw $baseException;
-                    }
+        // Para erros de autenticação/validação/rate-limit, lança a exception base
+        // (não são específicos de domínio)
+        if (in_array($status, [401, 422, 429], true)) {
+            throw $baseException;
+        }
 
-                    // Lança exception específica do domínio para outros erros
-                    return match ($domain) {
+        // Lança exception específica do domínio para outros erros
+        return match ($domain) {
             self::DOMAIN_PAYMENTS => throw new PaymentException(
                 message: $baseException->getMessage(),
                 statusCode: $baseException->getCode(),

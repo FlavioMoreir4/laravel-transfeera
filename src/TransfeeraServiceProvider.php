@@ -64,10 +64,8 @@ class TransfeeraServiceProvider extends ServiceProvider
         // Middlewares opcionais
         $this->app->singleton(LoggingMiddleware::class, fn ($app) => new LoggingMiddleware(
             enabled: $app['config']['transfeera']['logging']['enabled'] ?? false,
-            logLevel: $app['config']['transfeera']['logging']['level'] ?? 'info',
+            level: $app['config']['transfeera']['logging']['level'] ?? 'info',
             logHeaders: $app['config']['transfeera']['logging']['headers'] ?? false,
-            logBody: $app['config']['transfeera']['logging']['body'] ?? false,
-            maxBodyLength: $app['config']['transfeera']['logging']['max_body_length'] ?? 2000,
         ));
 
         $this->app->singleton(MetricsMiddleware::class, fn ($app) => new MetricsMiddleware(
