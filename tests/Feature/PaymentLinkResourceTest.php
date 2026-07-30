@@ -85,5 +85,5 @@ test('exclui link de pagamento', function () {
 
     $response = Transfeera::paymentLinks()->delete('pl_1');
 
-    expect($response['success'])->toBeTrue();
+    expect($response->success)->toBeTrue();
 });

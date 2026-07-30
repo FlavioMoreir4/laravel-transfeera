@@ -6,15 +6,21 @@ use FlavioMoreir4\Transfeera\DTOs\Response\AccountResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\AuthorizationResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\BankResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\BatchResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\BilletCipResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\BilletResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\ChargeResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\InfractionAnalysisResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\InfractionResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\PaymentIntentResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\PaymentLinkResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\PixCashInResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\PixEmvResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\PixKeyResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\PixQrCodeResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\PixRefundResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\PixResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\RecurrencePaymentResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\RecurrenceResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\StatementReportResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\StatementResponseDTO;
@@ -290,4 +296,77 @@ test('WebhookEventResponseDTO createFromApi e toArray', function () {
 
     expect($dto->event)->toBe('batch.processed');
     expect($dto->toArray())->toHaveKey('event');
+});
+
+test('OperationResponseDTO createFromApi e toArray', function () {
+    $dto = OperationResponseDTO::fromResponse([
+        'success' => true,
+        'message' => 'Operação concluída',
+    ]);
+
+    expect($dto->success)->toBeTrue();
+    expect($dto->message)->toBe('Operação concluída');
+    expect($dto->toArray())->toHaveKey('success');
+});
+
+test('PixEmvResponseDTO createFromApi e toArray', function () {
+    $dto = PixEmvResponseDTO::fromResponse([
+        'key' => 'fulano@email.com',
+        'value' => 50000,
+        'description' => 'Pagamento',
+    ]);
+
+    expect($dto->key)->toBe('fulano@email.com');
+    expect($dto->value)->toBe(50000);
+    expect($dto->toArray())->toHaveKey('key');
+});
+
+test('BilletCipResponseDTO createFromApi e toArray', function () {
+    $dto = BilletCipResponseDTO::fromResponse([
+        'billet_number' => '001',
+        'value' => 5000,
+        'due_date' => '2025-12-31',
+        'cip_status' => 'registered',
+    ]);
+
+    expect($dto->billetNumber)->toBe('001');
+    expect($dto->cipStatus)->toBe('registered');
+    expect($dto->toArray())->toHaveKey('billet_number');
+});
+
+test('RecurrencePaymentResponseDTO createFromApi e toArray', function () {
+    $dto = RecurrencePaymentResponseDTO::fromResponse([
+        'id' => 'rp_1',
+        'value' => 15000,
+        'due_date' => '2025-08-15',
+        'status' => 'pending',
+    ]);
+
+    expect($dto->value)->toBe(15000);
+    expect($dto->dueDate)->toBe('2025-08-15');
+    expect($dto->toArray())->toHaveKey('due_date');
+});
+
+test('PixRefundResponseDTO createFromApi e toArray', function () {
+    $dto = PixRefundResponseDTO::fromResponse([
+        'id' => 'ref_1',
+        'amount' => 10000,
+        'end_to_end_id' => 'E2E123456',
+    ]);
+
+    expect($dto->amount)->toBe(10000);
+    expect($dto->endToEndId)->toBe('E2E123456');
+    expect($dto->toArray())->toHaveKey('end_to_end_id');
+});
+
+test('InfractionAnalysisResponseDTO createFromApi e toArray', function () {
+    $dto = InfractionAnalysisResponseDTO::fromResponse([
+        'analysis_id' => 'anl_1',
+        'result' => 'approved',
+        'infraction_id' => 'inf_1',
+    ]);
+
+    expect($dto->analysisId)->toBe('anl_1');
+    expect($dto->result)->toBe('approved');
+    expect($dto->toArray())->toHaveKey('analysis_id');
 });

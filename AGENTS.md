@@ -164,7 +164,7 @@ Todo o conteúdo de `docs/` está criado e sincronizado com a v1.9.0:
 |------|-------|
 | **Versão** | v1.17.0 |
 | **Commit** | `cfda1df` (feat: v1.16.0 — Quality & Infra) |
-| **Testes** | 283 passing, 482 assertions |
+| **Testes** | 283+ passing, 482+ assertions |
 | **PHPStan** | Level 8 — 0 erros |
 | **Rector** | Clean |
 | **Documentação** | 16 docs + README + CHANGELOG + UPGRADE + REQUISITOS — todos sincronizados |

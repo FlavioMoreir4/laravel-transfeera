@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\AuthorizationResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Http;
 
@@ -78,7 +79,7 @@ test('cancela autorizacao pix automatico', function () {
 
     $response = Transfeera::pixAutomaticoAuthorizations()->cancel('auth_1');
 
-    expect($response['status'])->toBe('cancelled');
+    expect($response->status)->toBe('cancelled');
 });
 
 test('consulta cancelamento de autorizacao', function () {
@@ -95,7 +96,8 @@ test('consulta cancelamento de autorizacao', function () {
 
     $response = Transfeera::pixAutomaticoAuthorizations()->getCancellation('auth_1', 'canc_1');
 
-    expect($response['cancelled_at'])->toBe('2025-06-01T10:00:00Z');
+    expect($response)->toBeInstanceOf(AuthorizationResponseDTO::class);
+    expect($response->id)->toBe('auth_1');
 });
 
 test('atualiza autorizacao (split_payment)', function () {

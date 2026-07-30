@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\ChargeResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Http;
 
@@ -82,7 +83,8 @@ test('cancela cobranca', function () {
 
     $response = Transfeera::charges()->cancel('chg_1');
 
-    expect($response['status'])->toBe('cancelled');
+    expect($response)->toBeInstanceOf(ChargeResponseDTO::class);
+    expect($response->status)->toBe('cancelled');
 });
 
 test('download pdf comprovante', function () {

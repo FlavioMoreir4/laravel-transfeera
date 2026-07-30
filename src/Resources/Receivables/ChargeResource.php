@@ -62,15 +62,10 @@ class ChargeResource extends BaseResource
      * Cancela uma cobrança.
      *
      * @param  string  $id  ID da cobrança
-     * @return array<string, mixed>
      */
-    public function cancel(string $id): array
+    public function cancel(string $id): ChargeResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH.'/'.$id.'/cancel',
-            accountId: $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id.'/cancel', [], ChargeResponseDTO::class);
     }
 
     /**

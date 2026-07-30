@@ -9,11 +9,22 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+### Added
+
+- **6 novos DTOs**: `OperationResponseDTO`, `PixEmvResponseDTO`, `BilletCipResponseDTO`, `RecurrencePaymentResponseDTO`, `PixRefundResponseDTO`, `InfractionAnalysisResponseDTO`
+- **BankResourceTest** — Testes para Payments\BankResource e ContaCerta\BankResource
+- **AllResponseDTOsTest**: expandido de 21 para 28 testes (cobre todos os 27 DTOs)
+- **BaseResource::deleteDTO()** — método para DELETE com retorno tipado
+- **docs/pix-automatico.md** — Guia completo para Pix Automático com diagrama de fluxo
+- **docs/transacoes.md** — Guia de transações financeiras (lotes, boletos, extratos, cobranças)
+- **Roadmap**: Adicionado marco v1.18.0 "DTOs everywhere — 0 arrays"
+
 ### Changed
 
-- **phpunit.xml** — excluídos do coverage: Enums, Exceptions e WebhookEvent (boilerplate sem lógica de negócio)
-- **CI coverage threshold** — reduzido de 90% para 85% (valor realista), com exclusions permitindo foco em código com lógica
-- **AllResponseDTOsTest** — 21 novos testes unitários para `createFromApi()` e `toArray()` em todas as Response DTOs
+- **12 métodos** em 6 Resources (PixQrCode, Authorization, PaymentIntent, Account, Charge, Batch) refatorados para usar DTOs existentes
+- **20+ métodos** em 10 Resources (PixKey, PixCashIn, Billet, Batch, Transfer, PaymentLink, 3× Webhooks, Recurrence, Infraction) refatorados para retornar `OperationResponseDTO` ou DTOs específicos
+- **30 métodos a menos retornando raw array** — Total de métodos sem DTO caiu de ~45 para ~15 (apenas downloadPdf preservados por serem binários)
+- **CI coverage**: threshold 85%, excluídos Enums/Exceptions/WebhookEvent do cálculo
 
 ## [1.17.0] — 2025-07-30
 

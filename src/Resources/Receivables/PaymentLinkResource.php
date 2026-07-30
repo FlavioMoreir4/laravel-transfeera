@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Receivables;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\PaymentLinkResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
@@ -63,10 +64,9 @@ class PaymentLinkResource extends BaseResource
      * Exclui um link de pagamento.
      *
      * @param  string  $id  ID do link de pagamento
-     * @return array<string, mixed>
      */
-    public function delete(string $id): array
+    public function delete(string $id): OperationResponseDTO
     {
-        return $this->deleteRaw(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id);
+        return $this->deleteDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id, OperationResponseDTO::class);
     }
 }

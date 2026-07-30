@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\RecurrencePaymentResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\RecurrenceResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
@@ -33,31 +35,20 @@ class RecurrenceResource extends BaseResource
      *
      * @param  string  $recurrenceId  Identificador da recorrência
      * @param  array<string, mixed>  $params  Filtros
-     * @return array<string, mixed>
+     * @return array<int, RecurrencePaymentResponseDTO>
      */
     public function listPayments(string $recurrenceId, array $params = []): array
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            "/payout_recurrences/{$recurrenceId}/payments",
-            $params,
-            $this->accountId,
-        );
+        return $this->getDTOList(self::DOMAIN, "/payout_recurrences/{$recurrenceId}/payments", $params, RecurrencePaymentResponseDTO::class);
     }
 
     /**
      * Cancela uma recorrência.
      *
      * @param  string  $recurrenceId  Identificador da recorrência
-     * @return array<string, mixed>
      */
-    public function cancel(string $recurrenceId): array
+    public function cancel(string $recurrenceId): OperationResponseDTO
     {
-        return $this->connector->post(
-            self::DOMAIN,
-            "/payout_recurrences/{$recurrenceId}/cancel",
-            [],
-            $this->accountId,
-        );
+        return $this->postDTO(self::DOMAIN, "/payout_recurrences/{$recurrenceId}/cancel", [], OperationResponseDTO::class);
     }
 }

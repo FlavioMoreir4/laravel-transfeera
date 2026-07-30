@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\WebhookEventResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\WebhookResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
@@ -100,7 +101,7 @@ test('payments webhook deleta url', function () {
 
     $response = Transfeera::paymentsWebhooks()->deleteUrl('wh_1');
 
-    expect($response)->toBe([]);
+    expect($response)->toBeInstanceOf(OperationResponseDTO::class);
 });
 
 test('payments webhook lista eventos', function () {
@@ -138,7 +139,7 @@ test('payments webhook reenvia evento', function () {
 
     $response = Transfeera::paymentsWebhooks()->resendEvent('evt_1');
 
-    expect($response['status'])->toBe('resent');
+    expect($response->status)->toBe('resent');
 });
 
 // ─── Receivables Webhooks ──────────────────────────────────
@@ -232,7 +233,7 @@ test('receivables webhook deleta url', function () {
 
     $response = Transfeera::receivablesWebhooks()->deleteUrl('wh_rec_1');
 
-    expect($response)->toBe([]);
+    expect($response)->toBeInstanceOf(OperationResponseDTO::class);
 });
 
 test('receivables webhook lista eventos', function () {
@@ -268,7 +269,7 @@ test('receivables webhook reenvia evento', function () {
 
     $response = Transfeera::receivablesWebhooks()->resendEvent('evt_rec_1');
 
-    expect($response['status'])->toBe('resent');
+    expect($response->status)->toBe('resent');
 });
 
 // ─── Conta Certa Webhooks ──────────────────────────────────
@@ -361,7 +362,7 @@ test('conta certa webhook deleta url', function () {
 
     $response = Transfeera::contaCertaWebhooks()->deleteUrl('wh_cc_1');
 
-    expect($response)->toBe([]);
+    expect($response)->toBeInstanceOf(OperationResponseDTO::class);
 });
 
 test('conta certa webhook lista eventos', function () {
@@ -397,5 +398,5 @@ test('conta certa webhook reenvia evento', function () {
 
     $response = Transfeera::contaCertaWebhooks()->resendEvent('evt_cc_1');
 
-    expect($response['status'])->toBe('resent');
+    expect($response->status)->toBe('resent');
 });

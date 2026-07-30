@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Http;
 
@@ -63,7 +64,7 @@ test('verifica chave pix com codigo', function () {
 
     $response = Transfeera::pixKeys()->verify('key_abc', '123456');
 
-    expect($response['status'])->toBe('verified');
+    expect($response->status)->toBe('verified');
 });
 
 test('remove chave pix', function () {
@@ -75,8 +76,9 @@ test('remove chave pix', function () {
         ]),
     ]);
 
-    Transfeera::pixKeys()->delete('key_abc');
+    $response = Transfeera::pixKeys()->delete('key_abc');
 
+    expect($response)->toBeInstanceOf(OperationResponseDTO::class);
     Http::assertSent(fn ($request) => $request->method() === 'DELETE');
 });
 
@@ -120,13 +122,13 @@ test('portabilidade: claim, confirm, cancel', function () {
     ]);
 
     $claim = Transfeera::pixKeys()->claim('1199999999');
-    expect($claim['status'])->toBe('pending');
+    expect($claim->status)->toBe('pending');
 
     $confirmed = Transfeera::pixKeys()->confirmClaim('claim_1');
-    expect($confirmed['status'])->toBe('confirmed');
+    expect($confirmed->status)->toBe('confirmed');
 
     $cancelled = Transfeera::pixKeys()->cancelClaim('claim_1');
-    expect($cancelled['status'])->toBe('cancelled');
+    expect($cancelled->status)->toBe('cancelled');
 });
 
 test('reenvia codigo de verificacao de chave pix', function () {
@@ -144,5 +146,5 @@ test('reenvia codigo de verificacao de chave pix', function () {
 
     $response = Transfeera::pixKeys()->resendVerificationCode('key_abc');
 
-    expect($response['message'])->toContain('reenviado');
+    expect($response->message)->toContain('reenviado');
 });

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Concerns;
 
-use FlavioMoreir4\Transfeera\DTOs\Response\BaseResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\ResponseDTOInterface;
 use FlavioMoreir4\Transfeera\Http\Connector;
 
 /**
@@ -12,8 +12,6 @@ use FlavioMoreir4\Transfeera\Http\Connector;
  *
  * Fornece métodos tipados para operações CRUD que retornam DTOs,
  * além de métodos "raw" para casos onde o DTO não existe.
- *
- * @template TResponse of BaseResponseDTO
  */
 abstract class BaseResource
 {
@@ -25,11 +23,13 @@ abstract class BaseResource
     /**
      * Converte resposta da API para DTO tipado.
      *
-     * @param  class-string<TResponse>  $dtoClass
+     * @template T of ResponseDTOInterface
+     *
+     * @param  class-string<T>  $dtoClass
      * @param  array<string, mixed>  $data
-     * @return TResponse
+     * @return T
      */
-    protected function toDTO(string $dtoClass, array $data): BaseResponseDTO
+    protected function toDTO(string $dtoClass, array $data): ResponseDTOInterface
     {
         return $dtoClass::fromResponse($data);
     }
@@ -37,14 +37,16 @@ abstract class BaseResource
     /**
      * Converte lista de respostas da API para DTOs tipados.
      *
-     * @param  class-string<TResponse>  $dtoClass
+     * @template T of ResponseDTOInterface
+     *
+     * @param  class-string<T>  $dtoClass
      * @param  array<int, array<string, mixed>>  $dataList
-     * @return array<int, TResponse>
+     * @return array<int, T>
      */
     protected function toDTOList(string $dtoClass, array $dataList): array
     {
         return array_map(
-            fn (array $data): BaseResponseDTO => $dtoClass::fromResponse($data),
+            fn (array $data): ResponseDTOInterface => $dtoClass::fromResponse($data),
             $dataList
         );
     }
@@ -73,10 +75,12 @@ abstract class BaseResource
     /**
      * Faz requisição GET e retorna DTO único.
      *
-     * @param  class-string<TResponse>  $dtoClass
-     * @return TResponse
+     * @template T of ResponseDTOInterface
+     *
+     * @param  class-string<T>  $dtoClass
+     * @return T
      */
-    protected function getDTO(string $domain, string $path, array $params, string $dtoClass): BaseResponseDTO
+    protected function getDTO(string $domain, string $path, array $params, string $dtoClass): ResponseDTOInterface
     {
         $response = $this->connector->get($domain, $path, $params, $this->accountId);
 
@@ -86,8 +90,10 @@ abstract class BaseResource
     /**
      * Faz requisição GET e retorna lista de DTOs.
      *
-     * @param  class-string<TResponse>  $dtoClass
-     * @return array<int, TResponse>
+     * @template T of ResponseDTOInterface
+     *
+     * @param  class-string<T>  $dtoClass
+     * @return array<int, T>
      */
     protected function getDTOList(string $domain, string $path, array $params, string $dtoClass): array
     {
@@ -100,10 +106,12 @@ abstract class BaseResource
     /**
      * Faz requisição POST e retorna DTO do recurso criado.
      *
-     * @param  class-string<TResponse>  $dtoClass
-     * @return TResponse
+     * @template T of ResponseDTOInterface
+     *
+     * @param  class-string<T>  $dtoClass
+     * @return T
      */
-    protected function postDTO(string $domain, string $path, array $data, string $dtoClass): BaseResponseDTO
+    protected function postDTO(string $domain, string $path, array $data, string $dtoClass): ResponseDTOInterface
     {
         $response = $this->connector->post($domain, $path, $data, $this->accountId);
 
@@ -113,10 +121,12 @@ abstract class BaseResource
     /**
      * Faz requisição PUT e retorna DTO do recurso atualizado.
      *
-     * @param  class-string<TResponse>  $dtoClass
-     * @return TResponse
+     * @template T of ResponseDTOInterface
+     *
+     * @param  class-string<T>  $dtoClass
+     * @return T
      */
-    protected function putDTO(string $domain, string $path, array $data, string $dtoClass): BaseResponseDTO
+    protected function putDTO(string $domain, string $path, array $data, string $dtoClass): ResponseDTOInterface
     {
         $response = $this->connector->put($domain, $path, $data, $this->accountId);
 
@@ -126,12 +136,29 @@ abstract class BaseResource
     /**
      * Faz requisição PATCH e retorna DTO do recurso atualizado.
      *
-     * @param  class-string<TResponse>  $dtoClass
-     * @return TResponse
+     * @template T of ResponseDTOInterface
+     *
+     * @param  class-string<T>  $dtoClass
+     * @return T
      */
-    protected function patchDTO(string $domain, string $path, array $data, string $dtoClass): BaseResponseDTO
+    protected function patchDTO(string $domain, string $path, array $data, string $dtoClass): ResponseDTOInterface
     {
         $response = $this->connector->patch($domain, $path, $data, $this->accountId);
+
+        return $this->toDTO($dtoClass, $response);
+    }
+
+    /**
+     * Faz requisição DELETE e retorna DTO da operação.
+     *
+     * @template T of ResponseDTOInterface
+     *
+     * @param  class-string<T>  $dtoClass
+     * @return T
+     */
+    protected function deleteDTO(string $domain, string $path, string $dtoClass): ResponseDTOInterface
+    {
+        $response = $this->connector->delete($domain, $path, $this->accountId);
 
         return $this->toDTO($dtoClass, $response);
     }
@@ -141,7 +168,7 @@ abstract class BaseResource
      *
      * @return array<string, mixed> Resposta bruta (confirmação)
      *
-     * @deprecated v2.0.0 será removido. Use o método específico do Resource.
+     * @deprecated v2.0.0 será removido. Use deleteDTO() ou o método específico do Resource.
      * @see BaseResource::deleteRaw()
      */
     protected function deleteRaw(string $domain, string $path): array

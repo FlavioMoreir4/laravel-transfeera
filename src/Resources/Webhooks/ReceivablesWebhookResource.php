@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Webhooks;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\WebhookEventResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\WebhookResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
@@ -73,15 +74,10 @@ class ReceivablesWebhookResource extends BaseResource
      * Remove uma URL de webhook.
      *
      * @param  string  $id  ID da URL de webhook
-     * @return array<string, mixed>
      */
-    public function deleteUrl(string $id): array
+    public function deleteUrl(string $id): OperationResponseDTO
     {
-        return $this->connector->delete(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH_URLS.'/'.$id,
-            $this->accountId,
-        );
+        return $this->deleteDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH_URLS.'/'.$id, OperationResponseDTO::class);
     }
 
     /**
@@ -99,14 +95,9 @@ class ReceivablesWebhookResource extends BaseResource
      * Reenvia um evento de webhook de recebimentos.
      *
      * @param  string  $eventId  ID do evento
-     * @return array<string, mixed>
      */
-    public function resendEvent(string $eventId): array
+    public function resendEvent(string $eventId): OperationResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH_EVENTS.'/'.$eventId.'/retry',
-            accountId: $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH_EVENTS.'/'.$eventId.'/retry', [], OperationResponseDTO::class);
     }
 }

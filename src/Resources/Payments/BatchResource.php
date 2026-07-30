@@ -6,6 +6,7 @@ namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
 use FlavioMoreir4\Transfeera\DTOs\BatchDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\BatchResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -69,11 +70,10 @@ class BatchResource extends BaseResource
      * Remove um lote.
      *
      * @param  string  $id  Identificador do lote
-     * @return array<string, mixed> Confirmação de exclusão
      */
-    public function delete(string $id): array
+    public function delete(string $id): OperationResponseDTO
     {
-        return $this->deleteRaw(self::DOMAIN, "/batch/{$id}");
+        return $this->deleteDTO(self::DOMAIN, "/batch/{$id}", OperationResponseDTO::class);
     }
 
     /**
@@ -84,13 +84,6 @@ class BatchResource extends BaseResource
      */
     public function process(string $id): BatchResponseDTO
     {
-        $response = $this->connector->post(
-            self::DOMAIN,
-            "/batch/{$id}/close",
-            [],
-            $this->accountId,
-        );
-
-        return $this->toDTO(BatchResponseDTO::class, $response);
+        return $this->postDTO(self::DOMAIN, "/batch/{$id}/close", [], BatchResponseDTO::class);
     }
 }

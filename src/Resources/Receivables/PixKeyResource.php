@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Receivables;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\PixKeyResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
@@ -59,26 +60,20 @@ class PixKeyResource extends BaseResource
      * Remove uma chave Pix.
      *
      * @param  string  $id  ID da chave Pix
-     * @return array<string, mixed>
      */
-    public function delete(string $id): array
+    public function delete(string $id): OperationResponseDTO
     {
-        return $this->deleteRaw(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id);
+        return $this->deleteDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id, OperationResponseDTO::class);
     }
 
     /**
      * Reenvia o código de verificação para a chave Pix.
      *
      * @param  string  $id  ID da chave Pix
-     * @return array<string, mixed>
      */
-    public function resendVerificationCode(string $id): array
+    public function resendVerificationCode(string $id): OperationResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH.'/'.$id.'/resendVerificationCode',
-            accountId: $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id.'/resendVerificationCode', [], OperationResponseDTO::class);
     }
 
     /**
@@ -86,16 +81,10 @@ class PixKeyResource extends BaseResource
      *
      * @param  string  $id  ID da chave Pix
      * @param  string  $code  Código de verificação
-     * @return array<string, mixed>
      */
-    public function verify(string $id, string $code): array
+    public function verify(string $id, string $code): OperationResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH.'/'.$id.'/verify',
-            ['code' => $code],
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id.'/verify', ['code' => $code], OperationResponseDTO::class);
     }
 
     /**
@@ -104,44 +93,29 @@ class PixKeyResource extends BaseResource
      * A chave é passada na URL: POST /pix/key/{key}/claim
      *
      * @param  string  $key  Chave Pix a ser reivindicada
-     * @return array<string, mixed>
      */
-    public function claim(string $key): array
+    public function claim(string $key): OperationResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            '/pix/key/'.$key.'/claim',
-            accountId: $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, '/pix/key/'.$key.'/claim', [], OperationResponseDTO::class);
     }
 
     /**
      * Confirma a portabilidade da chave Pix.
      *
      * @param  string  $id  ID da solicitação de portabilidade
-     * @return array<string, mixed>
      */
-    public function confirmClaim(string $id): array
+    public function confirmClaim(string $id): OperationResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH.'/'.$id.'/claim/confirm',
-            accountId: $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id.'/claim/confirm', [], OperationResponseDTO::class);
     }
 
     /**
      * Cancela uma solicitação de portabilidade.
      *
      * @param  string  $id  ID da solicitação de portabilidade
-     * @return array<string, mixed>
      */
-    public function cancelClaim(string $id): array
+    public function cancelClaim(string $id): OperationResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH.'/'.$id.'/claim/cancel',
-            accountId: $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id.'/claim/cancel', [], OperationResponseDTO::class);
     }
 }

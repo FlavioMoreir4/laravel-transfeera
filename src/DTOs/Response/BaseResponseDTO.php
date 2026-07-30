@@ -9,7 +9,7 @@ namespace FlavioMoreir4\Transfeera\DTOs\Response;
  *
  * Contém campos comuns: id, status, created_at, updated_at.
  */
-abstract class BaseResponseDTO
+abstract class BaseResponseDTO implements ResponseDTOInterface
 {
     /**
      * @param  string  $id  Identificador único

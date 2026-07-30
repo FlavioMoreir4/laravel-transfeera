@@ -57,18 +57,13 @@ class AuthorizationResource extends BaseResource
     }
 
     /**
-     * Cancela uma autorização ativa.
+     * Cancela uma autorização Pix Automático.
      *
      * @param  string  $id  ID da autorização
-     * @return array<string, mixed>
      */
-    public function cancel(string $id): array
+    public function cancel(string $id): AuthorizationResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_PIX_AUTOMATICO,
-            self::BASE_PATH.'/'.$id.'/cancellations',
-            accountId: $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH.'/'.$id.'/cancellations', [], AuthorizationResponseDTO::class);
     }
 
     /**
@@ -76,15 +71,10 @@ class AuthorizationResource extends BaseResource
      *
      * @param  string  $id  ID da autorização
      * @param  string  $cancellationId  ID do cancelamento
-     * @return array<string, mixed>
      */
-    public function getCancellation(string $id, string $cancellationId): array
+    public function getCancellation(string $id, string $cancellationId): AuthorizationResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PIX_AUTOMATICO,
-            self::BASE_PATH.'/'.$id.'/cancellations/'.$cancellationId,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH.'/'.$id.'/cancellations/'.$cancellationId, [], AuthorizationResponseDTO::class);
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\TransferResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\TransferDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
@@ -81,10 +82,9 @@ class TransferResource extends BaseResource
      *
      * @param  string  $batchId  Identificador do lote
      * @param  string  $transferId  Identificador da transferência
-     * @return array<string, mixed> Confirmação de exclusão
      */
-    public function delete(string $batchId, string $transferId): array
+    public function delete(string $batchId, string $transferId): OperationResponseDTO
     {
-        return $this->deleteRaw(self::DOMAIN, "/batch/{$batchId}/transfer/{$transferId}");
+        return $this->deleteDTO(self::DOMAIN, "/batch/{$batchId}/transfer/{$transferId}", OperationResponseDTO::class);
     }
 }

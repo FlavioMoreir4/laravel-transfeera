@@ -63,48 +63,33 @@ class PaymentIntentResource extends BaseResource
     }
 
     /**
-     * Cancela uma instrução de pagamento pendente.
+     * Cancela uma instrução de pagamento.
      *
-     * @param  string  $id  ID da instrução de pagamento
-     * @return array<string, mixed>
+     * @param  string  $id  ID da instrução
      */
-    public function cancel(string $id): array
+    public function cancel(string $id): PaymentIntentResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_PIX_AUTOMATICO,
-            self::BASE_PATH.'/'.$id.'/cancellations',
-            accountId: $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH.'/'.$id.'/cancellations', [], PaymentIntentResponseDTO::class);
     }
 
     /**
      * Consulta o cancelamento de uma instrução de pagamento.
      *
-     * @param  string  $id  ID da instrução de pagamento
+     * @param  string  $id  ID da instrução
      * @param  string  $cancellationId  ID do cancelamento
-     * @return array<string, mixed>
      */
-    public function getCancellation(string $id, string $cancellationId): array
+    public function getCancellation(string $id, string $cancellationId): PaymentIntentResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PIX_AUTOMATICO,
-            self::BASE_PATH.'/'.$id.'/cancellations/'.$cancellationId,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH.'/'.$id.'/cancellations/'.$cancellationId, [], PaymentIntentResponseDTO::class);
     }
 
     /**
-     * Reenvia uma retentativa de cobrança para uma instrução com falha.
+     * Reenvia uma retentativa de instrução de pagamento.
      *
-     * @param  string  $id  ID da instrução de pagamento
-     * @return array<string, mixed>
+     * @param  string  $id  ID da instrução
      */
-    public function resendRetry(string $id): array
+    public function resendRetry(string $id): PaymentIntentResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_PIX_AUTOMATICO,
-            self::BASE_PATH.'/'.$id.'/retry',
-            accountId: $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_PIX_AUTOMATICO, self::BASE_PATH.'/'.$id.'/retry', [], PaymentIntentResponseDTO::class);
     }
 }

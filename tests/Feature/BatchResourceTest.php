@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Cache;
@@ -132,7 +133,10 @@ test('atualiza lote', function () {
 
 test('remove lote', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/batch/batch_123' => Http::response([], 204),
+        'api-sandbox.transfeera.com/batch/batch_123' => Http::response([
+            'success' => true,
+            'message' => 'Lote removido com sucesso',
+        ]),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
             'expires_in' => 1800,
@@ -141,5 +145,7 @@ test('remove lote', function () {
 
     $result = Transfeera::batches()->delete('batch_123');
 
-    expect($result)->toBe([]);
+    expect($result)->toBeInstanceOf(OperationResponseDTO::class);
+    expect($result->success)->toBeTrue();
+    expect($result->message)->toBe('Lote removido com sucesso');
 });

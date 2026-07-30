@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\BilletCipResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -150,7 +152,10 @@ test('lista boletos avulsos', function () {
 
 test('remove boleto de lote', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/batch/batch_123/billet/blt_1' => Http::response([], 204),
+        'api-sandbox.transfeera.com/batch/batch_123/billet/blt_1' => Http::response([
+            'success' => true,
+            'message' => 'Boleto removido com sucesso',
+        ]),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
             'expires_in' => 1800,
@@ -159,12 +164,16 @@ test('remove boleto de lote', function () {
 
     $response = Transfeera::billets()->delete('batch_123', 'blt_1');
 
-    expect($response)->toBe([]);
+    expect($response)->toBeInstanceOf(OperationResponseDTO::class);
+    expect($response->success)->toBeTrue();
 });
 
 test('remove boleto avulso', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/billet/blt_1' => Http::response([], 204),
+        'api-sandbox.transfeera.com/billet/blt_1' => Http::response([
+            'success' => true,
+            'message' => 'Boleto removido com sucesso',
+        ]),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
             'expires_in' => 1800,
@@ -173,7 +182,8 @@ test('remove boleto avulso', function () {
 
     $response = Transfeera::billets()->deleteStandalone('blt_1');
 
-    expect($response)->toBe([]);
+    expect($response)->toBeInstanceOf(OperationResponseDTO::class);
+    expect($response->success)->toBeTrue();
 });
 
 test('consulta situacao na cip', function () {
@@ -193,5 +203,6 @@ test('consulta situacao na cip', function () {
 
     $response = Transfeera::billets()->consultCip('blt_1');
 
-    expect($response['status'])->toBe('registered');
+    expect($response)->toBeInstanceOf(BilletCipResponseDTO::class);
+    expect($response->status)->toBe('registered');
 });

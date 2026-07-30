@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\AccountResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Http;
 
@@ -68,7 +69,10 @@ test('consulta conta digital', function () {
 
 test('encerra conta digital', function () {
     Http::fake([
-        'api-sandbox.transfeera.com/accounts/acc_1/close' => Http::response([], 204),
+        'api-sandbox.transfeera.com/accounts/acc_1/close' => Http::response([
+            'id' => 'acc_1',
+            'status' => 'closed',
+        ], 200),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
             'expires_in' => 1800,
@@ -77,5 +81,6 @@ test('encerra conta digital', function () {
 
     $response = Transfeera::accounts()->close('acc_1');
 
-    expect($response)->toBe([]);
+    expect($response)->toBeInstanceOf(AccountResponseDTO::class);
+    expect($response->status)->toBe('closed');
 });

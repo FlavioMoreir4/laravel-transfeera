@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\BilletCipResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\BilletResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -105,37 +107,29 @@ class BilletResource extends BaseResource
      *
      * @param  string  $batchId  Identificador do lote
      * @param  string  $id  Identificador do boleto
-     * @return array<string, mixed>
      */
-    public function delete(string $batchId, string $id): array
+    public function delete(string $batchId, string $id): OperationResponseDTO
     {
-        return $this->deleteRaw(self::DOMAIN, "/batch/{$batchId}/billet/{$id}");
+        return $this->deleteDTO(self::DOMAIN, "/batch/{$batchId}/billet/{$id}", OperationResponseDTO::class);
     }
 
     /**
      * Remove um boleto avulso.
      *
      * @param  string  $id  Identificador do boleto
-     * @return array<string, mixed>
      */
-    public function deleteStandalone(string $id): array
+    public function deleteStandalone(string $id): OperationResponseDTO
     {
-        return $this->deleteRaw(self::DOMAIN, "/billet/{$id}");
+        return $this->deleteDTO(self::DOMAIN, "/billet/{$id}", OperationResponseDTO::class);
     }
 
     /**
      * Consulta a situação do boleto na CIP.
      *
      * @param  string  $id  Identificador do boleto (passado como query param)
-     * @return array<string, mixed>
      */
-    public function consultCip(string $id): array
+    public function consultCip(string $id): BilletCipResponseDTO
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            '/billet/consult',
-            ['id' => $id],
-            $this->accountId,
-        );
+        return $this->getDTO(self::DOMAIN, '/billet/consult', ['id' => $id], BilletCipResponseDTO::class);
     }
 }

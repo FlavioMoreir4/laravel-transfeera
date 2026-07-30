@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\InfractionAnalysisResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Http;
 
@@ -47,7 +48,7 @@ test('consulta infracao por id', function () {
 test('envia analise individual', function () {
     Http::fake([
         'api-sandbox.transfeera.com/med/infractions/inf_1/analysis' => Http::response([
-            'id' => 'analysis_1',
+            'analysis_id' => 'analysis_1',
             'status' => 'submitted',
         ], 201),
         'login-api-sandbox.transfeera.com/*' => Http::response([
@@ -62,14 +63,16 @@ test('envia analise individual', function () {
         'description' => 'Devolução por acordo',
     ]);
 
-    expect($response['status'])->toBe('submitted');
+    expect($response)->toBeInstanceOf(InfractionAnalysisResponseDTO::class);
+    expect($response->status)->toBe('submitted');
 });
 
 test('envia analise em lote', function () {
     Http::fake([
         'api-sandbox.transfeera.com/med/infractions/analysis' => Http::response([
-            'id' => 'batch_1',
-            'status' => 'processing',
+            'data' => [
+                ['analysis_id' => 'batch_1', 'status' => 'processing'],
+            ],
         ], 201),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
@@ -81,5 +84,6 @@ test('envia analise em lote', function () {
         ['infraction_id' => 'inf_1', 'type' => 'refund', 'refund_amount' => 5000],
     ]);
 
-    expect($response['status'])->toBe('processing');
+    expect($response)->toHaveCount(1);
+    expect($response[0]->status)->toBe('processing');
 });

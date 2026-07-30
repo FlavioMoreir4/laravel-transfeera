@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\PaymentIntentResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -84,14 +85,15 @@ test('cancela instrucao de pagamento', function () {
 
     $response = Transfeera::pixAutomaticoPaymentIntents()->cancel('pi_1');
 
-    expect($response['status'])->toBe('cancelled');
+    expect($response)->toBeInstanceOf(PaymentIntentResponseDTO::class);
+    expect($response->status)->toBe('cancelled');
 });
 
 test('consulta cancelamento de instrucao', function () {
     Http::fake([
         'api-sandbox.transfeera.com/pix/automatic/payment_intents/pi_1/cancellations/canc_1' => Http::response([
             'id' => 'pi_1',
-            'cancelled_at' => '2025-06-01T10:00:00Z',
+            'status' => 'cancelled',
         ]),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
@@ -101,7 +103,8 @@ test('consulta cancelamento de instrucao', function () {
 
     $response = Transfeera::pixAutomaticoPaymentIntents()->getCancellation('pi_1', 'canc_1');
 
-    expect($response['cancelled_at'])->toBe('2025-06-01T10:00:00Z');
+    expect($response)->toBeInstanceOf(PaymentIntentResponseDTO::class);
+    expect($response->status)->toBe('cancelled');
 });
 
 test('reenvia retentativa de instrucao', function () {
@@ -118,5 +121,6 @@ test('reenvia retentativa de instrucao', function () {
 
     $response = Transfeera::pixAutomaticoPaymentIntents()->resendRetry('pi_1');
 
-    expect($response['status'])->toBe('retry_sent');
+    expect($response)->toBeInstanceOf(PaymentIntentResponseDTO::class);
+    expect($response->status)->toBe('retry_sent');
 });

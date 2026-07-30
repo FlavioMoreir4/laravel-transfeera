@@ -25,8 +25,8 @@ test('cria qrcode estatico', function () {
         'key' => 'email@example.com',
     ]);
 
-    expect($response['type'])->toBe('static');
-    expect($response['id'])->toBe('qr_static_1');
+    expect($response->type)->toBe('static');
+    expect($response->id)->toBe('qr_static_1');
 });
 
 test('cria cobranca imediata', function () {
@@ -48,7 +48,7 @@ test('cria cobranca imediata', function () {
         'value' => 5000,
     ]);
 
-    expect($response['status'])->toBe('active');
+    expect($response->status)->toBe('active');
 });
 
 test('cria cobranca com vencimento', function () {
@@ -71,7 +71,7 @@ test('cria cobranca com vencimento', function () {
         'due_date' => '2025-12-31',
     ]);
 
-    expect($response['due_date'])->toBe('2025-12-31');
+    expect($response->dueDate)->toBe('2025-12-31');
 });
 
 test('lista qrcodes', function () {

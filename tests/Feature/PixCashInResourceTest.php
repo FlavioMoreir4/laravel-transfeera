@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\PixRefundResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Http;
 
@@ -65,8 +66,9 @@ test('solicita devolucao de pix', function () {
         'description' => 'Devolução total',
     ]);
 
-    expect($response['refund_id'])->toBe('ref_abc');
-    expect($response['status'])->toBe('pending');
+    expect($response)->toBeInstanceOf(PixRefundResponseDTO::class);
+    expect($response->amount)->toBe(5000);
+    expect($response->status)->toBe('pending');
 });
 
 test('consulta devolucoes de um pix', function () {
@@ -84,5 +86,7 @@ test('consulta devolucoes de um pix', function () {
 
     $response = Transfeera::pixCashIn()->getRefunds('E2E123');
 
-    expect($response['data'])->toHaveCount(1);
+    expect($response)->toHaveCount(1);
+    expect($response[0])->toBeInstanceOf(PixRefundResponseDTO::class);
+    expect($response[0]->amount)->toBe(5000);
 });

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\PixEmvResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\PixResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
@@ -34,15 +35,9 @@ class PixResource extends BaseResource
      * os dados estruturados do pagamento.
      *
      * @param  string  $emv  Código Pix copia-e-cola (EMV QR Code)
-     * @return array<string, mixed>
      */
-    public function parseEmv(string $emv): array
+    public function parseEmv(string $emv): PixEmvResponseDTO
     {
-        return $this->connector->post(
-            self::DOMAIN,
-            '/pix/qrcode/parse',
-            ['emv' => $emv],
-            $this->accountId,
-        );
+        return $this->postDTO(self::DOMAIN, '/pix/qrcode/parse', ['emv' => $emv], PixEmvResponseDTO::class);
     }
 }

@@ -49,8 +49,8 @@ test('lista pagamentos de uma recorrência', function () {
 
     $response = Transfeera::recurrences()->listPayments('rec_1', ['page' => 1, 'per_page' => 10]);
 
-    expect($response['data'])->toHaveCount(2);
-    expect($response['data'][0]['status'])->toBe('completed');
+    expect($response)->toHaveCount(2);
+    expect($response[0]->status)->toBe('completed');
 });
 
 test('cancela recorrência ativa', function () {
@@ -68,7 +68,7 @@ test('cancela recorrência ativa', function () {
 
     $response = Transfeera::recurrences()->cancel('rec_1');
 
-    expect($response['status'])->toBe('cancelled');
+    expect($response->status)->toBe('cancelled');
 });
 
 test('tenta cancelar recorrência já cancelada', function () {

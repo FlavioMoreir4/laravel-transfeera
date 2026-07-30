@@ -29,48 +29,30 @@ class PixQrCodeResource extends BaseResource
      * Cria um QR Code estático (mesma chave, valor e dados fixos).
      *
      * @param  array<string, mixed>  $data  Dados do QR Code estático
-     * @return array<string, mixed>
      */
-    public function createStatic(array $data): array
+    public function createStatic(array $data): PixQrCodeResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH.'/static',
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/static', $data, PixQrCodeResponseDTO::class);
     }
 
     /**
      * Cria uma cobrança Pix imediata (sem vencimento).
      *
      * @param  array<string, mixed>  $data  Dados da cobrança imediata
-     * @return array<string, mixed>
      */
-    public function createImmediate(array $data): array
+    public function createImmediate(array $data): PixQrCodeResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH.'/collection/immediate',
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/collection/immediate', $data, PixQrCodeResponseDTO::class);
     }
 
     /**
      * Cria uma cobrança Pix com vencimento.
      *
      * @param  array<string, mixed>  $data  Dados da cobrança com vencimento
-     * @return array<string, mixed>
      */
-    public function createDue(array $data): array
+    public function createDue(array $data): PixQrCodeResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH.'/collection/dueDate',
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/collection/dueDate', $data, PixQrCodeResponseDTO::class);
     }
 
     /**

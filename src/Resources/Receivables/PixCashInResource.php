@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FlavioMoreir4\Transfeera\Resources\Receivables;
 
 use FlavioMoreir4\Transfeera\DTOs\Response\PixCashInResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\PixRefundResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -52,30 +53,20 @@ class PixCashInResource extends BaseResource
      *
      * @param  string  $end2EndId  End-to-end ID da transação Pix
      * @param  array{amount: int, description?: string}  $data  Dados da devolução
-     * @return array<string, mixed>
      */
-    public function requestRefund(string $end2EndId, array $data): array
+    public function requestRefund(string $end2EndId, array $data): PixRefundResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH.'/'.$end2EndId.'/refund',
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$end2EndId.'/refund', $data, PixRefundResponseDTO::class);
     }
 
     /**
      * Consulta as devoluções de um Pix recebido.
      *
      * @param  string  $end2EndId  End-to-end ID da transação Pix
-     * @return array<string, mixed>
+     * @return array<int, PixRefundResponseDTO>
      */
     public function getRefunds(string $end2EndId): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_RECEIVABLES,
-            self::BASE_PATH.'/'.$end2EndId.'/refund',
-            accountId: $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$end2EndId.'/refund', [], PixRefundResponseDTO::class);
     }
 }

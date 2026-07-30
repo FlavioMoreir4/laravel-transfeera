@@ -72,18 +72,12 @@ class AccountResource extends BaseResource
     }
 
     /**
-     * Encerra uma conta digital e remove suas chaves Pix vinculadas.
+     * Encerra (remove) uma conta digital.
      *
-     * @param  string  $id  ID da conta a ser encerrada
-     * @return array<string, mixed>
+     * @param  string  $id  Identificador da conta
      */
-    public function close(string $id): array
+    public function close(string $id): AccountResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_ACCOUNTS,
-            self::BASE_PATH.'/'.$id.'/close',
-            [],
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_ACCOUNTS, self::BASE_PATH.'/'.$id.'/close', [], AccountResponseDTO::class);
     }
 }

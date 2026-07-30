@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\PixEmvResponseDTO;
 use FlavioMoreir4\Transfeera\Exceptions\PaymentException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
@@ -68,8 +69,9 @@ test('parseia emv pix copia e cola', function () {
 
     $response = Transfeera::pix()->parseEmv('00020101021226830014br.gov.bcb.pix...');
 
-    expect($response['key'])->toBe('financeiro@empresa.com');
-    expect($response['value'])->toBe(25000);
+    expect($response)->toBeInstanceOf(PixEmvResponseDTO::class);
+    expect($response->key)->toBe('financeiro@empresa.com');
+    expect($response->value)->toBe(25000);
 });
 
 test('parseia emv invalido retorna erro de validacao', function () {

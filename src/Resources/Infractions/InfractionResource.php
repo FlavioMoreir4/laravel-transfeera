@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Infractions;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\InfractionAnalysisResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\InfractionResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
@@ -71,31 +72,27 @@ class InfractionResource extends BaseResource
      *
      * @param  string  $id  ID da infração
      * @param  array{type: string, refund_amount?: int, description?: string}  $data  Dados da análise
-     * @return array<string, mixed>
      */
-    public function submitAnalysis(string $id, array $data): array
+    public function submitAnalysis(string $id, array $data): InfractionAnalysisResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_INFRACTIONS,
-            self::BASE_PATH.'/'.$id.'/analysis',
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_INFRACTIONS, self::BASE_PATH.'/'.$id.'/analysis', $data, InfractionAnalysisResponseDTO::class);
     }
 
     /**
      * Envia análises em lote para múltiplas infrações.
      *
      * @param  array<int, array{infraction_id: string, type: string, refund_amount?: int, description?: string}>  $analyses  Lista de análises
-     * @return array<string, mixed>
+     * @return array<int, InfractionAnalysisResponseDTO>
      */
     public function submitBatchAnalysis(array $analyses): array
     {
-        return $this->connector->post(
+        $response = $this->connector->post(
             Connector::DOMAIN_INFRACTIONS,
             self::BASE_PATH.'/analysis',
             $analyses,
             $this->accountId,
         );
+
+        return $this->toDTOList(InfractionAnalysisResponseDTO::class, $this->extractDataList($response));
     }
 }
