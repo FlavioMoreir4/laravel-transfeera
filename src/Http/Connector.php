@@ -263,6 +263,11 @@ class Connector
                 message: $message,
                 statusCode: $status,
                 payload: $payload,
+                retryAfter: $this->parseIntHeader($response, 'Retry-After')
+                    ?? $this->parseIntHeader($response, 'X-RateLimit-RetryAfter'),
+                limit: $this->parseIntHeader($response, 'X-RateLimit-Limit'),
+                remaining: $this->parseIntHeader($response, 'X-RateLimit-Remaining'),
+                reset: $this->parseIntHeader($response, 'X-RateLimit-Reset'),
             ),
             default => new TransfeeraException(
                 message: $message,
@@ -317,5 +322,19 @@ class Connector
             ),
             default => throw $baseException,
         };
+    }
+
+    /**
+     * Extrai um header de resposta como inteiro, ou null se ausente/inválido.
+     */
+    private function parseIntHeader(Response $response, string $name): ?int
+    {
+        $value = $response->header($name);
+
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return is_numeric($value) ? (int) $value : null;
     }
 }

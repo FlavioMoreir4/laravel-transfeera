@@ -2,7 +2,7 @@
 
 > **Filosofia**: Compatibilidade garantida para sempre (v2 cancelado).
 > Apenas **MINORs** (features compatíveis) e **PATCHs** (correções).
-> Atual — v1.8.1 (183 testes, 260 asserções, PHPStan 0, Rector clean, Pint PSR-12).
+> Atual — v1.9.0 (199 testes, 283 asserções, PHPStan 0, Rector clean, Pint PSR-12).
 
 ---
 
@@ -70,15 +70,15 @@
 
 | # | Tarefa | Arquivos | Esforço | Prioridade |
 |---|--------|----------|---------|------------|
-| M1 | **GitHub Release workflow** — CI auto-cria release ao push de tag | `.github/workflows/release.yml` | 🟡 1h | 🔴 Alta |
-| M2 | **Coverage report no CI** — `pest --coverage` + upload artifact/badge | `.github/workflows/ci.yml`, `phpunit.xml` | 🟡 30min | 🔴 Alta |
-| M3 | **ServiceProvider test** — bindings registrados corretamente | `tests/Unit/ServiceProviderTest.php` | 🟡 1h | 🟡 Média |
-| M4 | **InstallCommand test** — comando artisan | `tests/Unit/InstallCommandTest.php` | 🟡 1h | 🟡 Média |
-| M5 | **Config validation** — validar config no boot do ServiceProvider | `src/TransfeeraServiceProvider.php` | 🟡 30min | 🟡 Média |
-| M6 | **Comando `transfeera:check`** — health check (ping credenciais + mTLS) | `src/Console/Commands/CheckCommand.php` | 🟡 1h | 🟡 Média |
-| M7 | **Rate limit headers** — expor `X-RateLimit-*` nas exceptions | `src/Http/Connector.php`, exceptions | 🟡 30min | 🟢 Baixa |
+| M1 | **GitHub Release workflow** ✅ | `.github/workflows/release.yml` | 🟡 1h | 🔴 Alta |
+| M2 | **Coverage report no CI** ✅ | `.github/workflows/ci.yml` | 🟡 30min | 🔴 Alta |
+| M3 | **ServiceProvider test** ✅ (11 tests) | `tests/Unit/ServiceProviderTest.php` | 🟡 1h | 🟡 Média |
+| M4 | **InstallCommand test** ✅ (4 tests) | `tests/Unit/InstallCommandTest.php` | 🟡 1h | 🟡 Média |
+| M5 | **Config validation** ✅ | `src/TransfeeraServiceProvider.php` | 🟡 30min | 🟡 Média |
+| M6 | **Comando `transfeera:check`** ✅ | `src/Console/Commands/CheckCommand.php` | 🟡 1h | 🟡 Média |
+| M7 | **Rate limit headers** ✅ | `src/Http/Connector.php`, exceptions | 🟡 30min | 🟢 Baixa |
 
-**Resultado**: ~175 testes, 260+ asserções. Release automática. Badge de coverage.
+**Resultado**: 199 testes, 283 asserções. Release automática. Coverage badge. transfeera:check. Rate limit headers.
 
 ---
 

@@ -4,7 +4,7 @@ Instruções para qualquer agente de IA (Hermes, Claude Code, Copilot, etc.) que
 
 ## O que é este projeto
 
-Pacote Laravel (`flaviomoreir4/laravel-transfeera`) versão **v1.8.1** — SDK completo da API Transfeera cobrindo **7 domínios**: Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa/Validações, Hub de Contas e MED/Infrações. É consumido como dependência por projetos Laravel de terceiros — não tem acoplamento a nenhuma aplicação específica.
+Pacote Laravel (`flaviomoreir4/laravel-transfeera`) versão **v1.9.0** — SDK completo da API Transfeera cobrindo **7 domínios**: Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa/Validações, Hub de Contas e MED/Infrações. É consumido como dependência por projetos Laravel de terceiros — não tem acoplamento a nenhuma aplicação específica.
 
 Documentação oficial da API (consultar antes de tocar em qualquer Resource — nunca inferir schema por analogia):
 - https://docs.transfeera.dev/reference/endpoints
@@ -22,7 +22,7 @@ Requer PHP 8.3+, Laravel 12+ como dependência de teste (`orchestra/testbench`).
 ## Comandos de verificação
 
 ```bash
-composer test          # Pest 5 (183 testes, 260 asserções)
+composer test          # Pest 5 (199 testes, 283 asserções)
 composer analyse       # Larastan / PHPStan level 8 — zero erros
 composer rector        # Rector dry-run (verifica)
 composer rector-fix    # Rector (aplica correções)
@@ -99,7 +99,7 @@ Se a tentação de adicionar uma dependência nova surgir, **parar e justificar 
 
 ## Testes
 
-- **Pest 5** — 183 testes, 260 asserções (v1.8.1)
+- **Pest 5** — 199 testes, 283 asserções (v1.9.0)
 - Cobertura: Resources (Feature), DTOs/Exceptions/Listeners/TokenManager/Connector (Unit)
 - `Http::fake()` com fixtures extraídas de payloads reais da documentação (`tests/Fixtures/`) — nunca inventar formato de payload.
 - Cobrir sempre: renovação automática de token, seleção de base URL por ambiente/sub-API, mTLS condicional, mapeamento de erro por status HTTP, validação de assinatura de webhook.

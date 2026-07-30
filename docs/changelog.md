@@ -7,6 +7,25 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.9.0] — 2025-07-30
+
+### Adicionado
+
+- **GitHub Release workflow** — criação automática de release ao push de tag (`v*`)
+- **Comando `transfeera:check`** — health check de conectividade com a API (credenciais, mTLS, endpoint auth)
+- **Rate limit headers nas exceptions** — `TransfeeraRateLimitException::getRetryAfter()`, `getLimit()`, `getRemaining()`, `getReset()` populados a partir dos headers `Retry-After`, `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+- **Coverage no CI** — `composer test-coverage --min=90` na matrix PHP 8.3
+- **Validação de config no boot** — `TransfeeraServiceProvider` emite warnings de log se config estiver incompleta (ambiente inválido, credenciais faltando, mTLS ausente em produção)
+- **Testes de ServiceProvider (11)** — verifica registros de singletons, alias e resolução de todos os bindings
+- **Testes de InstallCommand (4)** — verifica registro dos comandos artisan e execução
+
+### Alterado
+
+- **README badges** — adicionado badge Pint PSR-12, atualizado contagem de testes (183→199)
+- **Pint** — `composer format` agora executa automaticamente (1 fix aplicado)
+
+---
+
 ## [1.8.1] — 2025-07-30
 
 ### Adicionado
@@ -305,7 +324,8 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 | **1.7.0** | Exceptions tipadas por domínio, testes de integração |
 | **1.8.0** ✅ | Cobertura de testes: error handling, middlewares, concorrência, mTLS, Resources parciais |
 | **1.8.1** ✅ | PATCH: Pint, scripts, 14 novos testes webhook/transfer/qrcode, docs |
-| **1.9.0+** | Apenas MINORs — compatibilidade garantida para sempre |
+| **1.9.0** ✅ | Release workflow, transfeera:check, rate limit headers, coverage CI, config validation, ServiceProvider/InstallCommand tests |
+| **1.10.0+** | Apenas MINORs — compatibilidade garantida para sempre |
 | **v2** | ❌ Cancelado — decisão de nunca quebrar |
 
 Consulte [docs/roadmap.md](docs/roadmap.md) para o plano completo.
