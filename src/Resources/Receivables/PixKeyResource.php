@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Receivables;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\PixKeyResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -27,46 +28,31 @@ class PixKeyResource extends BaseResource
     /**
      * Lista todas as chaves Pix cadastradas.
      *
-     * @return array<int, array<string, mixed>>
+     * @return array<int, PixKeyResponseDTO>
      */
     public function list(): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            accountId: $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, [], PixKeyResponseDTO::class);
     }
 
     /**
      * Consulta uma chave Pix pelo ID.
      *
      * @param  string  $id  ID da chave Pix
-     * @return array<string, mixed>
      */
-    public function get(string $id): array
+    public function get(string $id): PixKeyResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$id,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], PixKeyResponseDTO::class);
     }
 
     /**
      * Cria uma nova chave Pix.
      *
      * @param  array{type: string, value: string}  $data  Dados da chave (type: cpf, cnpj, email, phone, evp)
-     * @return array<string, mixed>
      */
-    public function create(array $data): array
+    public function create(array $data): PixKeyResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $data, PixKeyResponseDTO::class);
     }
 
     /**
@@ -77,11 +63,7 @@ class PixKeyResource extends BaseResource
      */
     public function delete(string $id): array
     {
-        return $this->connector->delete(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$id,
-            $this->accountId,
-        );
+        return $this->deleteRaw(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id);
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Receivables;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\PaymentLinkResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -30,31 +31,20 @@ class PaymentLinkResource extends BaseResource
      * Cria um novo link de pagamento.
      *
      * @param  array<string, mixed>  $data  Dados do link de pagamento
-     * @return array<string, mixed>
      */
-    public function create(array $data): array
+    public function create(array $data): PaymentLinkResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $data, PaymentLinkResponseDTO::class);
     }
 
     /**
      * Consulta um link de pagamento pelo ID.
      *
      * @param  string  $id  ID do link de pagamento
-     * @return array<string, mixed>
      */
-    public function get(string $id): array
+    public function get(string $id): PaymentLinkResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$id,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], PaymentLinkResponseDTO::class);
     }
 
     /**
@@ -65,10 +55,6 @@ class PaymentLinkResource extends BaseResource
      */
     public function delete(string $id): array
     {
-        return $this->connector->delete(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$id,
-            $this->accountId,
-        );
+        return $this->deleteRaw(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Infractions;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\InfractionResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -46,31 +47,21 @@ class InfractionResource extends BaseResource
      * Lista as infrações cadastradas.
      *
      * @param  array<string, mixed>  $filters  Filtros opcionais (status, data, paginação)
-     * @return array<string, mixed>
+     * @return array<int, InfractionResponseDTO>
      */
     public function list(array $filters = []): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            $filters,
-            $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, InfractionResponseDTO::class);
     }
 
     /**
      * Consulta uma infração pelo ID.
      *
      * @param  string  $id  ID da infração
-     * @return array<string, mixed>
      */
-    public function get(string $id): array
+    public function get(string $id): InfractionResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$id,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], InfractionResponseDTO::class);
     }
 
     /**

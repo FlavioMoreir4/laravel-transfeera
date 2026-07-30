@@ -26,8 +26,8 @@ test('cria conta digital', function () {
         'email' => 'financeiro@xyz.com',
     ]);
 
-    expect($response['id'])->toBe('acc_1');
-    expect($response['status'])->toBe('active');
+    expect($response->id)->toBe('acc_1');
+    expect($response->status)->toBe('active');
 });
 
 test('lista contas digitais', function () {
@@ -46,7 +46,7 @@ test('lista contas digitais', function () {
 
     $response = Transfeera::accounts()->list();
 
-    expect($response['data'])->toHaveCount(2);
+    expect($response)->toHaveCount(2);
 });
 
 test('consulta conta digital', function () {
@@ -63,7 +63,7 @@ test('consulta conta digital', function () {
 
     $response = Transfeera::accounts()->get('acc_1');
 
-    expect($response['name'])->toBe('Empresa XYZ');
+    expect($response->name)->toBe('Empresa XYZ');
 });
 
 test('encerra conta digital', function () {

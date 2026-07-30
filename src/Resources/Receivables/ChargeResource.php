@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Receivables;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\ChargeResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -30,47 +31,31 @@ class ChargeResource extends BaseResource
      * Cria uma nova cobrança (boleto e/ou Pix).
      *
      * @param  array<string, mixed>  $data  Dados da cobrança
-     * @return array<string, mixed>
      */
-    public function create(array $data): array
+    public function create(array $data): ChargeResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $data, ChargeResponseDTO::class);
     }
 
     /**
      * Lista as cobranças cadastradas.
      *
      * @param  array<string, mixed>  $filters  Filtros opcionais (status, data, paginação)
-     * @return array<string, mixed>
+     * @return array<int, ChargeResponseDTO>
      */
     public function list(array $filters = []): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            $filters,
-            $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, ChargeResponseDTO::class);
     }
 
     /**
      * Consulta uma cobrança pelo ID.
      *
      * @param  string  $id  ID da cobrança
-     * @return array<string, mixed>
      */
-    public function get(string $id): array
+    public function get(string $id): ChargeResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$id,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], ChargeResponseDTO::class);
     }
 
     /**

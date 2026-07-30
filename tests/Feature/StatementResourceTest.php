@@ -18,8 +18,7 @@ test('consulta saldo', function () {
         'api-sandbox.transfeera.com/statement/balance' => Http::response([
             'balance' => 150000,
             'blocked' => 25000,
-            'available' => 125000,
-            'currency' => 'BRL',
+            'total' => 125000,
         ]),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
@@ -29,8 +28,8 @@ test('consulta saldo', function () {
 
     $response = Transfeera::statement()->getBalance();
 
-    expect($response['available'])->toBe(125000);
-    expect($response['balance'])->toBe(150000);
+    expect($response->balance)->toBe(150000);
+    expect($response->total)->toBe(125000);
 });
 
 test('resgata saldo para conta bancaria', function () {

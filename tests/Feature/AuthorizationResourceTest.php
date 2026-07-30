@@ -24,8 +24,8 @@ test('cria autorizacao pix automatico', function () {
         'limit_value' => 50000,
     ]);
 
-    expect($response['id'])->toBe('auth_1');
-    expect($response['status'])->toBe('active');
+    expect($response->id)->toBe('auth_1');
+    expect($response->status)->toBe('active');
 });
 
 test('lista autorizacoes pix automatico', function () {
@@ -44,7 +44,7 @@ test('lista autorizacoes pix automatico', function () {
 
     $response = Transfeera::pixAutomaticoAuthorizations()->list();
 
-    expect($response['data'])->toHaveCount(2);
+    expect($response)->toHaveCount(2);
 });
 
 test('consulta autorizacao pix automatico', function () {
@@ -61,7 +61,7 @@ test('consulta autorizacao pix automatico', function () {
 
     $response = Transfeera::pixAutomaticoAuthorizations()->get('auth_1');
 
-    expect($response['id'])->toBe('auth_1');
+    expect($response->id)->toBe('auth_1');
 });
 
 test('cancela autorizacao pix automatico', function () {
@@ -114,5 +114,5 @@ test('atualiza autorizacao (split_payment)', function () {
         'split_payment' => ['percentage' => 50],
     ]);
 
-    expect($response['split_payment']['percentage'])->toBe(50);
+    expect($response->splitPayment['percentage'])->toBe(50);
 });

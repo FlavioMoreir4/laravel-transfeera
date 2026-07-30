@@ -2,13 +2,17 @@
 
 namespace FlavioMoreir4\Transfeera\Tests;
 
+use FlavioMoreir4\Transfeera\Tests\Integration\IntegrationTestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Pest — Configuração
 |--------------------------------------------------------------------------
 */
 
-uses(TestCase::class)->in(__DIR__);
+uses(TestCase::class)->in('Unit');
+uses(TestCase::class)->in('Feature');
+uses(IntegrationTestCase::class)->in('Integration');
 
 /*
 |--------------------------------------------------------------------------

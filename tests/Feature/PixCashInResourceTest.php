@@ -25,8 +25,8 @@ test('consulta pix recebidos por periodo', function () {
         'end_date' => '2025-01-31',
     ]);
 
-    expect($response['data'])->toHaveCount(1);
-    expect($response['data'][0]['value'])->toBe(15000);
+    expect($response)->toHaveCount(1);
+    expect($response[0]->value)->toBe(15000);
 });
 
 test('consulta pix por end2endId', function () {
@@ -44,7 +44,7 @@ test('consulta pix por end2endId', function () {
 
     $response = Transfeera::pixCashIn()->getByEnd2EndId('E2E123');
 
-    expect($response['end2end_id'])->toBe('E2E123');
+    expect($response->id)->toBe('E2E123');
 });
 
 test('solicita devolucao de pix', function () {

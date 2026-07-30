@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\StatementResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -18,17 +19,10 @@ class StatementResource extends BaseResource
 
     /**
      * Consulta o saldo disponível na conta.
-     *
-     * @return array<string, mixed>
      */
-    public function getBalance(): array
+    public function getBalance(): StatementResponseDTO
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            '/statement/balance',
-            [],
-            $this->accountId,
-        );
+        return $this->getDTO(self::DOMAIN, '/statement/balance', [], StatementResponseDTO::class);
     }
 
     /**

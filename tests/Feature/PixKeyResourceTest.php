@@ -22,8 +22,8 @@ test('lista chaves pix', function () {
 
     $response = Transfeera::pixKeys()->list();
 
-    expect($response['data'])->toHaveCount(1);
-    expect($response['data'][0]['type'])->toBe('cpf');
+    expect($response)->toHaveCount(1);
+    expect($response[0]->type)->toBe('cpf');
 });
 
 test('cria chave pix', function () {
@@ -45,8 +45,8 @@ test('cria chave pix', function () {
         'value' => 'user@example.com',
     ]);
 
-    expect($response['id'])->toBe('key_abc123');
-    expect($response['status'])->toBe('pending');
+    expect($response->id)->toBe('key_abc123');
+    expect($response->status)->toBe('pending');
 });
 
 test('verifica chave pix com codigo', function () {
@@ -96,7 +96,7 @@ test('consulta chave pix por id', function () {
 
     $response = Transfeera::pixKeys()->get('key_1');
 
-    expect($response['id'])->toBe('key_1');
+    expect($response->id)->toBe('key_1');
 });
 
 test('portabilidade: claim, confirm, cancel', function () {

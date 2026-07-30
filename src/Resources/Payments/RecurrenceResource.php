@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\RecurrenceResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -20,16 +21,11 @@ class RecurrenceResource extends BaseResource
      * Lista todas as recorrências cadastradas.
      *
      * @param  array<string, mixed>  $params  Filtros (page, per_page, status)
-     * @return array<string, mixed>
+     * @return array<int, RecurrenceResponseDTO>
      */
     public function list(array $params = []): array
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            '/payout_recurrences',
-            $params,
-            $this->accountId,
-        );
+        return $this->getDTOList(self::DOMAIN, '/payout_recurrences', $params, RecurrenceResponseDTO::class);
     }
 
     /**

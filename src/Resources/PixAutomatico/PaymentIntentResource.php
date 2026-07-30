@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\PixAutomatico;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\PaymentIntentResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -29,15 +30,14 @@ class PaymentIntentResource extends BaseResource
      *
      * @param  string  $authorizationId  ID da autorização Pix Automático
      * @param  array<string, mixed>  $data  Dados da instrução de pagamento
-     * @return array<string, mixed>
      */
-    public function create(string $authorizationId, array $data): array
+    public function create(string $authorizationId, array $data): PaymentIntentResponseDTO
     {
-        return $this->connector->post(
+        return $this->postDTO(
             Connector::DOMAIN_PAYMENTS,
             self::BASE_PATH,
             array_merge($data, ['authorization_id' => $authorizationId]),
-            $this->accountId,
+            PaymentIntentResponseDTO::class,
         );
     }
 
@@ -45,31 +45,21 @@ class PaymentIntentResource extends BaseResource
      * Lista as instruções de pagamento.
      *
      * @param  array<string, mixed>  $filters  Filtros opcionais
-     * @return array<string, mixed>
+     * @return array<int, PaymentIntentResponseDTO>
      */
     public function list(array $filters = []): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            $filters,
-            $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, PaymentIntentResponseDTO::class);
     }
 
     /**
      * Consulta uma instrução de pagamento pelo ID.
      *
      * @param  string  $id  ID da instrução de pagamento
-     * @return array<string, mixed>
      */
-    public function get(string $id): array
+    public function get(string $id): PaymentIntentResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$id,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], PaymentIntentResponseDTO::class);
     }
 
     /**

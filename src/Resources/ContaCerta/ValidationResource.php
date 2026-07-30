@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\ContaCerta;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\ValidationResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -34,46 +35,30 @@ class ValidationResource extends BaseResource
      * Cria uma nova validação de conta bancária.
      *
      * @param  array<string, mixed>  $data  Dados da conta a ser validada
-     * @return array<string, mixed>
      */
-    public function create(array $data): array
+    public function create(array $data): ValidationResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_CONTA_CERTA,
-            self::BASE_PATH,
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_CONTA_CERTA, self::BASE_PATH, $data, ValidationResponseDTO::class);
     }
 
     /**
      * Lista as validações realizadas.
      *
      * @param  array<string, mixed>  $filters  Filtros opcionais (status, data, paginação)
-     * @return array<string, mixed>
+     * @return array<int, ValidationResponseDTO>
      */
     public function list(array $filters = []): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_CONTA_CERTA,
-            self::BASE_PATH,
-            $filters,
-            $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_CONTA_CERTA, self::BASE_PATH, $filters, ValidationResponseDTO::class);
     }
 
     /**
      * Consulta uma validação pelo ID.
      *
      * @param  string  $id  ID da validação
-     * @return array<string, mixed>
      */
-    public function get(string $id): array
+    public function get(string $id): ValidationResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_CONTA_CERTA,
-            self::BASE_PATH.'/'.$id,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_CONTA_CERTA, self::BASE_PATH.'/'.$id, [], ValidationResponseDTO::class);
     }
 }

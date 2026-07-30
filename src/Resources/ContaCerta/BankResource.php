@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\ContaCerta;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\BankResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -26,14 +27,10 @@ class BankResource extends BaseResource
     /**
      * Lista os bancos suportados pela Conta Certa.
      *
-     * @return array<string, mixed>
+     * @return array<int, BankResponseDTO>
      */
     public function list(): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_CONTA_CERTA,
-            self::BASE_PATH,
-            accountId: $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_CONTA_CERTA, self::BASE_PATH, [], BankResponseDTO::class);
     }
 }

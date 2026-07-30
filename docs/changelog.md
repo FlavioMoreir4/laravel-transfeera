@@ -7,9 +7,26 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
-## [Unreleased]
+## [1.10.0] — 2025-07-30
 
-### Alterado
+### Added
+
+- **7 novos Response DTOs**: `BilletResponseDTO`, `StatementResponseDTO`,
+  `PixResponseDTO`, `AccountResponseDTO`, `InfractionResponseDTO`,
+  `ValidationResponseDTO`, `RecurrenceResponseDTO` — tipagem completa para
+  todos os Resources que ainda retornavam array puro.
+- **15 Resources migrados para DTOs**: `BilletResource`, `StatementResource`,
+  `PixResource`, `AccountResource`, `InfractionResource`, `ValidationResource`,
+  `RecurrenceResource`, `PixKeyResource`, `PixQrCodeResource`,
+  `PixCashInResource`, `ChargeResource`, `PaymentLinkResource`,
+  `AuthorizationResource`, `PaymentIntentResource`, `ContaCerta\BankResource`
+  — agora retornam DTOs tipados via `getDTO`/`postDTO`/`getDTOList`.
+- **Infraestrutura de testes de integração**: `IntegrationTestCase` base com
+  skip automático se não houver `.env` + `ExampleTest` com exemplos reais.
+- **Guia de migração Laravel 13**: `docs/laravel-13.md` com matriz de
+  compatibilidade, requisitos, procedimento de upgrade.
+
+### Changed
 
 - **Estratégia de versionamento revisada**: v2.0.0 não está mais cancelado.
   Adotada **estratégia híbrida** — v1.x contínua com deprecação lenta, v2.0.0
@@ -17,12 +34,18 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
   de aviso antes da remoção em v2.0. Ver ADR-006 e UPGRADE.md para detalhes.
 - **`@deprecated` adicionado** ao método `BaseResource::deleteRaw()` —
   será removido na v2.0.0.
-
-### Corrigido
-
 - **Documentação reescrita**: README.md, REQUISITOS.md, ADRs (10),
   UPGRADE.md — todos reestruturados com modelos de referência do ecossistema
   Laravel.
+- **14 testes atualizados** para usar propriedades de DTOs (`$response->id`)
+  em vez de array access (`$response['id']`).
+
+### Documentation
+
+- `docs/laravel-13.md`: guia de migração e compatibilidade Laravel 13
+- `docs/erros.md`: seção "Estratégia de Retry para Rate Limit" (backoff
+  exponencial, Laravel Queue com backoff dinâmico)
+- Roadmap atualizado — marcos M8-M11 concluídos
 
 ---
 
@@ -344,8 +367,9 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 | **1.8.0** ✅ | Cobertura de testes: error handling, middlewares, concorrência, mTLS, Resources parciais |
 | **1.8.1** ✅ | PATCH: Pint, scripts, 14 novos testes webhook/transfer/qrcode, docs |
 | **1.9.0** ✅ | Release workflow, transfeera:check, rate limit headers, coverage CI, config validation, ServiceProvider/InstallCommand tests |
-| **1.10.0+** | Apenas MINORs — compatibilidade garantida para sempre |
-| **v2** | ❌ Cancelado — decisão de nunca quebrar |
+| **1.10.0** ✅ | Response DTOs, integração Laravel 13, testes integração, rate limit docs |
+| **1.11.0+** | MINORs — compatibilidade garantida, deprecação lenta |
+| **2.0.0** 🎯 | ~2026 Q1 — breaking com 6+ meses de aviso (ADR-006) |
 
 Consulte [docs/roadmap.md](docs/roadmap.md) para o plano completo.
 

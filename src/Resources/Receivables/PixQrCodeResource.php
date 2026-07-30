@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Receivables;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\PixQrCodeResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -76,31 +77,21 @@ class PixQrCodeResource extends BaseResource
      * Lista todos os QR Codes/cobranças Pix.
      *
      * @param  array<string, mixed>  $filters  Filtros opcionais (status, data, paginação)
-     * @return array<string, mixed>
+     * @return array<int, PixQrCodeResponseDTO>
      */
     public function list(array $filters = []): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            $filters,
-            $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, PixQrCodeResponseDTO::class);
     }
 
     /**
      * Consulta um QR Code/cobrança pelo ID.
      *
      * @param  string  $id  ID do QR Code
-     * @return array<string, mixed>
      */
-    public function get(string $id): array
+    public function get(string $id): PixQrCodeResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$id,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], PixQrCodeResponseDTO::class);
     }
 
     /**
@@ -111,10 +102,6 @@ class PixQrCodeResource extends BaseResource
      */
     public function revoke(string $id): array
     {
-        return $this->connector->delete(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$id,
-            accountId: $this->accountId,
-        );
+        return $this->deleteRaw(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id);
     }
 }

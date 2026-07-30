@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\BilletResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -27,32 +28,20 @@ class BilletResource extends BaseResource
      *
      * @param  string  $batchId  Identificador do lote
      * @param  array<string, mixed>  $data  Dados do boleto (beneficiário, valor, vencimento, etc.)
-     * @return array<string, mixed>
      */
-    public function create(string $batchId, array $data): array
+    public function create(string $batchId, array $data): BilletResponseDTO
     {
-        return $this->connector->post(
-            self::DOMAIN,
-            "/batch/{$batchId}/billet",
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(self::DOMAIN, "/batch/{$batchId}/billet", $data, BilletResponseDTO::class);
     }
 
     /**
      * Cria um novo boleto avulso (fora de lote).
      *
      * @param  array<string, mixed>  $data  Dados do boleto
-     * @return array<string, mixed>
      */
-    public function createStandalone(array $data): array
+    public function createStandalone(array $data): BilletResponseDTO
     {
-        return $this->connector->post(
-            self::DOMAIN,
-            '/billet',
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(self::DOMAIN, '/billet', $data, BilletResponseDTO::class);
     }
 
     /**
@@ -61,16 +50,10 @@ class BilletResource extends BaseResource
      * @param  string  $batchId  Identificador do lote
      * @param  string  $id  Identificador do boleto
      * @param  array<string, mixed>  $data  Dados a serem atualizados
-     * @return array<string, mixed>
      */
-    public function update(string $batchId, string $id, array $data): array
+    public function update(string $batchId, string $id, array $data): BilletResponseDTO
     {
-        return $this->connector->put(
-            self::DOMAIN,
-            "/batch/{$batchId}/billet/{$id}",
-            $data,
-            $this->accountId,
-        );
+        return $this->putDTO(self::DOMAIN, "/batch/{$batchId}/billet/{$id}", $data, BilletResponseDTO::class);
     }
 
     /**
@@ -78,32 +61,20 @@ class BilletResource extends BaseResource
      *
      * @param  string  $id  Identificador do boleto
      * @param  array<string, mixed>  $data  Dados a serem atualizados
-     * @return array<string, mixed>
      */
-    public function updateStandalone(string $id, array $data): array
+    public function updateStandalone(string $id, array $data): BilletResponseDTO
     {
-        return $this->connector->put(
-            self::DOMAIN,
-            "/billet/{$id}",
-            $data,
-            $this->accountId,
-        );
+        return $this->putDTO(self::DOMAIN, "/billet/{$id}", $data, BilletResponseDTO::class);
     }
 
     /**
      * Retorna os detalhes de um boleto.
      *
      * @param  string  $id  Identificador do boleto
-     * @return array<string, mixed>
      */
-    public function get(string $id): array
+    public function get(string $id): BilletResponseDTO
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            "/billet/{$id}",
-            [],
-            $this->accountId,
-        );
+        return $this->getDTO(self::DOMAIN, "/billet/{$id}", [], BilletResponseDTO::class);
     }
 
     /**
@@ -111,32 +82,22 @@ class BilletResource extends BaseResource
      *
      * @param  string  $batchId  Identificador do lote
      * @param  array<string, mixed>  $params  Filtros (page, per_page, status, etc.)
-     * @return array<string, mixed>
+     * @return array<int, BilletResponseDTO>
      */
     public function list(string $batchId, array $params = []): array
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            "/batch/{$batchId}/billet",
-            $params,
-            $this->accountId,
-        );
+        return $this->getDTOList(self::DOMAIN, "/batch/{$batchId}/billet", $params, BilletResponseDTO::class);
     }
 
     /**
      * Lista boletos avulsos com filtros e paginação.
      *
      * @param  array<string, mixed>  $params  Filtros (page, per_page, status, etc.)
-     * @return array<string, mixed>
+     * @return array<int, BilletResponseDTO>
      */
     public function listStandalone(array $params = []): array
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            '/billet',
-            $params,
-            $this->accountId,
-        );
+        return $this->getDTOList(self::DOMAIN, '/billet', $params, BilletResponseDTO::class);
     }
 
     /**
@@ -148,11 +109,7 @@ class BilletResource extends BaseResource
      */
     public function delete(string $batchId, string $id): array
     {
-        return $this->connector->delete(
-            self::DOMAIN,
-            "/batch/{$batchId}/billet/{$id}",
-            $this->accountId,
-        );
+        return $this->deleteRaw(self::DOMAIN, "/batch/{$batchId}/billet/{$id}");
     }
 
     /**
@@ -163,11 +120,7 @@ class BilletResource extends BaseResource
      */
     public function deleteStandalone(string $id): array
     {
-        return $this->connector->delete(
-            self::DOMAIN,
-            "/billet/{$id}",
-            $this->accountId,
-        );
+        return $this->deleteRaw(self::DOMAIN, "/billet/{$id}");
     }
 
     /**

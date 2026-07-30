@@ -14,9 +14,9 @@ test('consulta chave pix no DICT', function () {
         'api-sandbox.transfeera.com/pix/dict_key/11999999999' => Http::response([
             'key' => '11999999999',
             'type' => 'phone',
-            'holder_name' => 'João Silva',
-            'holder_document' => '***12345609**',
-            'bank' => 'Banco do Brasil',
+            'name' => 'João Silva',
+            'document' => '***12345609**',
+            'bank_name' => 'Banco do Brasil',
             'bank_code' => '001',
             'agency' => '1234',
             'account' => '56789',
@@ -30,9 +30,9 @@ test('consulta chave pix no DICT', function () {
 
     $response = Transfeera::pix()->lookupKey('11999999999');
 
-    expect($response['key'])->toBe('11999999999');
-    expect($response['holder_name'])->toBe('João Silva');
-    expect($response['bank'])->toBe('Banco do Brasil');
+    expect($response->key)->toBe('11999999999');
+    expect($response->name)->toBe('João Silva');
+    expect($response->bankName)->toBe('Banco do Brasil');
 });
 
 test('consulta chave pix inexistente retorna erro', function () {

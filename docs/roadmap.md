@@ -1,8 +1,8 @@
 # Roadmap — laravel-transfeera
 
-> **Filosofia**: Estratégia híbrida — v1.x contínua com deprecação lenta, v2.0.0 planejada ~2026 Q1.
+> Filosofia**: Estratégia híbrida — v1.x contínua com deprecação lenta, v2.0.0 planejada ~2026 Q1.
 > Apenas **MINORs** (features compatíveis) e **PATCHs** (correções) até lá.
-> Atual — v1.9.0 (199 testes, 283 asserções, PHPStan 0, Rector clean, Pint PSR-12).
+> Atual — **v1.10.0** (201 testes, 283 asserções, PHPStan 0, Rector clean, Pint PSR-12).
 
 ---
 
@@ -10,7 +10,7 @@
 
 ### ✅ Sólido
 - 24 Resources, 7 domínios, cobertura total de endpoints
-- 169 testes, 242 asserções — zero failures
+- 201 testes, 283 asserções — zero failures
 - PHPStan level 8, Rector clean
 - CI matrix: PHP 8.3/8.4 × Laravel 12/13
 - 12 docs, ServiceProvider, Facade, comandos artisan
@@ -82,18 +82,16 @@
 
 ---
 
-### 🚀 MINOR 1.10.0 — Response DTOs + Integração
+### ✅ 1.10.0 — Response DTOs + Integração
 
-> Esforço: ~2-3 dias. Foco em tipagem completa e DX.
+> Concluído na v1.10.0. 201 testes, 283 asserções.
 
-| # | Tarefa | Arquivos | Esforço | Prioridade |
-|---|--------|----------|---------|------------|
-| M8 | **Response DTOs para Resources que ainda retornam array** — verificar BilletResponseDTO, StatementResponseDTO, etc. | `src/DTOs/Response/`, Resources | 🟡 2h | 🟡 Média |
-| M9 | **Testes de integração opcionais** — esqueleto com skip se sem credenciais | `tests/Integration/`, `.env.example` | 🟠 4h | 🟢 Baixa |
-| M10 | **Laravel 13 migration guide** — documentar mudança dos middlewares | `UPGRADE.md` | 🟢 15min | 🟢 Baixa |
-| M11 | **Rate limit retry documentation** — documentar comportamento atual | `docs/erros.md` | 🟢 15min | 🟢 Baixa |
-
-**Resultado**: ~178 testes, 270+ asserções. Tipagem completa.
+| # | Tarefa | Status |
+|---|--------|--------|
+| M8 | **Response DTOs** — 7 novos DTOs criados, 15 Resources integrados, 14 testes atualizados | ✅ |
+| M9 | **Testes de integração** — `IntegrationTestCase` com skip condicional + `ExampleTest` | ✅ |
+| M10 | **Laravel 13 migration guide** — `docs/laravel-13.md` com matriz de compatibilidade | ✅ |
+| M11 | **Rate limit retry docs** — seção completa em `docs/erros.md` (backoff exponencial, Queue) | ✅ |
 
 ---
 

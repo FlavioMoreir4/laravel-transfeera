@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Payments;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\PixResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -22,16 +23,10 @@ class PixResource extends BaseResource
      * Consulta uma chave Pix no DICT para obter os dados do recebedor.
      *
      * @param  string  $pixKey  Chave Pix (CPF, CNPJ, e-mail, telefone ou aleatória)
-     * @return array<string, mixed>
      */
-    public function lookupKey(string $pixKey): array
+    public function lookupKey(string $pixKey): PixResponseDTO
     {
-        return $this->connector->get(
-            self::DOMAIN,
-            '/pix/dict_key/'.$pixKey,
-            [],
-            $this->accountId,
-        );
+        return $this->getDTO(self::DOMAIN, '/pix/dict_key/'.$pixKey, [], PixResponseDTO::class);
     }
 
     /**

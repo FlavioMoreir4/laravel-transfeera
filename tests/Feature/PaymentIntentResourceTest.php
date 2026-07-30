@@ -31,7 +31,7 @@ test('cria instrucao de pagamento', function () {
         'description' => 'Pagamento recorrente',
     ]);
 
-    expect($response['id'])->toBe('pi_1');
+    expect($response->id)->toBe('pi_1');
 });
 
 test('lista instrucoes de pagamento', function () {
@@ -50,7 +50,7 @@ test('lista instrucoes de pagamento', function () {
 
     $response = Transfeera::pixAutomaticoPaymentIntents()->list(['status' => 'pending']);
 
-    expect($response['data'])->toHaveCount(2);
+    expect($response)->toHaveCount(2);
 });
 
 test('consulta instrucao de pagamento', function () {
@@ -67,7 +67,7 @@ test('consulta instrucao de pagamento', function () {
 
     $response = Transfeera::pixAutomaticoPaymentIntents()->get('pi_1');
 
-    expect($response['status'])->toBe('paid');
+    expect($response->status)->toBe('paid');
 });
 
 test('cancela instrucao de pagamento', function () {

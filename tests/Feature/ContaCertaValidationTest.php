@@ -28,8 +28,8 @@ test('conta certa cria validacao', function () {
         'account_type' => 'checking',
     ]);
 
-    expect($response['id'])->toBe('val_1');
-    expect($response['status'])->toBe('pending');
+    expect($response->id)->toBe('val_1');
+    expect($response->status)->toBe('pending');
 });
 
 test('conta certa lista validacoes', function () {
@@ -48,7 +48,7 @@ test('conta certa lista validacoes', function () {
 
     $response = Transfeera::contaCertaValidations()->list();
 
-    expect($response['data'])->toHaveCount(2);
+    expect($response)->toHaveCount(2);
 });
 
 test('conta certa consulta validacao', function () {
@@ -65,7 +65,7 @@ test('conta certa consulta validacao', function () {
 
     $response = Transfeera::contaCertaValidations()->get('val_1');
 
-    expect($response['status'])->toBe('completed');
+    expect($response->status)->toBe('completed');
 });
 
 test('conta certa lista bancos', function () {
@@ -84,5 +84,5 @@ test('conta certa lista bancos', function () {
 
     $response = Transfeera::contaCertaBanks()->list();
 
-    expect($response['data'])->toHaveCount(2);
+    expect($response)->toHaveCount(2);
 });

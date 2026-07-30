@@ -27,8 +27,8 @@ test('cria link de pagamento', function () {
         'value' => 1990,
     ]);
 
-    expect($response['id'])->toBe('pl_1');
-    expect($response['status'])->toBe('active');
+    expect($response->id)->toBe('pl_1');
+    expect($response->status)->toBe('active');
 });
 
 test('consulta link de pagamento', function () {
@@ -46,7 +46,7 @@ test('consulta link de pagamento', function () {
 
     $response = Transfeera::paymentLinks()->get('pl_1');
 
-    expect($response['status'])->toBe('active');
+    expect($response->status)->toBe('active');
 });
 
 test('exclui link de pagamento', function () {

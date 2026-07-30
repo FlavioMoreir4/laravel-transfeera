@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Receivables;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\PixCashInResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -27,31 +28,21 @@ class PixCashInResource extends BaseResource
      * Consulta Pix recebidos por período.
      *
      * @param  array{start_date?: string, end_date?: string, page?: int, per_page?: int}  $filters
-     * @return array<string, mixed>
+     * @return array<int, PixCashInResponseDTO>
      */
     public function list(array $filters = []): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            $filters,
-            $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, PixCashInResponseDTO::class);
     }
 
     /**
      * Consulta um Pix recebido pelo end2endId (identificador único da transação no Pix).
      *
      * @param  string  $end2EndId  End-to-end ID da transação Pix
-     * @return array<string, mixed>
      */
-    public function getByEnd2EndId(string $end2EndId): array
+    public function getByEnd2EndId(string $end2EndId): PixCashInResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$end2EndId,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$end2EndId, [], PixCashInResponseDTO::class);
     }
 
     /**

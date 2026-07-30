@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Accounts;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\AccountResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
 
@@ -43,47 +44,31 @@ class AccountResource extends BaseResource
      * Cria uma nova conta digital.
      *
      * @param  array{name: string, document: string, email: string, ...}  $data  Dados da conta
-     * @return array<string, mixed>
      */
-    public function create(array $data): array
+    public function create(array $data): AccountResponseDTO
     {
-        return $this->connector->post(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            $data,
-            $this->accountId,
-        );
+        return $this->postDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $data, AccountResponseDTO::class);
     }
 
     /**
      * Lista as contas digitais vinculadas à credencial.
      *
      * @param  array<string, mixed>  $filters  Filtros opcionais
-     * @return array<string, mixed>
+     * @return array<int, AccountResponseDTO>
      */
     public function list(array $filters = []): array
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH,
-            $filters,
-            $this->accountId,
-        );
+        return $this->getDTOList(Connector::DOMAIN_PAYMENTS, self::BASE_PATH, $filters, AccountResponseDTO::class);
     }
 
     /**
      * Consulta uma conta digital pelo ID.
      *
      * @param  string  $id  ID da conta
-     * @return array<string, mixed>
      */
-    public function get(string $id): array
+    public function get(string $id): AccountResponseDTO
     {
-        return $this->connector->get(
-            Connector::DOMAIN_PAYMENTS,
-            self::BASE_PATH.'/'.$id,
-            accountId: $this->accountId,
-        );
+        return $this->getDTO(Connector::DOMAIN_PAYMENTS, self::BASE_PATH.'/'.$id, [], AccountResponseDTO::class);
     }
 
     /**

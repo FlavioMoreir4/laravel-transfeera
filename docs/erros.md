@@ -116,42 +116,52 @@ try {
 
 ### TransfeeraRateLimitException (429)
 
+Lançada quando a API retorna HTTP 429 (Too Many Requests). A classe expõe os headers de rate limit da API Transfeera, permitindo implementar backoff inteligente e monitoramento.
+
+#### Métodos Disponíveis
+
+| Método | Header de Origem | Descrição |
+|--------|------------------|-----------|
+| `getRetryAfter(): ?int` | `Retry-After` | Segundos recomendados para aguardar antes de tentar novamente |
+| `getLimit(): ?int` | `X-RateLimit-Limit` | Limite máximo de requisições permitidas na janela atual |
+| `getRemaining(): ?int` | `X-RateLimit-Remaining` | Requisições restantes na janela atual |
+| `getReset(): ?int` | `X-RateLimit-Reset` | Timestamp Unix de quando o rate limit será resetado |
+
 ```php
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraRateLimitException;
 
 try {
-    Transfeera::batches()->create([...]);
+    $batch = Transfeera::batches()->create([...]);
 } catch (TransfeeraRateLimitException $e) {
     $retryAfter = $e->getRetryAfter(); // Segundos (header Retry-After)
+    $limit     = $e->getLimit();       // Limite total da janela
+    $remaining = $e->getRemaining();   // Requisições que ainda pode fazer
+    $reset     = $e->getReset();       // Timestamp Unix do próximo reset
     
-    // Implementar backoff exponencial
+    Log::warning('Rate limit atingido', [
+        'retry_after' => $retryAfter,
+        'limit'       => $limit,
+        'remaining'   => $remaining,
+        'reset_at'    => $reset ? date('Y-m-d H:i:s', $reset) : null,
+    ]);
+    
+    // Aguardar o tempo recomendado pela API
     $waitTime = $retryAfter ?? 60;
+    sleep($waitTime);
     
-    // Exemplo com Laravel Queue (retry automático)
-    throw $e; // Laravel fará retry com backoff se configurado
+    // Tentar novamente
+    $batch = Transfeera::batches()->create([...]);
 }
 ```
 
-**Configurar retry no Queue Worker:**
+**Monitoramento preventivo:** Use `$e->getRemaining()` antes de atingir o limite para disparar alertas quando o consumo estiver alto:
 
 ```php
-// config/queue.php
-'connections' => [
-    'redis' => [
-        'retry_after' => 90,
-        'block_for' => 5,
-    ],
-],
-
-// Job com backoff
-class ProcessarLoteJob implements ShouldQueue
-{
-    public $tries = 3;
-    public $backoff = [60, 120, 300]; // 1min, 2min, 5min
-    
-    public function handle() {
-        Transfeera::batches()->create(...);
-    }
+if ($remaining !== null && $remaining < 10) {
+    Log::warning('Rate limit próximo do limite', [
+        'remaining' => $remaining,
+        'limit'     => $limit,
+    ]);
 }
 ```
 
@@ -408,7 +418,175 @@ $client = TransfeeraClient::withDebug(true);
 
 ---
 
-## 8. Próximos Passos
+## 8. Estratégia de Retry para Rate Limit
+
+Esta seção descreve como implementar uma estratégia robusta de retry ao lidar com `TransfeeraRateLimitException` em produção — tanto em chamadas síncronas quanto em jobs de fila.
+
+### Retry com Backoff Exponencial (Síncrono)
+
+Para operações síncronas (CLI, comandos artesanais, scripts), implemente retry com backoff exponencial respeitando o `Retry-After` da API:
+
+```php
+use FlavioMoreir4\Transfeera\Exceptions\TransfeeraRateLimitException;
+use FlavioMoreir4\Transfeera\Exceptions\TransfeeraServerException;
+
+function retryWithBackoff(callable $operation, int $maxRetries = 3): mixed
+{
+    $attempt = 0;
+
+    while (true) {
+        try {
+            return $operation();
+        } catch (TransfeeraRateLimitException $e) {
+            $attempt++;
+
+            if ($attempt > $maxRetries) {
+                // Esgotou as tentativas — relançar para o handler global
+                throw $e;
+            }
+
+            // Usar Retry-After da API, com backoff progressivo como fallback
+            $waitTime = $e->getRetryAfter()
+                ?? min(60 * (2 ** ($attempt - 1)), 300); // 60s, 120s, 240s...
+
+            Log::warning("Rate limit na tentativa {$attempt}/{$maxRetries}", [
+                'wait_time' => $waitTime,
+                'remaining' => $e->getRemaining(),
+                'limit'     => $e->getLimit(),
+                'reset_at'  => $e->getReset()
+                    ? date('Y-m-d H:i:s', $e->getReset())
+                    : null,
+            ]);
+
+            sleep($waitTime);
+
+        } catch (TransfeeraServerException $e) {
+            $attempt++;
+
+            if ($attempt > $maxRetries) {
+                throw $e;
+            }
+
+            // Backoff mais agressivo para erros de servidor (5xx)
+            $waitTime = min(5 * (2 ** ($attempt - 1)), 120);
+
+            Log::warning("Erro de servidor na tentativa {$attempt}/{$maxRetries}", [
+                'status'    => $e->getStatusCode(),
+                'wait_time' => $waitTime,
+            ]);
+
+            sleep($waitTime);
+        }
+    }
+}
+
+// Uso
+$batch = retryWithBackoff(fn () => Transfeera::batches()->create([
+    'name' => 'Lote Teste',
+]));
+```
+
+### Retry com Laravel Queue (Backoff Dinâmico)
+
+Para jobs em fila, configure o backoff baseado no `Retry-After` retornado pela API:
+
+```php
+<?php
+
+namespace App\Jobs;
+
+use FlavioMoreir4\Transfeera\Facades\Transfeera;
+use FlavioMoreir4\Transfeera\Exceptions\TransfeeraRateLimitException;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
+class ProcessarLotePagamento implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $tries = 5;
+    public $maxExceptions = 3;
+    public $timeout = 120;
+
+    public function __construct(
+        public array $dadosLote,
+        public array $transferencias
+    ) {}
+
+    public function handle(): void
+    {
+        $batch = Transfeera::batches()->create($this->dadosLote);
+
+        foreach ($this->transferencias as $t) {
+            Transfeera::transfers()->create($batch['id'], $t);
+        }
+
+        Transfeera::batches()->process($batch['id']);
+    }
+
+    /**
+     * Backoff fixo progressivo (em segundos).
+     * O Laravel consulta este método a cada retry automático.
+     */
+    public function backoff(): array
+    {
+        return [10, 30, 60, 120, 300];
+    }
+
+    /**
+     * Tempo máximo de retry.
+     */
+    public function retryUntil(): DateTime
+    {
+        return now()->addMinutes(30);
+    }
+
+    public function failed(Throwable $exception): void
+    {
+        Log::error('Falha permanente ao processar lote', [
+            'exception' => get_class($exception),
+            'message'   => $exception->getMessage(),
+            'dados'     => $this->dadosLote,
+        ]);
+    }
+}
+```
+
+### Middleware HTTP com Retry (Laravel Http Client)
+
+Para chamadas HTTP diretas que não passam pelo SDK, utilize o método `retry()` do cliente HTTP do Laravel:
+
+```php
+use Illuminate\Support\Facades\Http;
+use FlavioMoreir4\Transfeera\Exceptions\TransfeeraRateLimitException;
+
+$response = Http::retry(3, function (int $attempt, Exception $e) {
+    if ($e instanceof TransfeeraRateLimitException) {
+        return $e->getRetryAfter() ?? 60; // Delay baseado na resposta
+    }
+    return 100; // Delay padrão (ms)
+}, function (Exception $e) {
+    // Só retentar em rate limit ou erro de servidor
+    return $e instanceof TransfeeraRateLimitException
+        || $e instanceof TransfeeraServerException;
+})->post('https://api.transfeera.com/...', [...]);
+```
+
+### Dicas para Produção
+
+1. **Sempre respeitar `Retry-After`** — A API Transfeera informa o tempo exato de espera via `$e->getRetryAfter()`. Prefira este valor ao invés de um backoff fixo.
+2. **Monitorar `$e->getRemaining()`** — Use este valor para alertar antes de atingir o limite. Crie alertas quando `remaining < 10% do limit`.
+3. **Log estruturado** — Em todo rate limit, registre `retry_after`, `limit`, `remaining` e `reset` para debugging e dimensionamento de capacidade.
+4. **Usar filas para operações críticas** — Jobs do Laravel com `backoff` e `retryUntil` são mais resilientes que chamadas síncronas.
+5. **Timeout adequado** — Configure `$timeout` no job maior que o maior `Retry-After` esperado (ex.: 120s).
+6. **Evitar retry infinito** — Sempre defina `$tries` máximo e um `retryUntil` para evitar jobs presos na fila.
+
+---
+
+## 9. Próximos Passos
 
 - [Webhooks](webhooks.md) - Configuração e segurança
 - [Primeiro Pagamento](primeiro-pagamento.md) - Lotes e transferências

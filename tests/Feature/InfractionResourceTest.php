@@ -23,7 +23,7 @@ test('lista infractions', function () {
 
     $response = Transfeera::infractions()->list();
 
-    expect($response['data'])->toHaveCount(2);
+    expect($response)->toHaveCount(2);
 });
 
 test('consulta infracao por id', function () {
@@ -41,7 +41,7 @@ test('consulta infracao por id', function () {
 
     $response = Transfeera::infractions()->get('inf_1');
 
-    expect($response['amount'])->toBe(15000);
+    expect($response->amount)->toBe(15000);
 });
 
 test('envia analise individual', function () {
@@ -68,8 +68,8 @@ test('envia analise individual', function () {
 test('envia analise em lote', function () {
     Http::fake([
         'api-sandbox.transfeera.com/med/infractions/analysis' => Http::response([
-            'processed' => 2,
-            'failures' => 0,
+            'id' => 'batch_1',
+            'status' => 'processing',
         ], 201),
         'login-api-sandbox.transfeera.com/*' => Http::response([
             'access_token' => 'test-token',
@@ -78,17 +78,8 @@ test('envia analise em lote', function () {
     ]);
 
     $response = Transfeera::infractions()->submitBatchAnalysis([
-        [
-            'infraction_id' => 'inf_001',
-            'type' => 'refund',
-            'refund_amount' => 3000,
-        ],
-        [
-            'infraction_id' => 'inf_002',
-            'type' => 'contest',
-            'description' => 'Pagamento correto',
-        ],
+        ['infraction_id' => 'inf_1', 'type' => 'refund', 'refund_amount' => 5000],
     ]);
 
-    expect($response['processed'])->toBe(2);
+    expect($response['status'])->toBe('processing');
 });

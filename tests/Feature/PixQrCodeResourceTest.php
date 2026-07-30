@@ -90,7 +90,7 @@ test('lista qrcodes', function () {
 
     $response = Transfeera::pixQrCodes()->list(['status' => 'active']);
 
-    expect($response['data'])->toHaveCount(2);
+    expect($response)->toHaveCount(2);
 });
 
 test('consulta qrcode por id', function () {
@@ -110,9 +110,9 @@ test('consulta qrcode por id', function () {
 
     $response = Transfeera::pixQrCodes()->get('qr_imm_1');
 
-    expect($response['id'])->toBe('qr_imm_1');
-    expect($response['status'])->toBe('active');
-    expect($response['value'])->toBe(5000);
+    expect($response->id)->toBe('qr_imm_1');
+    expect($response->status)->toBe('active');
+    expect($response->value)->toBe(5000);
 });
 
 test('revoga cobranca', function () {

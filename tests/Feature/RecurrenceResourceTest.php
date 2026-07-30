@@ -29,8 +29,8 @@ test('lista recorrências', function () {
 
     $response = Transfeera::recurrences()->list(['status' => 'active']);
 
-    expect($response['data'])->toHaveCount(2);
-    expect($response['data'][0]['name'])->toBe('Aluguel');
+    expect($response)->toHaveCount(2);
+    expect($response[0]->name)->toBe('Aluguel');
 });
 
 test('lista pagamentos de uma recorrência', function () {

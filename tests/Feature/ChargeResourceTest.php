@@ -27,8 +27,8 @@ test('cria cobranca', function () {
         'value' => 5000,
     ]);
 
-    expect($response['id'])->toBe('chg_1');
-    expect($response['status'])->toBe('pending');
+    expect($response->id)->toBe('chg_1');
+    expect($response->status)->toBe('pending');
 });
 
 test('lista cobrancas', function () {
@@ -47,7 +47,7 @@ test('lista cobrancas', function () {
 
     $response = Transfeera::charges()->list(['status' => 'pending']);
 
-    expect($response['data'])->toHaveCount(2);
+    expect($response)->toHaveCount(2);
 });
 
 test('consulta cobranca por id', function () {
@@ -65,7 +65,7 @@ test('consulta cobranca por id', function () {
 
     $response = Transfeera::charges()->get('chg_1');
 
-    expect($response['status'])->toBe('paid');
+    expect($response->status)->toBe('paid');
 });
 
 test('cancela cobranca', function () {
