@@ -20,5 +20,13 @@
         <include>
             <directory>src</directory>
         </include>
+        <exclude>
+            <!-- Enums: pure value objects, sem lógica de negócio -->
+            <directory>src/Enums</directory>
+            <!-- Exceptions: boilerplate, testadas implicitamente -->
+            <directory>src/Exceptions</directory>
+            <!-- Evento de framework, não contém lógica de negócio -->
+            <file>src/Webhooks/WebhookEvent.php</file>
+        </exclude>
     </source>
 </phpunit>
