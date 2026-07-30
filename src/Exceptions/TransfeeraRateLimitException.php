@@ -38,10 +38,21 @@ class TransfeeraRateLimitException extends TransfeeraException
 
     /**
      * Segundos recomendados para aguardar antes de tentar novamente.
+     *
+     * Usa o header Retry-After quando disponível; caso contrário,
+     * retorna o valor derivado de X-RateLimit-Reset.
      */
     public function getRetryAfter(): ?int
     {
-        return $this->retryAfter;
+        if ($this->retryAfter !== null) {
+            return $this->retryAfter;
+        }
+
+        if ($this->reset !== null && $this->reset > time()) {
+            return $this->reset - time();
+        }
+
+        return null;
     }
 
     /**

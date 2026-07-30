@@ -8,6 +8,7 @@ use FlavioMoreir4\Transfeera\DTOs\Response\BankResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\BatchResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\BilletCipResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\BilletResponseDTO;
+use FlavioMoreir4\Transfeera\DTOs\Response\ChargePdfResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\ChargeResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\InfractionAnalysisResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\InfractionResponseDTO;
@@ -357,6 +358,21 @@ test('PixRefundResponseDTO createFromApi e toArray', function () {
     expect($dto->amount)->toBe(10000);
     expect($dto->endToEndId)->toBe('E2E123456');
     expect($dto->toArray())->toHaveKey('end_to_end_id');
+});
+
+test('ChargePdfResponseDTO createFromApi e toArray', function () {
+    $dto = ChargePdfResponseDTO::fromResponse([
+        'id' => 'ch_1',
+        'status' => 'available',
+        'url' => 'https://example.com/invoice.pdf',
+        'content_type' => 'application/pdf',
+        'size' => 12345,
+    ]);
+
+    expect($dto->url)->toBe('https://example.com/invoice.pdf');
+    expect($dto->contentType)->toBe('application/pdf');
+    expect($dto->size)->toBe(12345);
+    expect($dto->toArray())->toHaveKey('url');
 });
 
 test('InfractionAnalysisResponseDTO createFromApi e toArray', function () {

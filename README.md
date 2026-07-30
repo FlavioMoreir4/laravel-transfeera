@@ -10,7 +10,7 @@ Pagamentos • Recebimentos • Pix Automático • Conta Certa • Hub de Conta
 [![Laravel](https://img.shields.io/badge/Laravel-12.x%2F13.x-FF2D20)](https://laravel.com)
 [![License](https://img.shields.io/github/license/flaviomoreir4/laravel-transfeera)](LICENSE)
 [![CI](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml/badge.svg)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-283%2F283-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-292%2F292-brightgreen)](https://github.com/flaviomoreir4/laravel-transfeera/actions/workflows/ci.yml)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](phpstan.neon)
 [![Rector](https://img.shields.io/badge/Rector-clean-brightgreen)](rector.php)
 [![Pint](https://img.shields.io/badge/Pint-PSR%2012-brightgreen)](pint.json)
@@ -414,23 +414,28 @@ O `TokenManager` adiciona `scope=account_id:{accountId}` ao token, garantindo es
 | Comando | Descrição |
 |---------|-----------|
 | `php artisan transfeera:install` | Publica configuração e exibe instruções |
-| `php artisan transfeera:check` | Verifica conectividade, credenciais e mTLS |
+| `php artisan transfeera:check` | Valida credenciais, conectividade e mTLS |
+| `php artisan transfeera:check --silent` | Retorna apenas o código de saída (CI/CD) |
+| `php artisan transfeera:debug` | Diagnóstico completo do SDK |
+| `php artisan transfeera:cache-warm` | Pré-aquece o cache do token OAuth |
 
 ```bash
 php artisan transfeera:check
-# 🔍 Verificando Transfeera SDK...
-# 📋 Ambiente: sandbox
-# ✅ Ambiente válido.
-# ✅ Credenciais configuradas.
-# ✅ Endpoint de autenticação acessível.
+# 🔍 Verificando conectividade e credenciais da API Transfeera...
+# 🌐 Testando autenticação: https://login-api-sandbox.transfeera.com/authorization
+# OK: Credenciais validadas
+
+php artisan transfeera:check --silent && echo "Transfeera OK"
 ```
+
+Mais detalhes em [docs/comandos-artisan.md](docs/comandos-artisan.md).
 
 ---
 
 ## Testes
 
 ```bash
-composer test              # Pest (283 testes, 482 asserções)
+composer test              # Pest (300 testes, 547 asserções)
 composer test-coverage     # Com cobertura (PHP 8.3+)
 composer phpstan           # PHPStan level 8
 composer rector            # Rector dry-run
@@ -455,6 +460,8 @@ O CI roda em matrix PHP 8.3/8.4 × Laravel 12/13.
 | [Exceptions](docs/exceptions.md) | Hierarquia completa, catch, métodos úteis |
 | [Middlewares](docs/middlewares.md) | Config, logging, métricas, Prometheus |
 | [Erros](docs/erros.md) | Códigos HTTP, handlers, retry |
+| [Fila](docs/fila.md) | Jobs base, backoff inteligente, Horizon/Pulse |
+| [Comandos Artisan](docs/comandos-artisan.md) | Instalação, check, debug, cache-warm |
 | [Primeiro Pagamento](docs/primeiro-pagamento.md) | Passo a passo inicial |
 | [Primeiro Recebimento](docs/primeiro-recebimento.md) | Passo a passo inicial |
 | [Changelog](docs/changelog.md) | Histórico de versões (Keep a Changelog) |

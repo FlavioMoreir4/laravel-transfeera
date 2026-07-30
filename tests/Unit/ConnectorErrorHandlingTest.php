@@ -246,6 +246,47 @@ test('mapeia erro 429 para TransfeeraRateLimitException', function () {
         ->toThrow(TransfeeraRateLimitException::class);
 });
 
+test('expoe headers de rate limit na TransfeeraRateLimitException', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/*' => Http::response(['message' => 'Too Many Requests'], 429, [
+            'X-RateLimit-Limit' => '100',
+            'X-RateLimit-Remaining' => '0',
+            'X-RateLimit-Reset' => (string) (time() + 60),
+            'Retry-After' => '30',
+        ]),
+    ]);
+
+    try {
+        $this->connector->get(Connector::DOMAIN_PAYMENTS, '/batches');
+
+        self::fail('Expected TransfeeraRateLimitException to be thrown');
+    } catch (TransfeeraRateLimitException $e) {
+        expect($e->getLimit())->toBe(100)
+            ->and($e->getRemaining())->toBe(0)
+            ->and($e->getReset())->toBeInt()
+            ->and($e->getRetryAfter())->toBe(30);
+    }
+});
+
+test('getRetryAfter faz fallback para X-RateLimit-Reset quando Retry-After ausente', function () {
+    Http::fake([
+        'api-sandbox.transfeera.com/*' => Http::response(['message' => 'Too Many Requests'], 429, [
+            'X-RateLimit-Limit' => '100',
+            'X-RateLimit-Remaining' => '0',
+            'X-RateLimit-Reset' => (string) (time() + 45),
+        ]),
+    ]);
+
+    try {
+        $this->connector->get(Connector::DOMAIN_PAYMENTS, '/batches');
+
+        self::fail('Expected TransfeeraRateLimitException to be thrown');
+    } catch (TransfeeraRateLimitException $e) {
+        expect($e->getRetryAfter())->toBeGreaterThanOrEqual(44)
+            ->and($e->getRetryAfter())->toBeLessThanOrEqual(46);
+    }
+});
+
 test('mapeia erro dominio desconhecido para TransfeeraException generica', function () {
     Http::fake([
         'api-sandbox.transfeera.com/*' => Http::response(['message' => 'Erro interno'], 500),

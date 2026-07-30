@@ -2,7 +2,7 @@
 
 > Filosofia**: Estratégia híbrida — v1.x contínua com deprecação lenta, v2.0.0 planejada ~2026 Q1.
 > Apenas **MINORs** (features compatíveis) e **PATCHs** (correções) até lá.
-> Atual — **v1.19.0** (291 testes, 529 asserções, PHPStan 0, Rector clean, Pint PSR-12).
+> Atual — **v1.20.0** (292 testes, 531 asserção, PHPStan 0, Rector clean, Pint PSR-12).
 
 ---
 
@@ -109,6 +109,7 @@
 || **1.17.0** ✅ | Cookbook + Statement DTOs | 3 receitas, StatementWithdraw/Report DTOs, Boas Práticas |
 || **1.18.0** ✅ | **DTOs everywhere — 0 arrays** | OperationResponseDTO, PixQrCode/Authoriz/PaymentIntent/Charge/Account DTOs, PixRefund, BilletCip, PixoEmv, RecurrencePayment DTOs, +35 métodos tipados, docs pix-automatico, docs transacoes, Payments\BankResource test |
 || **1.19.0** ✅ | **DX & Observabilidade** | transfeera:check, rate limit headers, testes faltantes, PixQrCode revoke DTO, PaymentLink list test |
+|| **1.20.0** ✅ | **Zero arrays restantes** | ChargePdfResponseDTO, downloadPdf DTOs, +1 DTO, 292 testes |
 || **2.0.0** 🎯 ~2026 Q1 | **Breaking planejado** | Drop Laravel 12/PHP 8.3, remove `*Raw()`, Connector interno, API unificada (DTOs everywhere), UPGRADE.md completo |
 
 ---

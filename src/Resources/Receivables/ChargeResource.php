@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Receivables;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\ChargePdfResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\ChargeResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
@@ -75,14 +76,14 @@ class ChargeResource extends BaseResource
      *
      * @param  string  $id  ID da cobrança
      * @param  string  $receivableId  ID do recebível (boleto/pix gerado)
-     * @return array<string, mixed>
      */
-    public function downloadPdf(string $id, string $receivableId): array
+    public function downloadPdf(string $id, string $receivableId): ChargePdfResponseDTO
     {
-        return $this->connector->get(
+        return $this->getDTO(
             Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$id.'/receivables/'.$receivableId.'/pdf',
-            accountId: $this->accountId,
+            [],
+            ChargePdfResponseDTO::class,
         );
     }
 
@@ -92,14 +93,14 @@ class ChargeResource extends BaseResource
      * @deprecated Use downloadPdf($id, $receivableId) para path oficial.
      *
      * @param  string  $id  ID da cobrança
-     * @return array<string, mixed>
      */
-    public function downloadPdfByChargeId(string $id): array
+    public function downloadPdfByChargeId(string $id): ChargePdfResponseDTO
     {
-        return $this->connector->get(
+        return $this->getDTO(
             Connector::DOMAIN_RECEIVABLES,
             self::BASE_PATH.'/'.$id.'/pdf',
-            accountId: $this->accountId,
+            [],
+            ChargePdfResponseDTO::class,
         );
     }
 }

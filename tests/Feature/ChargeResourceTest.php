@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\ChargePdfResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\ChargeResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Http;
@@ -102,12 +103,10 @@ test('download pdf comprovante', function () {
     ]);
 
     $response = Transfeera::charges()->downloadPdf('chg_1', 'rec_1');
-    expect($response)->toBeArray();
-    expect($response)->toHaveKey('url');
-    expect($response['url'])->toContain('.pdf');
+    expect($response)->toBeInstanceOf(ChargePdfResponseDTO::class);
+    expect($response->url)->toContain('.pdf');
 
     $legacy = Transfeera::charges()->downloadPdfByChargeId('chg_2');
-    expect($legacy)->toBeArray();
-    expect($legacy)->toHaveKey('url');
-    expect($legacy['url'])->toContain('.pdf');
+    expect($legacy)->toBeInstanceOf(ChargePdfResponseDTO::class);
+    expect($legacy->url)->toContain('.pdf');
 });

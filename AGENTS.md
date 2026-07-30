@@ -4,7 +4,7 @@ Instruções para qualquer agente de IA (Hermes, Claude Code, Copilot, etc.) que
 
 ## O que é este projeto
 
-Pacote Laravel (`flaviomoreir4/laravel-transfeera`) versão **v1.17.0** — SDK completo da API Transfeera cobrindo **7 domínios**: Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa/Validações, Hub de Contas e MED/Infrações. É consumido como dependência por projetos Laravel de terceiros — não tem acoplamento a nenhuma aplicação específica.
+Pacote Laravel (`flaviomoreir4/laravel-transfeera`) versão **v1.20.0** — SDK completo da API Transfeera cobrindo **7 domínios**: Pagamentos, Recebimentos, Pix Automático, Webhooks, Conta Certa/Validações, Hub de Contas e MED/Infrações. É consumido como dependência por projetos Laravel de terceiros — não tem acoplamento a nenhuma aplicação específica.
 
 Documentação oficial da API (consultar antes de tocar em qualquer Resource — nunca inferir schema por analogia):
 - https://docs.transfeera.dev/reference/endpoints
@@ -22,7 +22,7 @@ Requer PHP 8.3+, Laravel 12+ como dependência de teste (`orchestra/testbench`).
 ## Comandos de verificação
 
 ```bash
-composer test          # Pest 5 (283 testes, 482 asserções)
+composer test          # Pest 5 (292 testes, 531 asserções)
 composer analyse       # Larastan / PHPStan level 8 — zero erros
 composer rector        # Rector dry-run (verifica)
 composer rector-fix    # Rector (aplica correções)
@@ -99,7 +99,7 @@ Se a tentação de adicionar uma dependência nova surgir, **parar e justificar 
 
 ## Testes
 
-- **Pest 5** — 199 testes, 283 asserções (v1.9.0)
+- **Pest 5** — 292 testes, 531 asserções (v1.20.0)
 - Cobertura: Resources (Feature), DTOs/Exceptions/Listeners/TokenManager/Connector (Unit)
 - `Http::fake()` com fixtures extraídas de payloads reais da documentação (`tests/Fixtures/`) — nunca inventar formato de payload.
 - Cobrir sempre: renovação automática de token, seleção de base URL por ambiente/sub-API, mTLS condicional, mapeamento de erro por status HTTP, validação de assinatura de webhook.
@@ -162,10 +162,10 @@ Todo o conteúdo de `docs/` está criado e sincronizado com a v1.9.0:
 
 | Item | Valor |
 |------|-------|
-| **Versão** | v1.17.0 |
-| **Commit** | `cfda1df` (feat: v1.16.0 — Quality & Infra) |
-| **Testes** | 283+ passing, 482+ assertions |
+| **Versão** | v1.20.0 |
+| **Commit** | `0988db6` (feat: v1.19.0 — DX & Observabilidade) |
+| **Testes** | 292 passing, 531 assertions |
 | **PHPStan** | Level 8 — 0 erros |
 | **Rector** | Clean |
-| **Documentação** | 16 docs + README + CHANGELOG + UPGRADE + REQUISITOS — todos sincronizados |
-| **Data** | Julho 2025 |
+| **Documentação** | 18 docs + README + CHANGELOG + UPGRADE + REQUISITOS — todos sincronizados |
+| **Data** | Julho 2026 |

@@ -9,33 +9,37 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ## [Unreleased]
 
+## [1.20.0] — 2026-07-30
+
+### Added
+
+- **ChargePdfResponseDTO** — DTO para download de comprovantes PDF de cobranças
+- **AllResponseDTOsTest** — expandido para 29 DTOs (ChargePdfResponseDTO)
+
+### Changed
+
+- `ChargeResource::downloadPdf()` — retorna `ChargePdfResponseDTO` (antes `array`)
+- `ChargeResource::downloadPdfByChargeId()` — retorna `ChargePdfResponseDTO` (antes `array`)
+- **Zero arrays restantes nos Resources** — todos os métodos de ação simples agora retornam DTOs
+- **README.md** — badge de testes atualizado para 292/292
+## [Unreleased]
+
 ### Added
 
 - **Comando `transfeera:check`** — Valida conectividade, credenciais e configuração de mTLS (`--silent` disponível)
 - **Rate limit headers expostos** — `TransfeeraRateLimitException` agora expõe `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` e `Retry-After`
 - **CheckCommandTest** — 7 testes unitários cobrindo sucesso, falha, mTLS e modo silencioso
 - **Rate limit headers test** — Verificação de exposição de headers no `ConnectorErrorHandlingTest`
-
-## [1.19.0] — 2026-07-30
-
-### Added
-
-- **6 novos DTOs**: `OperationResponseDTO`, `PixEmvResponseDTO`, `BilletCipResponseDTO`, `RecurrencePaymentResponseDTO`, `PixRefundResponseDTO`, `InfractionAnalysisResponseDTO`
-- **BankResourceTest** — Testes para Payments\BankResource e ContaCerta\BankResource
-- **AllResponseDTOsTest**: expandido de 21 para 28 testes (cobre todos os 27 DTOs)
-- **BaseResource::deleteDTO()** — método para DELETE com retorno tipado
-- **docs/pix-automatico.md** — Guia completo para Pix Automático com diagrama de fluxo
-- **docs/transacoes.md** — Guia de transações financeiras (lotes, boletos, extratos, cobranças)
-- **Roadmap**: Adicionado marco v1.18.0 "DTOs everywhere — 0 arrays"
+- **docs/comandos-artisan.md** — Guia completo dos comandos Artisan do SDK
 
 ### Changed
 
-- **12 métodos** em 6 Resources (PixQrCode, Authorization, PaymentIntent, Account, Charge, Batch) refatorados para usar DTOs existentes
-- **20+ métodos** em 10 Resources (PixKey, PixCashIn, Billet, Batch, Transfer, PaymentLink, 3× Webhooks, Recurrence, Infraction) refatorados para retornar `OperationResponseDTO` ou DTOs específicos
-- **30 métodos a menos retornando raw array** — Total de métodos sem DTO caiu de ~45 para ~15 (apenas downloadPdf preservados por serem binários)
-- **CI coverage**: threshold 85%, excluídos Enums/Exceptions/WebhookEvent do cálculo
+- **README.md** — seção de comandos Artisan expandida com exemplo de `transfeera:check`
+- **AGENTS.md** — atualizado para v1.19.0 (300 testes, 547 asserções)
+- **README.md** — badge de testes atualizado para 300/300
 
-## [1.17.0] — 2025-07-30
+## [1.19.0] — 2026-07-30
+
 
 ### Added
 
