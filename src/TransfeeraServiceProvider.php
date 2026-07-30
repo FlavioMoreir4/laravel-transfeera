@@ -8,6 +8,11 @@ use Override;
 use FlavioMoreir4\Transfeera\Console\Commands\InstallCommand;
 use FlavioMoreir4\Transfeera\Events\TransfeeraWebhookReceived;
 use FlavioMoreir4\Transfeera\Listeners\LogTransfeeraWebhook;
+use FlavioMoreir4\Transfeera\Http\Connector;
+use FlavioMoreir4\Transfeera\Http\Middleware\LoggingMiddleware;
+use FlavioMoreir4\Transfeera\Http\Middleware\MetricsMiddleware;
+use FlavioMoreir4\Transfeera\Auth\TokenManager;
+use FlavioMoreir4\Transfeera\Http\MtlsConfigurator;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -40,8 +45,49 @@ class TransfeeraServiceProvider extends ServiceProvider
             'transfeera',
         );
 
-        $this->app->singleton('transfeera', fn($app) => new TransfeeraClient(
+        $this->app->singleton(TokenManager::class, function ($app) {
+            $config = $app['config']['transfeera'];
+            $environment = $config['environment'] ?? 'sandbox';
+            $urls = $config['base_urls'] ?? [];
+            $authBaseUrl = $urls['auth'][$environment] ?? ($environment === 'production'
+                ? 'https://login-api.transfeera.com'
+                : 'https://login-api-sandbox.transfeera.com');
+
+            return new TokenManager($config, $authBaseUrl);
+        });
+
+        $this->app->singleton(MtlsConfigurator::class, fn ($app) => new MtlsConfigurator(
+            mtlsConfig: $app['config']['transfeera']['mtls'] ?? [],
+            environment: $app['config']['transfeera']['environment'] ?? 'sandbox',
+        ));
+
+        // Middlewares opcionais
+        $this->app->singleton(LoggingMiddleware::class, fn ($app) => new LoggingMiddleware(
+            enabled: $app['config']['transfeera']['logging']['enabled'] ?? false,
+            logLevel: $app['config']['transfeera']['logging']['level'] ?? 'info',
+            logHeaders: $app['config']['transfeera']['logging']['headers'] ?? false,
+            logBody: $app['config']['transfeera']['logging']['body'] ?? false,
+            maxBodyLength: $app['config']['transfeera']['logging']['max_body_length'] ?? 2000,
+        ));
+
+        $this->app->singleton(MetricsMiddleware::class, fn ($app) => new MetricsMiddleware(
+            enabled: $app['config']['transfeera']['metrics']['enabled'] ?? false,
+            prefix: $app['config']['transfeera']['metrics']['prefix'] ?? 'transfeera',
+        ));
+
+        $this->app->singleton(Connector::class, fn ($app) => new Connector(
+            tokenManager: $app->make(TokenManager::class),
+            mtls: $app->make(MtlsConfigurator::class),
             config: $app['config']['transfeera'],
+            baseUrls: $this->resolveBaseUrls($app['config']['transfeera']),
+            loggingMiddleware: $app->make(LoggingMiddleware::class),
+            metricsMiddleware: $app->make(MetricsMiddleware::class),
+        ));
+
+        $this->app->singleton('transfeera', fn ($app) => new TransfeeraClient(
+            config: $app['config']['transfeera'],
+            loggingMiddleware: $app->make(LoggingMiddleware::class),
+            metricsMiddleware: $app->make(MetricsMiddleware::class),
         ));
 
         $this->app->alias('transfeera', TransfeeraClient::class);
@@ -67,5 +113,28 @@ class TransfeeraServiceProvider extends ServiceProvider
                 InstallCommand::class,
             ]);
         }
+    }
+
+    /**
+     * Resolve as URLs base por domínio conforme ambiente.
+     *
+     * @return array<string, string>
+     */
+    private function resolveBaseUrls(array $config): array
+    {
+        $environment = $config['environment'] ?? 'sandbox';
+        $urls = $config['base_urls'] ?? [];
+
+        return [
+            Connector::DOMAIN_AUTH => $urls['auth'][$environment] ?? ($environment === 'production'
+                ? 'https://login-api.transfeera.com'
+                : 'https://login-api-sandbox.transfeera.com'),
+            Connector::DOMAIN_PAYMENTS => $urls['payments'][$environment] ?? ($environment === 'production'
+                ? 'https://api.transfeera.com'
+                : 'https://api-sandbox.transfeera.com'),
+            Connector::DOMAIN_CONTA_CERTA => $urls['conta_certa'][$environment] ?? ($environment === 'production'
+                ? 'https://api.transfeera.com'
+                : 'https://api-sandbox.transfeera.com'),
+        ];
     }
 }

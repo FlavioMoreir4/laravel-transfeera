@@ -9,6 +9,8 @@ use FlavioMoreir4\Transfeera\Exceptions\TransfeeraAuthenticationException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraRateLimitException;
 use FlavioMoreir4\Transfeera\Exceptions\TransfeeraValidationException;
+use FlavioMoreir4\Transfeera\Http\Middleware\LoggingMiddleware;
+use FlavioMoreir4\Transfeera\Http\Middleware\MetricsMiddleware;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -20,6 +22,7 @@ use Illuminate\Support\Facades\Http;
  * - Injeção do token de acesso (Bearer) nas requisições
  * - Aplicação condicional de mTLS (produção)
  * - Retry, timeout e User-Agent
+ * - Middlewares de logging e métricas
  * - Mapeamento de erros HTTP para exceptions tipadas
  */
 class Connector
@@ -36,6 +39,8 @@ class Connector
         private readonly MtlsConfigurator $mtls,
         private readonly array $config,
         private readonly array $baseUrls,
+        private readonly ?LoggingMiddleware $loggingMiddleware = null,
+        private readonly ?MetricsMiddleware $metricsMiddleware = null,
     ) {}
 
     /**
@@ -52,11 +57,7 @@ class Connector
         array $query = [],
         ?string $accountId = null,
     ): array {
-        $request = $this->buildRequest($domain, $accountId);
-
-        $response = $request->get($this->url($domain, $path), $query);
-
-        return $this->handleResponse($response);
+        return $this->execute('GET', $domain, $path, $query, $accountId);
     }
 
     /**
@@ -73,11 +74,7 @@ class Connector
         array $data = [],
         ?string $accountId = null,
     ): array {
-        $request = $this->buildRequest($domain, $accountId);
-
-        $response = $request->post($this->url($domain, $path), $data);
-
-        return $this->handleResponse($response);
+        return $this->execute('POST', $domain, $path, $data, $accountId);
     }
 
     /**
@@ -89,11 +86,7 @@ class Connector
         array $data = [],
         ?string $accountId = null,
     ): array {
-        $request = $this->buildRequest($domain, $accountId);
-
-        $response = $request->put($this->url($domain, $path), $data);
-
-        return $this->handleResponse($response);
+        return $this->execute('PUT', $domain, $path, $data, $accountId);
     }
 
     /**
@@ -105,11 +98,7 @@ class Connector
         array $data = [],
         ?string $accountId = null,
     ): array {
-        $request = $this->buildRequest($domain, $accountId);
-
-        $response = $request->patch($this->url($domain, $path), $data);
-
-        return $this->handleResponse($response);
+        return $this->execute('PATCH', $domain, $path, $data, $accountId);
     }
 
     /**
@@ -120,9 +109,37 @@ class Connector
         string $path,
         ?string $accountId = null,
     ): array {
-        $request = $this->buildRequest($domain, $accountId);
+        return $this->execute('DELETE', $domain, $path, [], $accountId);
+    }
 
-        $response = $request->delete($this->url($domain, $path));
+    /**
+     * Executa uma requisição HTTP genérica.
+     *
+     * @param  string  $method    Método HTTP (GET, POST, PUT, PATCH, DELETE)
+     * @param  string  $domain    Domínio da API
+     * @param  string  $path      Caminho do endpoint
+     * @param  array<string, mixed>  $data      Payload ou query params
+     * @param  string|null  $accountId  ID da conta digital
+     */
+    private function execute(
+        string $method,
+        string $domain,
+        string $path,
+        array $data,
+        ?string $accountId,
+    ): array {
+        $request = $this->buildRequest($domain, $accountId, $method, $path);
+
+        $response = match ($method) {
+            'GET' => $request->get($this->url($domain, $path), $data),
+            'POST' => $request->post($this->url($domain, $path), $data),
+            'PUT' => $request->put($this->url($domain, $path), $data),
+            'PATCH' => $request->patch($this->url($domain, $path), $data),
+            'DELETE' => $request->delete($this->url($domain, $path)),
+            default => throw new TransfeeraException(
+                message: "Método HTTP não suportado: {$method}",
+            ),
+        };
 
         return $this->handleResponse($response);
     }
@@ -140,9 +157,9 @@ class Connector
     }
 
     /**
-     * Monta o PendingRequest com headers, auth, mTLS, timeout e retry.
+     * Monta o PendingRequest com headers, auth, mTLS, timeout, retry e middlewares.
      */
-    private function buildRequest(string $domain, ?string $accountId): PendingRequest
+    private function buildRequest(string $domain, ?string $accountId, string $method, string $path): PendingRequest
     {
         $token = $this->tokenManager->getToken($accountId);
 
@@ -155,6 +172,26 @@ class Connector
                 times: $this->config['retry']['max_attempts'] ?? 3,
                 sleepMilliseconds: $this->config['retry']['delay_ms'] ?? 100,
             );
+
+        // Aplica middlewares se configurados
+        if ($this->loggingMiddleware instanceof LoggingMiddleware && $this->loggingMiddleware->enabled) {
+            $request = $request->withMiddleware(
+                fn(PendingRequest $request, callable $next): Response => $this->loggingMiddleware->handle($request, $next)
+            );
+        }
+
+        if ($this->metricsMiddleware instanceof MetricsMiddleware && $this->metricsMiddleware->enabled) {
+            $request = $request->withMiddleware(
+                fn(PendingRequest $request, callable $next): Response => $this->metricsMiddleware->handle($request, $next)
+            );
+        }
+
+        // Armazena metadados para middlewares
+        $request = $request->withOptions([
+            'transfeera_domain' => $domain,
+            'transfeera_method' => $method,
+            'transfeera_url' => $this->url($domain, $path),
+        ]);
 
         // Aplica mTLS apenas nos domínios que exigem (payments e conta_certa)
         if (in_array($domain, [self::DOMAIN_PAYMENTS, self::DOMAIN_CONTA_CERTA], true)) {

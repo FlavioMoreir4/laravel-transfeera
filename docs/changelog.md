@@ -7,6 +7,22 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
+## [1.6.0] — 2025-07-29
+
+### Adicionado
+
+- **Middleware de Logging** — `LoggingMiddleware` com log de requisições/respostas, headers sensíveis sanitizados, truncamento de body, níveis configuráveis
+- **Middleware de Métricas** — `MetricsMiddleware` com contadores de requisições, histogramas de latência, taxa de erro, integração pronta para Prometheus/StatsD
+- **Configuração via transfeera.php** — Seções `logging` e `metrics` com opções habilitadas/desabilitadas
+- **Integração no Connector** — Middlewares aplicados automaticamente quando habilitados na configuração
+
+### Alterado
+
+- **Connector** — Refatorado para executar via método `execute()` genérico, suportando GET/POST/PUT/PATCH/DELETE
+- **ServiceProvider** — Registra middlewares como singletons e injeta no Connector
+
+---
+
 ## [1.5.0] — 2025-07-29
 
 ### Adicionado

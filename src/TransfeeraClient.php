@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera;
 
+use FlavioMoreir4\Transfeera\Http\Middleware\LoggingMiddleware;
+use FlavioMoreir4\Transfeera\Http\Middleware\MetricsMiddleware;
 use FlavioMoreir4\Transfeera\Auth\TokenManager;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Http\MtlsConfigurator;
@@ -54,6 +56,8 @@ class TransfeeraClient
      */
     public function __construct(
         private readonly array $config,
+        private readonly ?LoggingMiddleware $loggingMiddleware = null,
+        private readonly ?MetricsMiddleware $metricsMiddleware = null,
     ) {}
 
     /**
@@ -85,6 +89,8 @@ class TransfeeraClient
             mtls: $mtls,
             config: $this->config,
             baseUrls: $resolvedBaseUrls,
+            loggingMiddleware: $this->loggingMiddleware,
+            metricsMiddleware: $this->metricsMiddleware,
         );
     }
 
