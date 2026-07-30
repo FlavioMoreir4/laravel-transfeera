@@ -11,6 +11,15 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ### Added
 
+- **Comando `transfeera:check`** — Valida conectividade, credenciais e configuração de mTLS (`--silent` disponível)
+- **Rate limit headers expostos** — `TransfeeraRateLimitException` agora expõe `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` e `Retry-After`
+- **CheckCommandTest** — 7 testes unitários cobrindo sucesso, falha, mTLS e modo silencioso
+- **Rate limit headers test** — Verificação de exposição de headers no `ConnectorErrorHandlingTest`
+
+## [1.19.0] — 2026-07-30
+
+### Added
+
 - **6 novos DTOs**: `OperationResponseDTO`, `PixEmvResponseDTO`, `BilletCipResponseDTO`, `RecurrencePaymentResponseDTO`, `PixRefundResponseDTO`, `InfractionAnalysisResponseDTO`
 - **BankResourceTest** — Testes para Payments\BankResource e ContaCerta\BankResource
 - **AllResponseDTOsTest**: expandido de 21 para 28 testes (cobre todos os 27 DTOs)

@@ -102,8 +102,12 @@ test('download pdf comprovante', function () {
     ]);
 
     $response = Transfeera::charges()->downloadPdf('chg_1', 'rec_1');
+    expect($response)->toBeArray();
+    expect($response)->toHaveKey('url');
     expect($response['url'])->toContain('.pdf');
 
     $legacy = Transfeera::charges()->downloadPdfByChargeId('chg_2');
+    expect($legacy)->toBeArray();
+    expect($legacy)->toHaveKey('url');
     expect($legacy['url'])->toContain('.pdf');
 });

@@ -2,7 +2,7 @@
 
 > Filosofia**: Estratégia híbrida — v1.x contínua com deprecação lenta, v2.0.0 planejada ~2026 Q1.
 > Apenas **MINORs** (features compatíveis) e **PATCHs** (correções) até lá.
-> Atual — **v1.17.0** (262 testes, 426 asserções, PHPStan 0, Rector clean, Pint PSR-12).
+> Atual — **v1.19.0** (291 testes, 529 asserções, PHPStan 0, Rector clean, Pint PSR-12).
 
 ---
 
@@ -107,7 +107,8 @@
 || **1.15.0** ✅ | Performance & DX | RateLimitMonitor, cache-warm, TransfeeraBaseJob, docs/fila.md, 25 novos testes |
 || **1.16.0** ✅ | Qualidade & Infra | Webhook DTOs, .env.example, CONTRIBUTING.md, GitHub Release, +3 testes |
 || **1.17.0** ✅ | Cookbook + Statement DTOs | 3 receitas, StatementWithdraw/Report DTOs, Boas Práticas |
-|| **1.18.0** 🎯 | **DTOs everywhere — 0 arrays** | OperationResponseDTO, PixQrCode/Authoriz/PaymentIntent/Charge/Account DTOs, PixRefund, BilletCip, PixoEmv, RecurrencePayment DTOs, +35 métodos tipados, docs pix-automatico, docs transacoes, Payments\BankResource test |
+|| **1.18.0** ✅ | **DTOs everywhere — 0 arrays** | OperationResponseDTO, PixQrCode/Authoriz/PaymentIntent/Charge/Account DTOs, PixRefund, BilletCip, PixoEmv, RecurrencePayment DTOs, +35 métodos tipados, docs pix-automatico, docs transacoes, Payments\BankResource test |
+|| **1.19.0** ✅ | **DX & Observabilidade** | transfeera:check, rate limit headers, testes faltantes, PixQrCode revoke DTO, PaymentLink list test |
 || **2.0.0** 🎯 ~2026 Q1 | **Breaking planejado** | Drop Laravel 12/PHP 8.3, remove `*Raw()`, Connector interno, API unificada (DTOs everywhere), UPGRADE.md completo |
 
 ---

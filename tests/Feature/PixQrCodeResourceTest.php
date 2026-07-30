@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Tests\Feature;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\Facades\Transfeera;
 use Illuminate\Support\Facades\Http;
 
@@ -129,5 +130,7 @@ test('revoga cobranca', function () {
 
     $response = Transfeera::pixQrCodes()->revoke('qr_1');
 
-    expect($response['status'])->toBe('revoked');
+    expect($response)->toBeInstanceOf(OperationResponseDTO::class);
+    expect($response->id)->toBe('qr_1');
+    expect($response->status)->toBe('revoked');
 });

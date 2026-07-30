@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FlavioMoreir4\Transfeera\Resources\Receivables;
 
+use FlavioMoreir4\Transfeera\DTOs\Response\OperationResponseDTO;
 use FlavioMoreir4\Transfeera\DTOs\Response\PixQrCodeResponseDTO;
 use FlavioMoreir4\Transfeera\Http\Connector;
 use FlavioMoreir4\Transfeera\Resources\Concerns\BaseResource;
@@ -80,10 +81,9 @@ class PixQrCodeResource extends BaseResource
      * Revoga uma cobrança Pix (imediata ou com vencimento).
      *
      * @param  string  $id  ID da cobrança a ser revogada
-     * @return array<string, mixed>
      */
-    public function revoke(string $id): array
+    public function revoke(string $id): OperationResponseDTO
     {
-        return $this->deleteRaw(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id);
+        return $this->deleteDTO(Connector::DOMAIN_RECEIVABLES, self::BASE_PATH.'/'.$id, OperationResponseDTO::class);
     }
 }
